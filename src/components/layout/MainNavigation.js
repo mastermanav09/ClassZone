@@ -4,13 +4,16 @@ import classes from "./MainNavigation.module.scss";
 import Sidebar from "./Sidebar";
 
 const MainNavigation = () => {
-  const [sideBar, setSideBar] = useState(0);
+  const [showSideBar, setShowSideBar] = useState(false);
+  function closeSideBar() {
+    setShowSideBar(false);
+  }
   let iconStyles = { color: "black", fontSize: "25px" };
   return <div className={classes.container}>
     <div className={classes.navbar} id="main">
       <div className={classes.container1}>
         <div className={classes.sidebarBtn}>
-          <FaIcons.FaBars style={iconStyles} onClick={() => setSideBar(1)} />
+          <FaIcons.FaBars style={iconStyles} onClick={() => setShowSideBar(true)} />
         </div>
         <div className={classes.logo}> Logo</div>
       </div>
@@ -21,12 +24,7 @@ const MainNavigation = () => {
       </div>
     </div>
     {
-      (sideBar === 1) ? (
-        <div id="mySidebar" class={classes.sidebar}>
-          <button href="" class={classes.closebtn} onClick={() => setSideBar(0)}>&times;</button>
-          <a href="#">About</a>
-        </div>
-      ) : <p></p>
+      (showSideBar === true) ? <Sidebar closeSideBar={closeSideBar} /> : <p></p>
     }
   </div>
 };
