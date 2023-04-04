@@ -1,3 +1,90 @@
 .container {
-  background-color: lightblue;
+  .navbar {
+    height: 65px;
+    box-shadow: 0 3px 6px blue;
+    background-color: white;
+    color: black;
+    display: flex;
+    align-items: center;
+    position: fixed;
+    justify-content: space-between;
+    width: 100%;
+    top: 0;
+
+    .container1 {
+      display: flex;
+
+      .sidebarBtn {
+        height: 30px;
+        width: 30px;
+        position: relative;
+        margin-left: 20px;
+        cursor: pointer;
+      }
+
+      .logo {
+        margin-left: 15px;
+      }
+    }
+
+    .container2 {
+      display: flex;
+
+      .addBtn {
+        height: 20px;
+        width: 22px;
+        position: relative;
+        margin-right: 20px;
+        display: inline-block;
+        text-align: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .sidebar {
+    height: 100%;
+    width: 250px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    padding-top: 60px;
+    transition: 0.5s;
+
+    button {
+      cursor: pointer;
+      margin-top: 10px;
+      transition: 0.3s;
+    }
+
+    a {
+      padding: 8px 8px 8px 32px;
+      text-decoration: none;
+      font-size: 25px;
+      color: #818181;
+      display: block;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background-color: black;
+      color: white;
+    }
+
+    a:hover {
+      color: #f1f1f1;
+    }
+
+    .closebtn {
+      position: absolute;
+      top: 0;
+      right: 25px;
+      font-size: 36px;
+      margin-left: 50px;
+    }
+  }
 }
