@@ -1,4 +1,4 @@
-.container {
+.wrapper {
   .navbar {
     height: 65px;
     box-shadow: 0 3px 6px blue;
@@ -10,8 +10,10 @@
     justify-content: space-between;
     width: 100%;
     top: 0;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
 
-    .container1 {
+    .container_one {
       display: flex;
 
       .sidebarBtn {
@@ -27,17 +29,14 @@
       }
     }
 
-    .container2 {
+    .container_two {
       display: flex;
+      align-items: center;
+      justify-content: center;
 
       .addBtn {
-        height: 20px;
-        width: 22px;
-        position: relative;
-        margin-right: 20px;
-        display: inline-block;
-        text-align: center;
-        justify-content: center;
+        margin-left: 1rem;
+        margin-right: 1rem;
         cursor: pointer;
       }
     }
