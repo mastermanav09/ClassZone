@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import classes from "./MainNavigation.module.scss";
 import Sidebar from "./Sidebar";
-import Plus from "@/svg/Plus";
-import Hamburger from "@/svg/Hamburger";
+import Plus from "@/components/svg/Plus";
+import Hamburger from "@/components/svg/Hamburger";
 
 const MainNavigation = () => {
   const [showSideBar, setShowSideBar] = useState(false);

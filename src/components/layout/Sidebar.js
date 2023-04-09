@@ -1,6 +1,6 @@
 import React from "react";
 import classes from "./Sidebar.module.scss";
-import Cross from "@/svg/Cross";
+import Cross from "@/components/svg/Cross";
 import Link from "next/link";
 
 const Sidebar = (props) => {
