@@ -1,38 +1,32 @@
 import React, { useState } from "react";
+import * as FaIcons from "react-icons/fa"
 import classes from "./MainNavigation.module.scss";
 import Sidebar from "./Sidebar";
-import Plus from "@/svg/Plus";
-import Hamburger from "@/svg/Hamburger";
 
 const MainNavigation = () => {
   const [showSideBar, setShowSideBar] = useState(false);
-
-  const toggleSidebar = () => {
-    setShowSideBar((prev) => !prev);
-  };
-
-  return (
-    <>
-      {showSideBar && (
-        <Sidebar toggleSidebar={toggleSidebar} showSideBar={showSideBar} />
-      )}
-      <div className={classes.wrapper}>
-        <div className={classes.navbar} id="main">
-          <div className={classes["container_one"]}>
-            <div className={classes.sidebarBtn}>
-              <Hamburger onClick={toggleSidebar} />
-            </div>
-            <div className={classes.logo}>Logo</div>
-          </div>
-          <div className={classes["container_two"]}>
-            <div className={classes.addBtn}>
-              <Plus />
-            </div>
-          </div>
+  function closeSideBar() {
+    setShowSideBar(false);
+  }
+  let iconStyles = { color: "black", fontSize: "25px" };
+  return <div className={classes.container}>
+    <div className={classes.navbar} id="main">
+      <div className={classes.container1}>
+        <div className={classes.sidebarBtn}>
+          <FaIcons.FaBars style={iconStyles} onClick={() => setShowSideBar(true)} />
+        </div>
+        <div className={classes.logo}> Logo</div>
+      </div>
+      <div className={classes.container2}>
+        <div className={classes.addBtn}>
+          <FaIcons.FaPlus style={iconStyles} />
         </div>
       </div>
-    </>
-  );
+    </div>
+    {
+      (showSideBar === true) ? <Sidebar closeSideBar={closeSideBar} /> : <p></p>
+    }
+  </div>
 };
 
 export default MainNavigation;
