@@ -1,0 +1,68 @@
+.classCard__upper {
+    background-color: #008d7d;
+    height: 90px;
+    position: relative;
+    color: white;
+    padding: 10px;
+    border-bottom: 1px solid #dcdcdc;
+}
+
+.classCard {
+    width: 300px;
+    border: 1px solid #dcdcdc;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+
+    @media screen and (max-width: 480px) {
+        width: 320px;
+        margin-left: 35px;
+    }
+
+    @media screen and (max-width: 900px) and (min-width: 481px) {
+        width: 320px;
+        margin-left: 15px;
+    }
+
+    @media screen and (max-width: 1440px) and (min-width: 1100px) {
+        width: 310px;
+        margin-left: 5px;
+    }
+
+    @media screen and (max-width: 2000px) and (min-width: 1441px) {
+        width: 320px;
+        margin-left: 15px;
+    }
+}
+
+.classCard__middle {
+    height: 190px;
+    border-bottom: 1px solid #dcdcdc;
+}
+
+.classCard__creatorPhoto {
+    position: absolute;
+    right: 5px;
+    overflow: hidden;
+    object-fit: cover;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    border: #008d7d 1px black;
+}
+
+.classCard__className {
+    font-weight: 600;
+    font-size: 30px;
+}
+
+.classCard__creatorName {
+    position: absolute;
+    bottom: 12px;
+    font-size: 15px;
+}
+
+.classCard__lower {
+    display: flex;
+    flex-direction: row-reverse;
+}
