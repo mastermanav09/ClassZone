@@ -1,0 +1,87 @@
+.container {
+  background: url("../../../public//background/auth_backgrpund_design.jpg");
+  height: calc(100vh - 65px);
+  width: 50%;
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: relative;
+
+  .background_shadow {
+    height: 100%;
+    width: 100%;
+    background-color: rgba($color: #000000, $alpha: 0.5);
+  }
+}
+
+.box {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+
+  .emoticons {
+    div {
+      max-width: 120px !important;
+      padding: 1rem 1.2rem;
+      border-radius: 50%;
+
+      &:nth-child(1) {
+        background-image: radial-gradient(
+          circle farthest-side,
+          #fceabb,
+          #f8b500
+        );
+      }
+
+      &:nth-child(2) {
+        background-image: linear-gradient(to right, #8360c3, #2ebf91);
+      }
+
+      &:nth-child(3) {
+        background-image: linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%);
+      }
+    }
+
+    width: 100%;
+    height: 70%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+}
+
+.slider {
+  margin: 4rem auto;
+  height: 30%;
+  text-align: center;
+  min-width: 100%;
+
+  .content {
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .action_btns {
+    display: flex;
+    justify-content: space-evenly;
+    margin: 3rem auto;
+
+    button {
+      padding: 0.9rem 1rem;
+      border-radius: 50%;
+      color: white;
+      background-color: white;
+    }
+
+    .arrow {
+      width: 20px;
+      height: 20px;
+      color: rgb(54, 54, 180);
+    }
+  }
+}

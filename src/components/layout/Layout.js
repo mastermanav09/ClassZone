@@ -5,7 +5,7 @@ const Layout = (props) => {
   return (
     <>
       <MainNavigation />
-      <main>{props.children}</main>
+      <main style={{ marginTop: "65px" }}>{props.children}</main>
     </>
   );
 };
