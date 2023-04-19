@@ -1,8 +1,13 @@
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
-const userSchema = new Schema(
+const classSchema = new Schema(
   {
+    name: {
+      type: String,
+      required: true,
+    },
+
     subject: {
       type: String,
       required: true,
@@ -30,6 +35,6 @@ const userSchema = new Schema(
   { timestamps: true }
 );
 
-const User = mongoose.models.User || mongoose.model("Class", userSchema);
+const Class = mongoose.models.Class || mongoose.model("Class", classSchema);
 
-export default User;
+export default Class;

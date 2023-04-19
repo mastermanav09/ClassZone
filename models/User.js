@@ -10,6 +10,10 @@ const userSchema = new Schema(
         min: 3,
       },
 
+      userImage: {
+        type: String,
+      },
+
       email: {
         type: String,
         required: true,
@@ -18,12 +22,7 @@ const userSchema = new Schema(
       password: {
         type: String,
         required: true,
-        min: 6,
-      },
-
-      role: {
-        type: String,
-        required: false,
+        min: 8,
       },
 
       isAdmin: {
@@ -33,7 +32,15 @@ const userSchema = new Schema(
       },
     },
 
-    classes: [
+    enrolled: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Class",
+        required: true,
+      },
+    ],
+
+    teaching: [
       {
         type: Schema.Types.ObjectId,
         ref: "Class",
