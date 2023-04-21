@@ -3,8 +3,7 @@ import MainNavigation from "./MainNavigation";
 const Layout = (props) => {
   return (
     <>
-      <MainNavigation />
-      <main style={{ marginTop: "65px" }}>{props.children}</main>
+      <main>{props.children}</main>
     </>
   );
 };

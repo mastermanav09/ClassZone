@@ -3,7 +3,7 @@ import classes from "./DesignContainer.module.scss";
 import Image from "next/image";
 import LeftArrow from "../svg/LeftArrow";
 import RightArrow from "../svg/RightArrow";
-
+import shortid from "shortid";
 const textContent = [
   {
     heading: "Welcome to the future of online learning.",
@@ -28,15 +28,21 @@ const textContent = [
 
 const DesignContainer = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [clickedButton, setClickedButton] = useState({ direction: "left" });
 
   const slideLeft = () => {
-    setSelectedIndex(
-      (prev) => (prev - 1 + textContent.length) % textContent.length
-    );
+    setSelectedIndex((prev) => (prev - 1 + textContent.length) % textContent.length);
+    setClickedButton({ direction: "left" });
   };
+
   const slideRight = () => {
     setSelectedIndex((prev) => (prev + 1) % textContent.length);
+    setClickedButton({ direction: "right" });
   };
+
+  const getRandomKey = () => {
+    return shortid.generate();
+  }
 
   return (
     <div className={classes.container}>
@@ -74,7 +80,7 @@ const DesignContainer = () => {
         </div>
 
         <div className={classes["slider"]}>
-          <div className={classes["content"]}>
+          <div key={getRandomKey()} className={[classes.content, (clickedButton.direction === "left") ? classes["animate-left"] : classes["animate-right"]].join(" ")}>
             <h2 className={classes["content_heading"]}>
               {textContent[selectedIndex].heading}
             </h2>

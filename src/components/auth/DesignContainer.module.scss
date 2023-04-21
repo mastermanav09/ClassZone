@@ -1,10 +1,15 @@
 .container {
   background: url("../../../public//background/auth_backgrpund_design.jpg");
-  height: calc(100vh - 65px);
+  height: 100vh;
   width: 50%;
   background-size: cover;
   background-repeat: no-repeat;
   position: relative;
+
+  @media screen and (max-width: 941px) {
+    width: 0;
+    height: 0;
+  }
 
   .background_shadow {
     height: 100%;
@@ -22,26 +27,36 @@
   display: flex;
   flex-direction: column;
 
+  @media screen and (max-width: 941px) {
+    width: 0;
+    height: 0;
+  }
+
   .emoticons {
+
     div {
       max-width: 120px !important;
       padding: 1rem 1.2rem;
       border-radius: 50%;
 
-      &:nth-child(1) {
-        background-image: radial-gradient(
-          circle farthest-side,
-          #fceabb,
-          #f8b500
-        );
+      @media screen and (max-width: 941px) {
+        background-image: none;
       }
 
-      &:nth-child(2) {
-        background-image: linear-gradient(to right, #8360c3, #2ebf91);
-      }
+      @media screen and (min-width: 941px) {
+        &:nth-child(1) {
+          background-image: radial-gradient(circle farthest-side,
+              #fceabb,
+              #f8b500);
+        }
 
-      &:nth-child(3) {
-        background-image: linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%);
+        &:nth-child(2) {
+          background-image: linear-gradient(to right, #8360c3, #2ebf91);
+        }
+
+        &:nth-child(3) {
+          background-image: linear-gradient(120deg, #d4fc79 0%, #96e6a1 100%);
+        }
       }
     }
 
@@ -50,6 +65,11 @@
     display: flex;
     justify-content: space-evenly;
     align-items: center;
+
+    @media screen and (max-width: 941px) {
+      width: 0;
+      height: 0;
+    }
   }
 }
 
@@ -59,17 +79,68 @@
   text-align: center;
   min-width: 100%;
 
+  @media screen and (max-width: 941px) {
+    height: 0;
+  }
+
   .content {
     color: #fff;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+
+    h2,
+    p {
+      @media screen and (max-width: 941px) {
+        font-size: 0;
+      }
+    }
+  }
+
+  .animate-left {
+    position: relative;
+    animation: animateleft 0.4s;
+  }
+
+  @keyframes animateleft {
+    from {
+      left: -300px;
+      opacity: 0
+    }
+
+    to {
+      left: 0;
+      opacity: 1;
+    }
+  }
+
+  .animate-right {
+    position: relative;
+    animation: animateright 0.4s;
+  }
+
+  @keyframes animateright {
+    from {
+      right: -300px;
+      opacity: 0;
+    }
+
+    to {
+      right: 0;
+      opacity: 1;
+    }
   }
 
   .action_btns {
     display: flex;
     justify-content: space-evenly;
     margin: 3rem auto;
+
+    @media screen and (max-width: 941px) {
+      width: 0;
+      height: 0;
+      margin: 0;
+    }
 
     button {
       padding: 0.9rem 1rem;
@@ -81,6 +152,12 @@
     .arrow {
       width: 20px;
       height: 20px;
+
+      @media screen and (max-width: 941px) {
+        width: 0;
+        height: 0;
+      }
+
       color: rgb(54, 54, 180);
     }
   }

@@ -1,0 +1,93 @@
+.container {
+    background: url("../../../public//background/Hi.gif");
+    overflow: hidden;
+    object-fit: cover;
+    width: 60px;
+    height: 60px;
+    background-size: 62px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 100px;
+    margin-left: 150px;
+
+    @media screen and (max-width: 941px) {
+        margin-top: 50px;
+        margin-left: 75px;
+    }
+}
+
+.login {
+    @media screen and (max-width: 941px) {
+        width: 100%;
+    }
+
+    @media screen and (min-width: 941px) {
+        width: 50%;
+    }
+
+    .welcomeMessage {
+        margin-left: 150px;
+
+        @media screen and (max-width: 941px) {
+            margin-left: 75px;
+        }
+
+        margin-top: 20px;
+        font-family: sans-serif;
+    }
+
+    .form {
+        margin-left: 150px;
+        margin-top: 20px;
+        margin-right: 100px;
+        font-family: sans-serif;
+
+        @media screen and (max-width: 941px) {
+            margin-left: 75px;
+        }
+    }
+}
+
+.login .form input {
+    width: 100%;
+    height: 40px;
+    margin-top: 5px;
+    background: rgba(246, 209, 209, 0.5);
+    border: 1px solid rgba(255, 255, 255, .1);
+    color: black;
+    padding: 0 15px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.login {
+    .form {
+        p {
+            color: grey;
+            margin-top: 30px;
+        }
+    }
+}
+
+.login .form input:focus {
+    border: 1px solid rgba(0, 0, 0, 0.8);
+    outline: none;
+}
+
+.login .form input.submit {
+    background: rgba(91, 43, 235, 0.9);
+    color: white;
+    height: 45px;
+    font-size: 20px;
+    cursor: pointer;
+    font-size: 15px;
+    margin-top: 40px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.login .form .link {
+    width: 100%;
+    color: orange;
+    text-decoration: underline;
+}
