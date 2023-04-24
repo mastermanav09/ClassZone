@@ -17,7 +17,7 @@ const MainNavigation = () => {
         <Sidebar toggleSidebar={toggleSidebar} showSideBar={showSideBar} />
       )}
       <div className={classes.wrapper}>
-        <div className={classes.navbar} id="main">
+        <div className={classes.navbar}>
           <div className={classes["container_one"]}>
             <div className={classes.sidebarBtn}>
               <Hamburger onClick={toggleSidebar} />

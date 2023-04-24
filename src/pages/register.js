@@ -1,11 +1,8 @@
 import React from "react";
-import DesignContainer from "@/components/auth/DesignContainer";
-import AuthForm from "@/components/auth/AuthForm";
+import Auth from "@/components/auth/Auth";
+
 const RegisterPage = () => {
-  return <div style={{ display: "flex", height: "100vh", width: "100%" }}>
-    <DesignContainer />
-    <AuthForm Register={true} />
-  </div>
+  return <Auth isRegister={true} />;
 };
 
 export default RegisterPage;

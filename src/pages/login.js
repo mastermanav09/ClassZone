@@ -1,14 +1,8 @@
-import DesignContainer from "@/components/auth/DesignContainer";
-import AuthForm from "@/components/auth/AuthForm";
 import React from "react";
+import Auth from "@/components/auth/Auth";
 
 const LoginPage = () => {
-  return (
-    <div style={{ display: "flex", height: "100vh", width: "100%" }}>
-      <DesignContainer />
-      <AuthForm Register={false} />
-    </div>
-  );
+  return <Auth />;
 };
 
 export default LoginPage;

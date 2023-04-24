@@ -1,0 +1,14 @@
+.wrapper {
+  height: 100vh;
+
+  @media screen and (max-width: 980px) {
+    height: calc(100vh - 65px);
+  }
+
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+
+  @media screen and (max-width: 980px) {
+    grid-template-columns: 1fr;
+  }
+}

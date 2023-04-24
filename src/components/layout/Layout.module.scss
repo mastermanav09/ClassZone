@@ -1,0 +1,7 @@
+.main {
+  height: 100vh;
+
+  &.authorized {
+    height: calc(100vh - 65px);
+  }
+}

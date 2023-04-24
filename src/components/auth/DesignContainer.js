@@ -4,6 +4,7 @@ import Image from "next/image";
 import LeftArrow from "../svg/LeftArrow";
 import RightArrow from "../svg/RightArrow";
 import shortid from "shortid";
+
 const textContent = [
   {
     heading: "Welcome to the future of online learning.",
@@ -28,21 +29,24 @@ const textContent = [
 
 const DesignContainer = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
-  const [clickedButton, setClickedButton] = useState({ direction: "left" });
+  const [clickedButtonDirection, setClickedButtonDirection] =
+    useState("initial");
 
   const slideLeft = () => {
-    setSelectedIndex((prev) => (prev - 1 + textContent.length) % textContent.length);
-    setClickedButton({ direction: "left" });
+    setSelectedIndex(
+      (prev) => (prev - 1 + textContent.length) % textContent.length
+    );
+    setClickedButtonDirection("left");
   };
 
   const slideRight = () => {
     setSelectedIndex((prev) => (prev + 1) % textContent.length);
-    setClickedButton({ direction: "right" });
+    setClickedButtonDirection("right");
   };
 
   const getRandomKey = () => {
     return shortid.generate();
-  }
+  };
 
   return (
     <div className={classes.container}>
@@ -52,8 +56,8 @@ const DesignContainer = () => {
         <div className={classes.emoticons}>
           <div>
             <Image
-              width={100}
-              height={100}
+              width={80}
+              height={80}
               layout="responsive"
               src="/open_book.png"
               alt="pen book"
@@ -61,8 +65,8 @@ const DesignContainer = () => {
           </div>
           <div>
             <Image
-              width={130}
-              height={130}
+              width={80}
+              height={80}
               layout="responsive"
               src="/grinning_face.png"
               alt="grinning face"
@@ -70,8 +74,8 @@ const DesignContainer = () => {
           </div>
           <div>
             <Image
-              width={100}
-              height={100}
+              width={80}
+              height={80}
               layout="responsive"
               src="/writing_hand.png"
               alt="writing hand"
@@ -80,7 +84,13 @@ const DesignContainer = () => {
         </div>
 
         <div className={classes["slider"]}>
-          <div key={getRandomKey()} className={[classes.content, (clickedButton.direction === "left") ? classes["animate-left"] : classes["animate-right"]].join(" ")}>
+          <div
+            key={getRandomKey()}
+            className={[
+              classes.content,
+              classes[`animate-${clickedButtonDirection}`],
+            ].join(" ")}
+          >
             <h2 className={classes["content_heading"]}>
               {textContent[selectedIndex].heading}
             </h2>
