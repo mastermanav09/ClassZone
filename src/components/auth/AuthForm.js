@@ -16,8 +16,8 @@ const AuthForm = ({ Register }) => {
       <input type="password" placeholder="Type your Password" />
       {(Register === true) ? <input type="submit" value="Sign Up" className={classes.submit} /> :
         <input type="submit" value="Sign In" className={classes.submit} />}
-      {(Register === false) ? <Link className={classes.link} href='/register'> Don't have an account yet Signup here</Link> :
-        <Link className={classes.link} href='/login'> Have an account Signin here</Link>}
+      {(Register === false) ? <Link className={classes.link} href="/register"> Don't have an account yet Signup here</Link> :
+        <Link className={classes.link} href="/login"> Have an account Signin here</Link>}
     </div>
   </div>
 };
