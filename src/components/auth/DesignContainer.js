@@ -3,6 +3,7 @@ import classes from "./DesignContainer.module.scss";
 import Image from "next/image";
 import LeftArrow from "../svg/LeftArrow";
 import RightArrow from "../svg/RightArrow";
+import shortid from "shortid";
 
 const textContent = [
   {
@@ -28,14 +29,23 @@ const textContent = [
 
 const DesignContainer = () => {
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [clickedButtonDirection, setClickedButtonDirection] =
+    useState("initial");
 
   const slideLeft = () => {
     setSelectedIndex(
       (prev) => (prev - 1 + textContent.length) % textContent.length
     );
+    setClickedButtonDirection("left");
   };
+
   const slideRight = () => {
     setSelectedIndex((prev) => (prev + 1) % textContent.length);
+    setClickedButtonDirection("right");
+  };
+
+  const getRandomKey = () => {
+    return shortid.generate();
   };
 
   return (
@@ -46,8 +56,8 @@ const DesignContainer = () => {
         <div className={classes.emoticons}>
           <div>
             <Image
-              width={100}
-              height={100}
+              width={80}
+              height={80}
               layout="responsive"
               src="/open_book.png"
               alt="pen book"
@@ -55,8 +65,8 @@ const DesignContainer = () => {
           </div>
           <div>
             <Image
-              width={130}
-              height={130}
+              width={80}
+              height={80}
               layout="responsive"
               src="/grinning_face.png"
               alt="grinning face"
@@ -64,8 +74,8 @@ const DesignContainer = () => {
           </div>
           <div>
             <Image
-              width={100}
-              height={100}
+              width={80}
+              height={80}
               layout="responsive"
               src="/writing_hand.png"
               alt="writing hand"
@@ -74,7 +84,13 @@ const DesignContainer = () => {
         </div>
 
         <div className={classes["slider"]}>
-          <div className={classes["content"]}>
+          <div
+            key={getRandomKey()}
+            className={[
+              classes.content,
+              classes[`animate-${clickedButtonDirection}`],
+            ].join(" ")}
+          >
             <h2 className={classes["content_heading"]}>
               {textContent[selectedIndex].heading}
             </h2>

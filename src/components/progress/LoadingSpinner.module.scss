@@ -1,0 +1,34 @@
+.spinner {
+  display: inline-block;
+  width: 80px;
+  height: 80px;
+
+  @media screen and (max-width: 768px) {
+    width: 70px;
+  }
+}
+
+.spinner:after {
+  content: " ";
+  display: block;
+  width: 64px;
+  height: 64px;
+  // margin: 8px;
+  border-radius: 50%;
+  border: 6px solid rgb(55, 104, 197);
+  border-color: rgb(55, 104, 197) transparent rgb(55, 104, 197) transparent;
+  animation: spinner 1s linear infinite;
+
+  @media screen and (max-width: 768px) {
+    width: 45px;
+    height: 45px;
+  }
+}
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

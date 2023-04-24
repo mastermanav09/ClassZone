@@ -1,12 +1,8 @@
-import DesignContainer from "@/components/auth/DesignContainer";
 import React from "react";
+import Auth from "@/components/auth/Auth";
 
 const LoginPage = () => {
-  return (
-    <>
-      <DesignContainer />
-    </>
-  );
+  return <Auth />;
 };
 
 export default LoginPage;

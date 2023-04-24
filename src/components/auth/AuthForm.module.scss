@@ -1,0 +1,165 @@
+@import "typing_slider.scss";
+$color-grayish: #dadce0;
+$color-black: #121212;
+$color-white: #ffffff;
+$color-light: #f1f5f9;
+
+.container {
+  .auth {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+  }
+
+  @media screen and (max-width: 980px) {
+    width: 100%;
+  }
+}
+
+.welcomeMessage {
+  margin: 0.2rem auto 0.5rem;
+  font-size: clamp(16px, 1.6vw, 24px);
+}
+
+.hi_gif {
+  background: url("../../../public//background/Hi.gif");
+  overflow: hidden;
+  width: 60px;
+  height: 60px;
+  background-size: 62px;
+}
+
+.container .form input {
+  width: 100%;
+  height: 40px;
+  margin-top: 5px;
+  background-color: rgba(206, 218, 233, 0.573);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: black;
+  padding: 0 15px;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.container {
+  .form {
+    width: 75%;
+    max-width: 650px;
+
+    @media screen and (max-width: 980px) {
+      width: 90%;
+    }
+
+    p {
+      color: grey;
+      margin-top: 30px;
+    }
+  }
+}
+
+.form input:focus {
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  outline: none;
+}
+
+.form input.submit {
+  background: rgba(11, 107, 216, 0.9);
+  color: white;
+  height: 45px;
+  font-size: 20px;
+  border: 0;
+  font-size: clamp(16px, 1.4vw, 20px);
+  margin-top: 40px;
+  margin-bottom: 10px;
+
+  &:hover {
+    cursor: pointer;
+    background: rgb(73, 148, 233);
+  }
+}
+
+.form .link {
+  font-size: 0.8rem;
+  width: 100%;
+
+  :nth-child(2) {
+    color: rgb(37, 116, 195);
+    font-weight: 500;
+    margin: 0 2px;
+  }
+}
+
+.striped {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem 0;
+
+  &-line {
+    flex: auto;
+    flex-basis: auto;
+    border: none;
+    outline: none;
+    height: 2px;
+    background: $color-grayish;
+  }
+
+  &-text {
+    font-family: inherit;
+    font-size: clamp(13px, 2.5vw, 18px);
+    font-weight: 500;
+    line-height: inherit;
+    color: $color-black;
+    margin: 0 1rem;
+  }
+}
+
+.method {
+  &-control {
+    margin-bottom: 1rem;
+  }
+
+  &-action {
+    font-family: inherit;
+    font-size: clamp(14px, 2.5vw, 16px);
+    font-weight: 500;
+    line-height: inherit;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: auto;
+    padding: 0.35rem 1.25rem;
+    outline: none;
+    border: 2px solid $color-grayish;
+    border-radius: 2rem;
+    color: $color-black;
+    background: $color-white;
+    text-transform: capitalize;
+    text-rendering: optimizeLegibility;
+    transition: all 0.35s ease;
+
+    @media screen and (max-width: 700px) {
+      padding: 0.3rem 0.7rem;
+    }
+
+    * {
+      margin: 0 0.4rem;
+    }
+
+    &:hover {
+      background: $color-light;
+    }
+
+    svg {
+      @media screen and (max-width: 700px) {
+        width: 31px;
+        height: 31px;
+      }
+    }
+  }
+}
