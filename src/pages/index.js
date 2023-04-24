@@ -1,4 +1,4 @@
-import Dashboard from "@/components/layout/Dashboard";
+import Dashboard from "@/components/home/Dashboard";
 import React from "react";
 function HomePage() {
   return (
