@@ -1,7 +1,7 @@
 import React from "react";
 import classes from "./Dashboard.module.scss";
 import Card from "./Card";
-import MainNavigation from "./MainNavigation";
+
 const Dashboard = () => {
   return (
     <>
