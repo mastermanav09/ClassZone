@@ -59,7 +59,7 @@ const DesignContainer = () => {
               width={80}
               height={80}
               layout="responsive"
-              src="/open_book.png"
+              src="/static/extra/open_book.png"
               alt="pen book"
             />
           </div>
@@ -68,7 +68,7 @@ const DesignContainer = () => {
               width={80}
               height={80}
               layout="responsive"
-              src="/grinning_face.png"
+              src="/static/extra/grinning_face.png"
               alt="grinning face"
             />
           </div>
@@ -77,7 +77,7 @@ const DesignContainer = () => {
               width={80}
               height={80}
               layout="responsive"
-              src="/writing_hand.png"
+              src="/static/extra/writing_hand.png"
               alt="writing hand"
             />
           </div>
