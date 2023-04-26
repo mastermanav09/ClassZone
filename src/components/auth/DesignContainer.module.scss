@@ -29,11 +29,9 @@
       max-width: 7rem;
 
       &:nth-child(1) {
-        background-image: radial-gradient(
-          circle farthest-side,
-          #fceabb,
-          #f8b500
-        );
+        background-image: radial-gradient(circle farthest-side,
+            #fceabb,
+            #f8b500);
       }
 
       &:nth-child(2) {
@@ -125,6 +123,7 @@
       border-radius: 50%;
       color: white;
       background-color: white;
+      margin-top: 40px;
     }
 
     .arrow {
