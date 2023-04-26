@@ -35,9 +35,51 @@ export default NextAuth({
 
       return session;
     },
+
+    async signIn({ account, profile }) {
+      if (account.provider === "google") {
+        const { name, email, picture } = profile;
+
+        try {
+          await db.connect();
+
+          const user = await User.findOne({
+            "credentials.email": email,
+          });
+
+          if (user) {
+            return profile.email_verified;
+          }
+
+          const newUser = new User({
+            credentials: {
+              name: name,
+              email: email,
+              userImage: picture,
+              password: "xxxxxxxx",
+            },
+
+            enrolled: [],
+            teaching: [],
+          });
+
+          await newUser.save();
+          return profile.email_verified && profile.email.endsWith("@gmail.com");
+        } catch (error) {
+          console.log(error);
+        }
+      }
+
+      return false;
+    },
   },
 
   providers: [
+    GoogleProvider({
+      clientId: process.env.GOOGLE_ID,
+      clientSecret: process.env.GOOGLE_SECRET,
+    }),
+
     CredentialsProvider({
       async authorize(credentials) {
         await db.connect();
@@ -59,8 +101,10 @@ export default NextAuth({
               _id: user._id,
               name: user.credentials.name,
               email: user.credentials.email,
-              image: "NA",
+              userImage: user.credentials.userImage,
               isAdmin: user.credentials.isAdmin,
+              enrolled: user.enrolled,
+              teaching: user.teaching,
             };
           } else {
             throw new Error("Password is incorrect");
@@ -72,4 +116,6 @@ export default NextAuth({
       },
     }),
   ],
+
+  secret: process.env.JWT_SECRET,
 });

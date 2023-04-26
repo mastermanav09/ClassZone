@@ -3,7 +3,13 @@ import classes from "./AuthForm.module.scss";
 import Link from "next/link";
 import Google from "../svg/Google";
 
+import { signIn } from "next-auth/react";
+
 const AuthForm = ({ isRegister }) => {
+  const googleAuthHandler = () => {
+    signIn();
+  };
+
   return (
     <div className={classes.container}>
       <div className={classes.auth}>
@@ -55,7 +61,7 @@ const AuthForm = ({ isRegister }) => {
           <div className={classes.method}>
             <div className={`${classes["method-control"]}`}>
               <button
-                // onClick={googleAuthHandler}
+                onClick={googleAuthHandler}
                 className={`${classes["method-action"]}`}
               >
                 <Google />

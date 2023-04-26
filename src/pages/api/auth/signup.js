@@ -2,6 +2,7 @@ import db from "../../../../utils/db";
 import User from "../../../../models/User";
 import bcrypt from "bcryptjs";
 import { userSignupValidation } from "../../../../utils/validators/signupValidation";
+import { validationErrorResponse } from "../../../../utils/responses/errorResponse";
 
 const handler = async (req, res) => {
   if (req.method !== "POST") {
@@ -9,14 +10,19 @@ const handler = async (req, res) => {
   }
 
   const { name, email, password, role } = req.body;
-  userSignupValidation(
-    {
-      name,
-      email,
-      password,
-    },
-    res
-  );
+  const validationResponse = userSignupValidation({
+    name,
+    email,
+    password,
+  });
+
+  if (validationResponse.error) {
+    return res
+      .status(422)
+      .json(
+        validationErrorResponse(validationResponse.error.details[0].message)
+      );
+  }
 
   try {
     await db.connect();
@@ -29,16 +35,17 @@ const handler = async (req, res) => {
       throw error;
     }
 
+    const hashedPassword = bcrypt.hash(password, 12);
     const newUser = new User({
       credentials: {
         name: name,
         email: email,
-        password: bcrypt.hashSync(password),
-        role: role,
-        isAdmin: false,
+        userImage: "/static/profileImages/no-img.png",
+        password: hashedPassword,
       },
 
-      classes: [],
+      enrolled: [],
+      teaching: [],
     });
 
     await newUser.save();
