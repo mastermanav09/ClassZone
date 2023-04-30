@@ -6,7 +6,7 @@ import { loadUser } from "../../utils/store/reducers/user";
 import PageLoader from "@/components/progress/PageLoader";
 
 function HomePage() {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const dispatch = useDispatch();
 
   useEffect(() => {

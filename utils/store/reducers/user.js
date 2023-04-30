@@ -11,44 +11,46 @@ import { toast } from "react-toastify";
 import { ERROR_TOAST, SERVER_ERROR_TOAST } from "../../constants";
 import { getError } from "@/helper/getError";
 
-export const signup = createAsyncThunk("user/signup", async (data) => {
-  const { name, email, password, router, setIsLoading } = data;
+export const signup = createAsyncThunk(
+  "user/signup",
+  async (data, { getState, dispatch }) => {
+    const { name, email, password, router, setIsLoading } = data;
 
-  setIsLoading(true);
+    setIsLoading(true);
 
-  try {
-    const res = await axios({
-      url: "/api/auth/signup",
-      method: "POST",
-      data: {
-        name,
-        email,
-        password,
-      },
-    });
+    try {
+      const res = await axios({
+        url: "/api/auth/signup",
+        method: "POST",
+        data: {
+          name,
+          email,
+          password,
+        },
+      });
 
-    if (res.status !== 201) {
-      const error = new Error(res.data.message);
-      error.statusCode = res.data.status;
-      throw error;
+      if (res.status !== 201) {
+        const error = new Error(res.data.message);
+        error.statusCode = res.data.status;
+        throw error;
+      }
+
+      dispatch(login({ email, password, setIsLoading, router }));
+    } catch (error) {
+      console.log(error);
+      const message = getError(error);
+      notifyAndUpdate(ERROR_TOAST, "error", message, toast);
     }
 
-    await login({ email, password, setIsLoading, router });
-  } catch (error) {
-    console.log(error);
-    const message = getError(error);
-    notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+    setIsLoading(false);
   }
-
-  setIsLoading(false);
-});
+);
 
 export const login = createAsyncThunk("user/login", async (data) => {
   const { email, password, router, setIsLoading } = data;
 
-  setIsLoading(true);
-
   try {
+    setIsLoading(true);
     const res = await signIn("credentials", {
       redirect: false,
       email,
@@ -70,7 +72,6 @@ export const login = createAsyncThunk("user/login", async (data) => {
       throw error;
     }
 
-    setIsLoading(false);
     router.replace("/");
   } catch (error) {
     const message = getError(error);
@@ -79,13 +80,14 @@ export const login = createAsyncThunk("user/login", async (data) => {
     }
 
     notifyAndUpdate(ERROR_TOAST, "error", message, toast);
-    setIsLoading(false);
   }
+
+  setIsLoading(false);
 });
 
 export const loadUser = createAsyncThunk(
   "user/loadUser",
-  async (data, { getState, dispatch }) => {
+  async (data, { _, dispatch }) => {
     const { setIsLoading } = data;
 
     setIsLoading(true);
