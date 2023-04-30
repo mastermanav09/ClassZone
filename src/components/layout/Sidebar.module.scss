@@ -49,27 +49,36 @@
 
 .list-section {
   padding: 0.5rem 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 
   .list {
     padding-left: 0 !important;
+  }
+}
 
-    .list-item {
-      list-style-type: none;
-      padding: 1rem 1.5rem;
+.list-item {
+  list-style-type: none;
+  padding: 1rem 1.5rem;
+  font-size: clamp(16px, 1.65vw, 20px);
 
-      &:hover {
-        background-color: whitesmoke;
-        cursor: pointer;
-        border-left: 4px solid green;
+  &:hover {
+    background-color: whitesmoke;
+    cursor: pointer;
+    border-left: 4px solid green;
 
-        div {
-          translate: 20px;
-          transition: all 0.3s ease-in-out;
-          text-rendering: optimizeSpeed;
-        }
-      }
+    div {
+      translate: 20px;
+      transition: all 0.3s ease-in-out;
+      text-rendering: optimizeSpeed;
     }
   }
+}
+
+.logout {
+  margin-top: auto;
 }
 
 @keyframes slideRight {

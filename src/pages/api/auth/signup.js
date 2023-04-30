@@ -2,23 +2,32 @@ import db from "../../../../utils/db";
 import User from "../../../../models/User";
 import bcrypt from "bcryptjs";
 import { userSignupValidation } from "../../../../utils/validators/signupValidation";
+import { validationErrorResponse } from "../../../../utils/responses/errorResponse";
+import manageResponses from "../../../../utils/responses/manageResponses";
 
 const handler = async (req, res) => {
   if (req.method !== "POST") {
-    return;
+    return res.status(400).json({
+      message: "Bad Request!",
+    });
   }
 
-  const { name, email, password, role } = req.body;
-  userSignupValidation(
-    {
+  try {
+    const { name, email, password } = req.body;
+    const validationResponse = userSignupValidation({
       name,
       email,
       password,
-    },
-    res
-  );
+    });
 
-  try {
+    if (validationResponse.error) {
+      const error = new Error(
+        validationErrorResponse(validationResponse.error.details[0].message)
+      );
+      error.statusCode = 422;
+      throw error;
+    }
+
     await db.connect();
 
     const existingUser = await User.findOne({ "credentials.email": email });
@@ -29,28 +38,29 @@ const handler = async (req, res) => {
       throw error;
     }
 
+    const hashedPassword = await bcrypt.hash(password, 12);
     const newUser = new User({
       credentials: {
         name: name,
         email: email,
-        password: bcrypt.hashSync(password),
-        role: role,
-        isAdmin: false,
+        userImage: "/static/profileImages/no-img.png",
+        password: hashedPassword,
       },
 
-      classes: [],
+      enrolled: [],
+      teaching: [],
     });
 
     await newUser.save();
-    res.status(201).json({
-      message: "Created new user!",
-    });
+    return res.status(201).json(manageResponses(201, null));
   } catch (error) {
     if (!error.statusCode) {
       error.statusCode = 500;
     }
 
-    res.status(error.statusCode).json(error);
+    return res
+      .status(error.statusCode)
+      .json(manageResponses(error.statusCode, error.message));
   }
 };
 

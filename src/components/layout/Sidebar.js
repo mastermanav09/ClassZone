@@ -2,9 +2,14 @@ import React from "react";
 import classes from "./Sidebar.module.scss";
 import Cross from "@/components/svg/Cross";
 import Link from "next/link";
+import { signOut } from "next-auth/react";
 
 const Sidebar = (props) => {
   const { toggleSidebar, showSideBar } = props;
+
+  const logoutHandler = () => {
+    signOut();
+  };
 
   return (
     <div
@@ -34,10 +39,16 @@ const Sidebar = (props) => {
             </li>
           </Link>
         </ul>
+
+        <div className={classes["logout"]} onClick={logoutHandler}>
+          <li className={classes["list-item"]}>
+            <div>Logout</div>
+          </li>
+        </div>
       </div>
 
       <label
-        for="menu-control"
+        htmlFor="menu-control"
         className={classes["sidebar__close"]}
         onClick={toggleSidebar}
       >

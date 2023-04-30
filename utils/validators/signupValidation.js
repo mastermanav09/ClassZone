@@ -1,34 +1,32 @@
-const { validationErrorResponse } = require("../responses/errorResponse");
+const Joi = require("joi");
 
 const userSignupValidation = (requestBody, res) => {
-  const { name, email, password } = requestBody;
+  const schema = Joi.object({
+    name: Joi.string().trim().min(3).required().messages({
+      "any.required": `Name is a required field`,
+      "string.empty": `Name cannot be an empty field`,
+      "string.min": `Name should have a minimum length of 3`,
+    }),
 
-  if (name.trim().length < 3) {
-    return res
-      .status(422)
-      .json(
-        validationErrorResponse("Name should be of at least 3 characters.")
-      );
-  }
+    email: Joi.string().email().required().messages({
+      "string.base": `Please enter a valid email.`,
+      "any.required": `Email is a required field`,
+      "string.empty": `Email cannot be an empty field`,
+    }),
 
-  if (!email || !email.includes("@")) {
-    return res.status(422).json(validationErrorResponse("Invalid email."));
-  }
+    password: Joi.string()
+      .min(8)
+      .regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/)
+      .required()
+      .messages({
+        "string.pattern.base": `Please enter a password with at least 8 characters and should contain at least one letter, one number & one special character.`,
+        "string.min": `Password should have a minimum length of 8`,
+        "any.required": `Password is a required field`,
+        "string.empty": `Password cannot be an empty field`,
+      }),
+  });
 
-  if (
-    password.trim().length < 6 ||
-    new RegExp(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/
-    ).test(password)
-  ) {
-    return res
-      .status(422)
-      .json(
-        validationErrorResponse(
-          "Please enter a password with at least 8 characters and should contain at least one uppercase(A), one lowercase(e), one number(5) & one special character(@)."
-        )
-      );
-  }
+  return schema.validate(requestBody);
 };
 
 module.exports = {
