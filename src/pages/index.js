@@ -1,7 +1,32 @@
 import Dashboard from "@/components/home/Dashboard";
-import React from "react";
-import { getSession, useSession } from "next-auth/react";
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { getSession } from "next-auth/react";
+import { loadUser } from "../../utils/store/reducers/user";
+import PageLoader from "@/components/progress/PageLoader";
+
 function HomePage() {
+  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    let session;
+    const authenticateUser = async () => {
+      session = await getSession();
+
+      if (session?.user) {
+        console.log(session);
+        dispatch(loadUser({ setIsLoading }));
+      }
+    };
+
+    authenticateUser();
+  }, [dispatch]);
+
+  if (isLoading) {
+    return <PageLoader />;
+  }
+
   return (
     <>
       <Dashboard />

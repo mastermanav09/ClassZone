@@ -48,7 +48,7 @@ const Sidebar = (props) => {
       </div>
 
       <label
-        for="menu-control"
+        htmlFor="menu-control"
         className={classes["sidebar__close"]}
         onClick={toggleSidebar}
       >

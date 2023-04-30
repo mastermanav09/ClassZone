@@ -1,26 +1,34 @@
+const serverErrorResponse = (message) => {
+  return {
+    status: 500,
+    message: message || "Something went wrong! Please try again later.",
+  };
+};
+
 const notFoundErrorResponse = (message) => {
   return {
     status: 404,
-    message: message || "not found",
+    message: message || "Not found",
   };
 };
 
 const unauthorizedErrorResponse = (message) => {
   return {
     status: 401,
-    message: message || "unauthorized!",
+    message: message || "Unauthorized!",
   };
 };
 
 const validationErrorResponse = (message) => {
   return {
     status: 422,
-    message: message || "validation error",
+    message: message || "Validation error",
   };
 };
 
 module.exports = {
   notFoundErrorResponse,
   unauthorizedErrorResponse,
+  serverErrorResponse,
   validationErrorResponse,
 };

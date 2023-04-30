@@ -31,6 +31,10 @@ const userSchema = new Schema(
       },
     },
 
+    provider: {
+      type: String,
+    },
+
     enrolled: [
       {
         type: Schema.Types.ObjectId,

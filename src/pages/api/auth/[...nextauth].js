@@ -59,6 +59,7 @@ export default NextAuth({
               password: "xxxxxxxx",
             },
 
+            provider: "google",
             enrolled: [],
             teaching: [],
           });
@@ -68,6 +69,8 @@ export default NextAuth({
         } catch (error) {
           console.log(error);
         }
+      } else if (account.provider === "credentials") {
+        return true;
       }
 
       return false;
@@ -90,13 +93,15 @@ export default NextAuth({
           });
 
           if (!user) {
-            throw new Error("Invalid email or password");
+            throw new Error("Account with this email doesn't exist.");
           }
 
-          if (
-            user &&
-            bcrypt.compareSync(credentials.password, user.credentials.password)
-          ) {
+          const validatedToken = bcrypt.compareSync(
+            credentials.password,
+            user.credentials.password
+          );
+
+          if (validatedToken) {
             return {
               _id: user._id,
               name: user.credentials.name,
@@ -106,9 +111,9 @@ export default NextAuth({
               enrolled: user.enrolled,
               teaching: user.teaching,
             };
-          } else {
-            throw new Error("Password is incorrect");
           }
+
+          throw new Error("Incorrect email or password.");
         } catch (error) {
           const message = error.message || "Something went wrong!";
           throw new Error(message);
