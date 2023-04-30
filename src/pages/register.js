@@ -1,20 +1,22 @@
 import React from "react";
 import Auth from "@/components/auth/Auth";
 import { getSession } from "next-auth/react";
+import Head from "next/head";
 
 const RegisterPage = () => {
-  return <Auth isRegister={true} />;
+  return (
+    <>
+      <Head>
+        <title>Register</title>
+      </Head>
+      <Auth isRegister={true} />
+    </>
+  );
 };
 
 export default RegisterPage;
 
 export async function getServerSideProps(context) {
-  const pageMeta = {
-    title: "Register",
-    description:
-      "It is a learning management system which is designed to manage and deliver online educational content, including online courses, training programs, and other educational content.",
-  };
-
   const session = await getSession({ req: context.req });
   const { redirect } = context.query;
 
@@ -28,8 +30,6 @@ export async function getServerSideProps(context) {
   }
 
   return {
-    props: {
-      ...pageMeta,
-    },
+    props: {},
   };
 }
