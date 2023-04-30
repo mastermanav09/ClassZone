@@ -27,11 +27,7 @@ function HomePage() {
     return <PageLoader />;
   }
 
-  return (
-    <>
-      <Dashboard />
-    </>
-  );
+  return <Dashboard />;
 }
 
 export default HomePage;

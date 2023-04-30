@@ -11,6 +11,10 @@ export default NextAuth({
     strategy: "jwt",
   },
 
+  secret: process.env.NEXTAUTH_SECRET,
+  pages: {
+    signIn: "/login",
+  },
   callbacks: {
     async jwt({ token, user }) {
       if (user?._id) {
@@ -113,7 +117,7 @@ export default NextAuth({
             };
           }
 
-          throw new Error("Incorrect email or password.");
+          return null;
         } catch (error) {
           const message = error.message || "Something went wrong!";
           throw new Error(message);
@@ -121,6 +125,4 @@ export default NextAuth({
       },
     }),
   ],
-
-  secret: process.env.SECRET,
 });
