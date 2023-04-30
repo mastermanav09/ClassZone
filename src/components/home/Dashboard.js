@@ -7,15 +7,8 @@ const Dashboard = () => {
     <>
       <div className={classes.dashboard}>
         <div className={classes["dashboard__classContainer"]}>
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-          <Card />
+          <Card classId={1} />
+          <Card classId={2} />
         </div>
       </div>
     </>

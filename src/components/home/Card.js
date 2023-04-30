@@ -1,11 +1,18 @@
 import React from "react";
 import classes from "./Card.module.scss";
-
-const Card = () => {
+import { useRouter } from "next/router";
+const Card = ({ classId }) => {
+  const router = useRouter();
   return (
     <div
       className={classes.classCard}
       style={{ marginRight: 30, marginBottom: 30 }}
+      onClick={() => router.push(
+        {
+          pathname: '/class/[classId]',
+          query: { classId: classId },
+        }
+      )}
     >
       <div className={classes["classCard__upper"]}>
         <div className={classes["classCard__className"]}>Name</div>
@@ -17,7 +24,7 @@ const Card = () => {
       </div>
       <div className={classes["classCard__middle"]}></div>
       <div className={classes["classCard__lower"]}></div>
-    </div>
+    </div >
   );
 };
 
