@@ -1,9 +1,11 @@
-import Error from "@/components/layout/Error"
-import Link from "next/link"
-const ErrorPage = () => {
-    return <>
-        <Error />
-    </>
-}
+import Error from "@/components/layout/Error";
 
-export default ErrorPage
+const ErrorPage = () => {
+  return (
+    <>
+      <Error />
+    </>
+  );
+};
+
+export default ErrorPage;
