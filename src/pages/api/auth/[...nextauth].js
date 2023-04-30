@@ -13,9 +13,8 @@ export default NextAuth({
 
   secret: process.env.SECRET,
 
-  pages: {
-    signIn: "/login",
-  },
+  site: process.env.NEXTAUTH_URL,
+
   callbacks: {
     async jwt({ token, user }) {
       if (user?._id) {
