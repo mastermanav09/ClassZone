@@ -70,6 +70,7 @@ export const login = createAsyncThunk("user/login", async (data) => {
       throw error;
     }
 
+    setIsLoading(false);
     router.replace("/");
   } catch (error) {
     const message = getError(error);
@@ -78,9 +79,8 @@ export const login = createAsyncThunk("user/login", async (data) => {
     }
 
     notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+    setIsLoading(false);
   }
-
-  setIsLoading(false);
 });
 
 export const loadUser = createAsyncThunk(

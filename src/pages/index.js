@@ -15,7 +15,6 @@ function HomePage() {
       session = await getSession();
 
       if (session?.user) {
-        console.log(session);
         dispatch(loadUser({ setIsLoading }));
       }
     };
