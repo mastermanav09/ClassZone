@@ -12,6 +12,7 @@ const userSchema = new Schema(
 
       userImage: {
         type: String,
+        required: true,
       },
 
       email: {
@@ -27,9 +28,11 @@ const userSchema = new Schema(
 
       isAdmin: {
         type: Boolean,
-        required: true,
-        default: false,
       },
+    },
+
+    provider: {
+      type: String,
     },
 
     enrolled: [

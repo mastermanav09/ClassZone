@@ -5,3 +5,8 @@
     height: calc(100vh - 65px);
   }
 }
+
+.toast-container {
+  font-size: clamp(14px, 1.6vw, 16px);
+  letter-spacing: 1px;
+}

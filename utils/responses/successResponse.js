@@ -1,10 +1,18 @@
-const successResponse = (statusCode, message) => {
+const successResponse = (message) => {
   return {
-    status: statusCode,
-    message,
+    status: 200,
+    message: message || "Successfully done",
+  };
+};
+
+const successResourceCreatedResponse = (message) => {
+  return {
+    status: 201,
+    message: message || "Successfully created the resource",
   };
 };
 
 module.exports = {
   successResponse,
+  successResourceCreatedResponse,
 };
