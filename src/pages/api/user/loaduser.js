@@ -1,4 +1,5 @@
 import User from "../../../../models/User";
+import db from "../../../../utils/db";
 import manageResponses from "../../../../utils/responses/manageResponses";
 import { getSession } from "next-auth/react";
 
@@ -19,6 +20,8 @@ const handler = async (req, res) => {
 
     const { user } = session;
     const { email } = user;
+
+    await db.connect();
 
     const userResponse = await User.findOne({
       "credentials.email": email,

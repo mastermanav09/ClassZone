@@ -15,7 +15,9 @@ const AuthForm = ({ isRegister }) => {
   const { data: session } = useSession;
   const router = useRouter();
   const dispatch = useDispatch();
-  const submitHandler = async ({ name, email, password }) => {
+  const submitHandler = async ({ name, email, password }, event) => {
+    event.preventDefault();
+
     if (isRegister) {
       dispatch(signup({ name, email, password, setIsLoading, router }));
     } else {
@@ -29,7 +31,8 @@ const AuthForm = ({ isRegister }) => {
     formState: { errors },
   } = useForm();
 
-  const googleAuthHandler = () => {
+  const googleAuthHandler = (event) => {
+    event.preventDefault();
     signIn("google");
   };
 
