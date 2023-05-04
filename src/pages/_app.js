@@ -10,76 +10,77 @@ import { SessionProvider, useSession } from "next-auth/react";
 import PageLoader from "@/components/progress/PageLoader";
 import { Progress } from "@/components/progress";
 import { useProgressStore } from "../../utils/store/progress-store/useProgressStore";
+import "react-responsive-modal/styles.css";
 
 export default function App({ Component, pageProps, session }) {
-  const setIsAnimating = useProgressStore((state) => state.setIsAnimating);
-  const isAnimating = useProgressStore((state) => state.isAnimating);
-  const router = useRouter();
+	const setIsAnimating = useProgressStore((state) => state.setIsAnimating);
+	const isAnimating = useProgressStore((state) => state.isAnimating);
+	const router = useRouter();
 
-  useEffect(() => {
-    const handleStart = () => {
-      setIsAnimating(true);
-    };
+	useEffect(() => {
+		const handleStart = () => {
+			setIsAnimating(true);
+		};
 
-    const handleStop = () => {
-      setIsAnimating(false);
-    };
+		const handleStop = () => {
+			setIsAnimating(false);
+		};
 
-    router.events.on("routeChangeStart", handleStart);
-    router.events.on("routeChangeComplete", handleStop);
-    router.events.on("routeChangeError", handleStop);
+		router.events.on("routeChangeStart", handleStart);
+		router.events.on("routeChangeComplete", handleStop);
+		router.events.on("routeChangeError", handleStop);
 
-    return () => {
-      router.events.off("routeChangeStart", handleStart);
-      router.events.off("routeChangeComplete", handleStop);
-      router.events.off("routeChangeError", handleStop);
-    };
-  }, [router, setIsAnimating]);
+		return () => {
+			router.events.off("routeChangeStart", handleStart);
+			router.events.off("routeChangeComplete", handleStop);
+			router.events.off("routeChangeError", handleStop);
+		};
+	}, [router, setIsAnimating]);
 
-  return (
-    <SessionProvider session={session}>
-      <Suspense>
-        <StoreProvider store={store}>
-          <Head>
-            <meta
-              name="description"
-              content="It is a learning management system which is designed to manage and deliver online educational content, including online courses, training programs, and other educational content."
-            />
-          </Head>
-          <Progress isAnimating={isAnimating} />
-          {Component.auth ? (
-            <Auth adminOnly={Component.auth.adminOnly}>
-              <Layout>
-                <Component {...pageProps} />
-              </Layout>
-            </Auth>
-          ) : (
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
-          )}
-        </StoreProvider>
-      </Suspense>
-    </SessionProvider>
-  );
+	return (
+		<SessionProvider session={session}>
+			<Suspense>
+				<StoreProvider store={store}>
+					<Head>
+						<meta
+							name="description"
+							content="It is a learning management system which is designed to manage and deliver online educational content, including online courses, training programs, and other educational content."
+						/>
+					</Head>
+					<Progress isAnimating={isAnimating} />
+					{Component.auth ? (
+						<Auth adminOnly={Component.auth.adminOnly}>
+							<Layout>
+								<Component {...pageProps} />
+							</Layout>
+						</Auth>
+					) : (
+						<Layout>
+							<Component {...pageProps} />
+						</Layout>
+					)}
+				</StoreProvider>
+			</Suspense>
+		</SessionProvider>
+	);
 }
 
 function Auth({ children, adminOnly }) {
-  const router = useRouter();
-  const { status, data: session } = useSession({
-    required: true,
-    onUnauthenticated() {
-      router.push("/unauthorized?message=login required");
-    },
-  });
+	const router = useRouter();
+	const { status, data: session } = useSession({
+		required: true,
+		onUnauthenticated() {
+			router.push("/unauthorized?message=login required");
+		},
+	});
 
-  if (status === "loading") {
-    return <PageLoader />;
-  }
+	if (status === "loading") {
+		return <PageLoader />;
+	}
 
-  if (adminOnly && !session.user.isAdmin) {
-    router.push("/unauthorized?message=admin login required");
-  }
+	if (adminOnly && !session.user.isAdmin) {
+		router.push("/unauthorized?message=admin login required");
+	}
 
-  return children;
+	return children;
 }

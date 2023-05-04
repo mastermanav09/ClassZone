@@ -1,6 +1,9 @@
 .class {
     width: 70%;
     margin: auto;
+    @media screen and (max-width : 500px) {
+        width: 90%;
+    }
 }
 
 .class__nameBox {
