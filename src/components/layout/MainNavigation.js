@@ -5,8 +5,8 @@ import Plus from "@/components/svg/Plus";
 import Hamburger from "@/components/svg/Hamburger";
 import { useDispatch } from "react-redux";
 import { createClass } from "../../../utils/store/reducers/class";
-import AddClassForm from "./AddClassForm";
-import JoinClassForm from "./JoinClassForm";
+import AddClassForm from "../class/AddClassForm";
+import JoinClassForm from "../class/JoinClassForm";
 
 const MainNavigation = () => {
   const [showSideBar, setShowSideBar] = useState(false);
@@ -77,11 +77,6 @@ const MainNavigation = () => {
               <Hamburger onClick={toggleSidebar} />
             </div>
             <div className={classes.logo}>Logo</div>
-          </div>
-          <div className={classes["container_two"]}>
-            <div className={classes.addBtn} onClick={addClassHandler}>
-              <Plus />
-            </div>
           </div>
           <div className={classes["container_two"]}>
             <div className={classes.addBtn}>

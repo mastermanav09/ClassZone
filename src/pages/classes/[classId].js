@@ -1,4 +1,4 @@
-import ClassUI from "@/components/home/ClassUI";
+import ClassUI from "@/components/class/ClassUI";
 import { getServerSession } from "next-auth/next";
 import { useRouter } from "next/router";
 import { authOptions } from "../api/auth/[...nextauth]";
