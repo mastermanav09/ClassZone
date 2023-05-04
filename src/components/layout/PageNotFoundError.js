@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
-import classes from "./Error.module.scss";
+import classes from "./PageNotFoundError.module.scss";
 
-const Error = () => {
+const PageNotFoundError = () => {
   const router = useRouter();
   const handleClick = () => {
     router.replace("/");
@@ -30,4 +30,4 @@ const Error = () => {
   );
 };
 
-export default Error;
+export default PageNotFoundError;

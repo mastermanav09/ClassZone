@@ -33,7 +33,10 @@ const AuthForm = ({ isRegister }) => {
 
   const googleAuthHandler = (event) => {
     event.preventDefault();
-    signIn("google");
+    signIn("google", {
+      callbackUrl: process.env.NEXTAUTH_URL,
+      redirect: false,
+    });
   };
 
   return (

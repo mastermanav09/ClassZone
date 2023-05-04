@@ -1,13 +1,14 @@
 import db from "../../../../utils/db";
 import User from "../../../../models/User";
 import bcrypt from "bcryptjs";
-import { userSignupValidation } from "../../../../utils/validators/signupValidation";
+import { userSignupValidation } from "../../../../utils/validators/userSignupValidation";
 import { validationErrorResponse } from "../../../../utils/responses/errorResponse";
 import manageResponses from "../../../../utils/responses/manageResponses";
 
 const handler = async (req, res) => {
   if (req.method !== "POST") {
     return res.status(400).json({
+      status: 400,
       message: "Bad Request!",
     });
   }
@@ -21,9 +22,7 @@ const handler = async (req, res) => {
     });
 
     if (validationResponse.error) {
-      const error = new Error(
-        validationErrorResponse(validationResponse.error.details[0].message)
-      );
+      const error = new Error(validationResponse.error?.details[0]?.message);
       error.statusCode = 422;
       throw error;
     }
@@ -52,6 +51,8 @@ const handler = async (req, res) => {
     });
 
     await newUser.save();
+    await db.disconnect();
+
     return res.status(201).json(manageResponses(201, null));
   } catch (error) {
     if (!error.statusCode) {

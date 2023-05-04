@@ -18,6 +18,13 @@ const classSchema = new Schema(
       required: true,
     },
 
+    announcements: [
+      {
+        text: { type: String },
+        date: { type: Date },
+      },
+    ],
+
     teacher: {
       type: Schema.Types.ObjectId,
       ref: "User",

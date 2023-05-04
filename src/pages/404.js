@@ -1,11 +1,7 @@
-import Error from "@/components/layout/Error";
+import PageNotFoundError from "@/components/layout/PageNotFoundError";
 
 const ErrorPage = () => {
-  return (
-    <>
-      <Error />
-    </>
-  );
+  return <PageNotFoundError />;
 };
 
 export default ErrorPage;

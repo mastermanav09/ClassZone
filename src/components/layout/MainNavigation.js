@@ -3,12 +3,27 @@ import classes from "./MainNavigation.module.scss";
 import Sidebar from "./Sidebar";
 import Plus from "@/components/svg/Plus";
 import Hamburger from "@/components/svg/Hamburger";
+import { useDispatch } from "react-redux";
+import { createClass } from "../../../utils/store/reducers/class";
 
 const MainNavigation = () => {
   const [showSideBar, setShowSideBar] = useState(false);
+  const dispatch = useDispatch();
 
   const toggleSidebar = () => {
     setShowSideBar((prev) => !prev);
+  };
+
+  const addClassHandler = () => {
+    dispatch(
+      createClass({
+        classData: {
+          className: "dadadada",
+          subject: "dakdjald",
+          batch: "daldkjalk",
+        },
+      })
+    );
   };
 
   return (
@@ -25,7 +40,7 @@ const MainNavigation = () => {
             <div className={classes.logo}>Logo</div>
           </div>
           <div className={classes["container_two"]}>
-            <div className={classes.addBtn}>
+            <div className={classes.addBtn} onClick={addClassHandler}>
               <Plus />
             </div>
           </div>

@@ -1,18 +1,20 @@
 import User from "../../../../models/User";
 import db from "../../../../utils/db";
+import { authOptions } from "../auth/[...nextauth]";
 import manageResponses from "../../../../utils/responses/manageResponses";
-import { getSession } from "next-auth/react";
+import { getServerSession } from "next-auth/next";
 
 const handler = async (req, res) => {
   if (req.method !== "GET") {
     return res.status(400).json({
+      status: 400,
       message: "Bad Request!",
     });
   }
 
   try {
-    const session = await getSession({ req });
-    if (!session) {
+    const session = await getServerSession(req, res, authOptions);
+    if (!session || !session.user) {
       const error = new Error("Sign in required!");
       error.statusCode = 401;
       throw error;
@@ -32,6 +34,8 @@ const handler = async (req, res) => {
       error.statusCode = 404;
       throw error;
     }
+
+    await db.disconnect();
 
     return res
       .status(200)

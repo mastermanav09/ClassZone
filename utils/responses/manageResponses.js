@@ -25,6 +25,6 @@ export default function manageResponses(statusCode, message) {
   }
 
   if (statusCode === 422) {
-    return errorResponses.unauthorizedErrorResponse(message);
+    return errorResponses.validationErrorResponse(message);
   }
 }

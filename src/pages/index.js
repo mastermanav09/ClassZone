@@ -1,7 +1,9 @@
 import Dashboard from "@/components/home/Dashboard";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import { authOptions } from "./api/auth/[...nextauth]";
 import { getSession } from "next-auth/react";
+import { getServerSession } from "next-auth/next";
 import { loadUser } from "../../utils/store/reducers/user";
 import PageLoader from "@/components/progress/PageLoader";
 import Head from "next/head";
@@ -44,7 +46,7 @@ function HomePage() {
 export default HomePage;
 
 export async function getServerSideProps(context) {
-  const session = await getSession({ req: context.req });
+  const session = await getServerSession(context.req, context.res, authOptions);
 
   if (!session) {
     return {

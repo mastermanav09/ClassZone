@@ -1,6 +1,6 @@
 const Joi = require("joi");
 
-const userSignupValidation = (requestBody, res) => {
+const userSignupValidation = (requestBody) => {
   const schema = Joi.object({
     name: Joi.string().trim().min(3).required().messages({
       "any.required": `Name is a required field`,

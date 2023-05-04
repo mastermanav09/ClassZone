@@ -6,13 +6,12 @@ import GoogleProvider from "next-auth/providers/google";
 import bcrypt from "bcryptjs";
 import User from "../../../../models/User";
 
-export default NextAuth({
+export const authOptions = {
   session: {
     strategy: "jwt",
   },
 
   secret: process.env.SECRET,
-
   site: process.env.NEXTAUTH_URL,
 
   callbacks: {
@@ -37,10 +36,14 @@ export default NextAuth({
         session.user.isAdmin = token.isAdmin;
       }
 
+      if (token?.picture) {
+        session.user.image = token?.picture;
+      }
+
       return session;
     },
 
-    async signIn({ account, profile }) {
+    async signIn({ account, profile, ...rest }) {
       if (account.provider === "google") {
         const { name, email, picture } = profile;
 
@@ -88,41 +91,39 @@ export default NextAuth({
     }),
 
     CredentialsProvider({
-      async authorize(credentials) {
+      type: "credentials",
+      async authorize(credentials, req) {
         await db.connect();
 
-        try {
-          const user = await User.findOne({
-            "credentials.email": credentials.email,
-          });
+        const user = await User.findOne({
+          "credentials.email": credentials.email,
+        }).lean();
 
-          if (!user) {
-            throw new Error("Account with this email doesn't exist.");
-          }
-
-          const validatedToken = bcrypt.compareSync(
-            credentials.password,
-            user.credentials.password
-          );
-
-          if (validatedToken) {
-            return {
-              _id: user._id,
-              name: user.credentials.name,
-              email: user.credentials.email,
-              userImage: user.credentials.userImage,
-              isAdmin: user.credentials.isAdmin,
-              enrolled: user.enrolled,
-              teaching: user.teaching,
-            };
-          }
-
-          return null;
-        } catch (error) {
-          const message = error.message || "Something went wrong!";
-          throw new Error(message);
+        if (!user) {
+          throw new Error("Account with this email doesn't exist.");
         }
+
+        const validatedToken = bcrypt.compareSync(
+          credentials.password,
+          user.credentials.password
+        );
+
+        if (!validatedToken) {
+          return null;
+        }
+
+        await db.disconnect();
+
+        return {
+          _id: user._id,
+          name: user.credentials.name,
+          email: user.credentials.email,
+          image: user.credentials.userImage,
+          isAdmin: user.credentials.isAdmin,
+        };
       },
     }),
   ],
-});
+};
+
+export default NextAuth(authOptions);
