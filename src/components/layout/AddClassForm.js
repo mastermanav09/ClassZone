@@ -25,7 +25,7 @@ const AddClassForm = (props) => {
 				onClose={addClassModal}
 				center
 				open={showAddClassModal}
-				animationDuration={1000}
+				animationDuration={200}
 				styles={{
 					overlay: {
 						position: "fixed",

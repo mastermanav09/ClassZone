@@ -21,7 +21,7 @@ const JoinClassForm = (props) => {
 				onClose={joinClassModal}
 				center
 				open={showJoinClassModal}
-				animationDuration={1000}
+				animationDuration={200}
 				styles={{
 					overlay: {
 						position: "fixed",
