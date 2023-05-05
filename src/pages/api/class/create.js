@@ -5,6 +5,9 @@ import Class from "../../../../models/Class";
 import manageResponses from "../../../../utils/responses/manageResponses";
 import { createClassValidation } from "../../../../utils/validators/createClassValidation";
 import User from "../../../../models/User";
+import mongoose from "mongoose";
+
+const colors = ["#0a9689", "#2c6fbb", "#4e2374", "#CC313D", "#7A2048"];
 
 const handler = async (req, res) => {
   if (req.method !== "POST") {
@@ -45,12 +48,19 @@ const handler = async (req, res) => {
 
     await db.connect();
 
-    const teacher = await User.findOne(filter);
+    const teacher = await User.findOne(filter)
+      .select(
+        "-credentials.password -credentials.isAdmin -enrolled -teaching -provider -createdAt -updatedAt -__v"
+      )
+      .lean();
+
     if (!teacher) {
       const error = new Error("User do not exists!");
       error.statusCode = 404;
       throw error;
     }
+
+    const backgroundColor = colors[Math.floor(Math.random() * colors.length)];
 
     const newClass = new Class({
       name: className,
@@ -59,13 +69,19 @@ const handler = async (req, res) => {
       announcements: [],
       teacher: teacher._id,
       students: [],
+      backgroundColor,
     });
 
     await newClass.save();
+
+    await User.findByIdAndUpdate(teacher._id, {
+      $push: { teaching: newClass._id },
+    });
+
     await db.disconnect();
 
     return res.status(201).json({
-      class: newClass,
+      class: { ...newClass._doc, teacher: teacher },
       ...manageResponses(201, "Class created successfully!"),
     });
   } catch (error) {

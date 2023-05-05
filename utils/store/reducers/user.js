@@ -10,6 +10,7 @@ import {
 import { toast } from "react-toastify";
 import { ERROR_TOAST, SERVER_ERROR_TOAST } from "../../constants";
 import { getError } from "@/helper/getError";
+import { classActions } from "./class";
 
 export const signup = createAsyncThunk(
   "user/signup",
@@ -99,7 +100,13 @@ export const loadUser = createAsyncThunk(
       });
 
       const user = res.data.user;
-      dispatch(userSlice.actions.setUser(user));
+      const { enrolled: userEnrolledClasses, teaching: userTeachingClasses } =
+        res.data.user;
+
+      dispatch(userActions.setUser(user));
+      dispatch(
+        classActions.loadClasses({ userEnrolledClasses, userTeachingClasses })
+      );
     } catch (error) {
       console.log(error);
       const message = getError(error);
@@ -114,24 +121,18 @@ const userSlice = createSlice({
   name: "user",
   initialState: {
     id: "",
-
     credentials: {
       name: "",
       email: "",
       userImage: "",
       isAdmin: null,
     },
-
-    enrolled: [],
-    teaching: [],
   },
 
   reducers: {
     setUser(state, action) {
       state.id = action.payload._id;
       state.credentials = action.payload.credentials;
-      state.enrolled = action.payload.enrolled;
-      state.teaching = action.payload.teaching;
     },
   },
 });

@@ -16,7 +16,6 @@ function HomePage() {
     let session;
     const authenticateUser = async () => {
       session = await getSession();
-
       if (session?.user) {
         dispatch(loadUser({ setIsLoading }));
       }

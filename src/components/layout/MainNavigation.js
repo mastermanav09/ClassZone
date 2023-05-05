@@ -19,18 +19,6 @@ const MainNavigation = () => {
     setShowSideBar((prev) => !prev);
   };
 
-  //   const addClassHandler = () => {
-  //     dispatch(
-  //       createClass({
-  //         classData: {
-  //           className: "dadadada",
-  //           subject: "dakdjald",
-  //           batch: "daldkjalk",
-  //         },
-  //       })
-  //     );
-  //   };
-
   const handleAddClassClick = () => {
     setShowAddClassModal(true);
     setShowDropdown(false);
@@ -45,11 +33,11 @@ const MainNavigation = () => {
     setShowDropdown((prev) => !prev);
   };
 
-  const addClassModal = () => {
+  const toggleAddClassModal = () => {
     setShowAddClassModal(false);
   };
 
-  const joinClassModal = () => {
+  const toggleJoinClassModal = () => {
     setShowJoinClassModal(false);
   };
 
@@ -60,13 +48,13 @@ const MainNavigation = () => {
       )}
       {showAddClassModal && (
         <AddClassForm
-          addClassModal={addClassModal}
+          toggleAddClassModal={toggleAddClassModal}
           showAddClassModal={showAddClassModal}
         />
       )}
       {showJoinClassModal && (
         <JoinClassForm
-          joinClassModal={joinClassModal}
+          toggleJoinClassModal={toggleJoinClassModal}
           showJoinClassModal={showJoinClassModal}
         />
       )}
