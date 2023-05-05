@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import classes from "./DesignContainer.module.scss";
-import Image from "next/image";
+import Image from "next/legacy/image";
 import LeftArrow from "../svg/LeftArrow";
 import RightArrow from "../svg/RightArrow";
 import shortid from "shortid";
@@ -58,7 +58,7 @@ const DesignContainer = () => {
             <Image
               width={80}
               height={80}
-              layout="responsive"
+              fill="true"
               src="/static/extra/open_book.png"
               alt="pen book"
             />
@@ -67,7 +67,7 @@ const DesignContainer = () => {
             <Image
               width={80}
               height={80}
-              layout="responsive"
+              fill="true"
               src="/static/extra/grinning_face.png"
               alt="grinning face"
             />
@@ -76,7 +76,7 @@ const DesignContainer = () => {
             <Image
               width={80}
               height={80}
-              layout="responsive"
+              fill="true"
               src="/static/extra/writing_hand.png"
               alt="writing hand"
             />

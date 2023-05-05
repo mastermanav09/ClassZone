@@ -2,8 +2,6 @@
   background: url("../../../public/static/background/auth_background_design.jpg");
   height: 100%;
   width: 100%;
-  border-top-right-radius: 15px;
-  border-bottom-right-radius: 15px;
   background-size: cover;
   background-repeat: no-repeat;
   position: relative;
@@ -24,14 +22,18 @@
 
   .emoticons {
     div {
+      position: relative;
+      display: block;
       padding: 1rem 1.2rem;
       border-radius: 50%;
       max-width: 7rem;
 
       &:nth-child(1) {
-        background-image: radial-gradient(circle farthest-side,
-            #fceabb,
-            #f8b500);
+        background-image: radial-gradient(
+          circle farthest-side,
+          #fceabb,
+          #f8b500
+        );
       }
 
       &:nth-child(2) {
