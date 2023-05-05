@@ -27,7 +27,7 @@ const handler = async (req, res) => {
 
     const userResponse = await User.findOne({
       "credentials.email": email,
-    }).select("-credentials.password -__v -createdAt -updatedAt");
+    }).select("-credentials.password -__v -createdAt -updatedAt -provider");
 
     if (!userResponse) {
       const error = new Error("User not found!");
@@ -35,11 +35,56 @@ const handler = async (req, res) => {
       throw error;
     }
 
+    let enrolledClasses = [],
+      teachingClasses = [];
+
+    let user_doc;
+    user_doc = await User.findOne({
+      "credentials.email": email,
+    })
+      .select("teaching")
+      .populate("teaching", "name backgroundColor _id")
+      .sort({ updatedAt: -1 });
+
+    teachingClasses = user_doc.teaching;
+
+    user_doc = await User.findOne({
+      "credentials.email": email,
+    })
+      .select("enrolled")
+      .populate({
+        path: "enrolled",
+        populate: {
+          path: "teacher",
+          select: {
+            "credentials.name": 1,
+            "credentials.email": 1,
+            "credentials.userImage": 1,
+            _id: 0,
+          },
+        },
+
+        select: {
+          name: 1,
+          backgroundColor: 1,
+          _id: 1,
+          teacher: 1,
+        },
+      })
+      .sort({ updatedAt: -1 });
+
+    enrolledClasses = user_doc.enrolled;
+
     await db.disconnect();
 
-    return res
-      .status(200)
-      .json({ ...manageResponses(200, null), user: userResponse });
+    return res.status(200).json({
+      ...manageResponses(200, null),
+      user: {
+        ...userResponse._doc,
+        teaching: teachingClasses,
+        enrolled: enrolledClasses,
+      },
+    });
   } catch (error) {
     if (!error.statusCode) {
       error.statusCode = 500;

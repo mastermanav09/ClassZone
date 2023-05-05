@@ -11,7 +11,7 @@ export const createClass = createAsyncThunk(
   async (data, { _, dispatch }) => {
     const { setIsLoading, router, classData } = data;
 
-    // setIsLoading(true);
+    setIsLoading(true);
 
     try {
       const res = await axios({
@@ -24,24 +24,55 @@ export const createClass = createAsyncThunk(
 
       const newClass = res.data.class;
       const message = res.data.message;
-      notifyAndUpdate(SUCCESS_TOAST, "success", message, toast);
-      // router.push(`/classes/${newClass._id}`);
+      console.log(newClass);
+      dispatch(classActions.addUserTeachingClasses(newClass));
+
+      router.push(`/classes/${newClass._id}`);
+
+      setTimeout(
+        () => notifyAndUpdate(SUCCESS_TOAST, "success", message, toast),
+        1000
+      );
     } catch (error) {
       console.log(error);
       const message = getError(error);
       notifyAndUpdate(ERROR_TOAST, "error", message, toast);
     }
 
-    // setIsLoading(false);
+    setIsLoading(false);
   }
 );
 
 const classSlice = createSlice({
   name: "class",
-  initialState: {},
+  initialState: {
+    userEnrolledClasses: null,
+    userTeachingClasses: null,
+  },
 
-  reducers: {},
+  reducers: {
+    loadClasses(state, action) {
+      state.userEnrolledClasses = action.payload.userEnrolledClasses;
+      state.userTeachingClasses = action.payload.userTeachingClasses;
+    },
+
+    addUserTeachingClasses(state, action) {
+      if (!state.userTeachingClasses) {
+        state.userTeachingClasses = [];
+      }
+
+      state.userTeachingClasses.unshift(action.payload);
+    },
+
+    addUserEnrolledClasses(state, action) {
+      if (!state.userEnrolledClasses) {
+        state.userEnrolledClasses = [];
+      }
+
+      state.userEnrolledClasses.unshift(action.payload);
+    },
+  },
 });
 
 export default classSlice.reducer;
-export const userActions = classSlice.actions;
+export const classActions = classSlice.actions;

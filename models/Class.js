@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { colorValidator } from "../utils/validators/colorValidator";
 const Schema = mongoose.Schema;
 
 const classSchema = new Schema(
@@ -38,6 +39,12 @@ const classSchema = new Schema(
         required: true,
       },
     ],
+
+    backgroundColor: {
+      type: String,
+      validator: [colorValidator, "Invalid Color"],
+      required: true,
+    },
   },
   { timestamps: true }
 );

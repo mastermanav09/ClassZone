@@ -1,70 +1,112 @@
-.modal{
-        display: flex;
-        flex-direction: column;
-        width: 35rem;
-        @media screen and (max-width: 1000px) and (min-width: 491px) {
-            width: 25rem;
-        }
-        @media screen and (max-width:490px) {
-            width: 15rem;
-        }
-        h2{
-            margin-bottom: 1rem;
-        }
-        .form{
-            display: flex;
-            flex-direction: column;
-            div{
-                display: flex;
-                position: relative;
-                flex-direction: column;
-                margin-bottom: 1rem;
-                margin-top: 0.2rem;
-                label{
-                    color: #0a9689;
-                }
-                input{
-                    height: 2.5rem;
-                    padding: 0.3rem;
-                    border-radius: 0.5rem;
-                    position: relative;
-                    border: 3px solid #ccc;
-                }
-                input:focus {
-                    outline: none !important;
-                    border:1px solid #0a9689;
-                }
-                .validation-text {
-                    position: absolute;
-                    color: rgb(240, 46, 46);
-                    font-size: 0.7rem;
-                }
-            }
-        }
-        .btn{
-            display: flex;
-            flex-direction: row-reverse;
-            button{
-                padding: 0.5rem;
-                height: 2.3rem;
-                width: 4rem;
-                margin: 0.5rem;
-                border-radius: 0.4rem;
-                color: #0a9689;
-                font-weight: bolder;
-                align-items: center;
-                &:nth-child(1):hover {
-                    background-color: #0a9689;
-                    color: white;
-                }
+$primary-color: #0a9689;
 
-                &:nth-child(2) {
-                    background-color: white;
-                }
+.modal {
+  display: flex;
+  flex-direction: column;
+  width: 35rem;
+  @media screen and (max-width: 1000px) and (min-width: 491px) {
+    width: 25rem;
+  }
+  @media screen and (max-width: 490px) {
+    width: 15rem;
+  }
+  h2 {
+    margin-bottom: 1rem;
+  }
+  .form {
+    display: flex;
+    flex-direction: column;
 
-                &:nth-child(2):hover {
-                    background-color: whitesmoke;
-                }
-            }
+    div {
+      display: flex;
+      position: relative;
+      flex-direction: column;
+      gap: 0.2rem;
+      margin-bottom: 0.5rem;
+      margin-top: 0.5rem;
+
+      label {
+        color: $primary-color;
+      }
+
+      input {
+        height: 2.5rem;
+        padding: 0.3rem;
+        border-radius: 0.5rem;
+        border: 1px solid $primary-color;
+      }
+
+      input:focus {
+        outline: none !important;
+        border: 1px solid $primary-color;
+      }
+
+      .validation-text {
+        position: absolute;
+        bottom: -1.5rem;
+        color: rgb(240, 46, 46);
+        font-size: clamp(0.65rem, 1.5vw, 0.7rem);
+      }
+    }
+  }
+  .btn {
+    display: flex;
+    flex-direction: row-reverse;
+
+    button {
+      padding: 0.5rem;
+      height: 2.3rem;
+      width: 4rem;
+      margin: 0.5rem;
+      border-radius: 0.4rem;
+      color: $primary-color;
+      font-weight: bolder;
+      align-items: center;
+
+      &:enabled {
+        &:nth-child(1):hover {
+          background-color: $primary-color;
+          color: white;
         }
+      }
+
+      &:disabled {
+        cursor: default !important;
+      }
+
+      &:nth-child(2) {
+        background-color: white;
+      }
+
+      &:nth-child(2):hover {
+        background-color: whitesmoke;
+      }
+    }
+  }
+}
+
+.spinner {
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+}
+
+.spinner:after {
+  content: " ";
+  display: block;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 4px solid $primary-color;
+  border-color: $primary-color transparent $primary-color transparent;
+  animation: spinner 1s linear infinite;
+}
+
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

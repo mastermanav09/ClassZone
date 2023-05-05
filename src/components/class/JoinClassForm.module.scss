@@ -1,59 +1,71 @@
-.modal{
+.modal {
+  display: flex;
+  flex-direction: column;
+  width: 35rem;
+  @media screen and (max-width: 1000px) and (min-width: 491px) {
+    width: 25rem;
+  }
+  @media screen and (max-width: 490px) {
+    width: 15rem;
+  }
+  h2 {
+    margin-bottom: 1rem;
+  }
+  .form {
     display: flex;
     flex-direction: column;
-    width: 35rem;
-    @media screen and (max-width: 1000px) and (min-width: 491px) {
-        width: 25rem;
-    }
-    @media screen and (max-width:490px) {
-        width: 15rem;
-    }
-    h2{
-        margin-bottom: 1rem;
-    }
-    .form{
-        display: flex;
-        flex-direction: column;
-        label{
-            color: #0a9689;
-        }
-        input{
-            margin-bottom: 1rem;
-            margin-top: 0.2rem;
-            height: 2.5rem;
-            padding: 0.3rem;
-            border-radius: 0.5rem;
-            border: 3px solid #ccc;
-        }
-        input:focus {
-            outline: none !important;
-            border:1px solid #0a9689;
-          }
-    }
-    .btn{
-        display: flex;
-        flex-direction: row-reverse;
-        button{
-            padding: 0.5rem;
-            height: 2.3rem;
-            width: 4rem;
-            margin: 0.5rem;
-            border-radius: 0.4rem;
-            color: #0a9689;
-            font-weight: bolder;
-            align-items: center;
-            &:nth-child(1):hover {
-                background-color: #0a9689;
-                color: white;
-            }
 
-            &:nth-child(2) {
-                background-color: white;
-            }
+    div {
+      display: flex;
+      position: relative;
+      flex-direction: column;
+      gap: 0.2rem;
+      margin-bottom: 0.5rem;
+      margin-top: 0.5rem;
 
-            &:nth-child(2):hover {
-                background-color: whitesmoke;
-            }
-        }
+      label {
+        color: #0a9689;
+      }
+
+      input {
+        height: 2.5rem;
+        padding: 0.3rem;
+        border-radius: 0.5rem;
+        border: 1px solid #0a9689;
+      }
+
+      input:focus {
+        outline: none !important;
+        border: 1px solid #0a9689;
+      }
     }
+  }
+
+  .btn {
+    display: flex;
+    flex-direction: row-reverse;
+
+    button {
+      padding: 0.5rem;
+      height: 2.3rem;
+      width: 4rem;
+      margin: 0.5rem;
+      border-radius: 0.4rem;
+      color: #0a9689;
+      font-weight: bolder;
+      align-items: center;
+      &:nth-child(1):hover {
+        background-color: #0a9689;
+        color: white;
+      }
+
+      &:nth-child(2) {
+        background-color: white;
+      }
+
+      &:nth-child(2):hover {
+        background-color: whitesmoke;
+      }
+    }
+  }
 }
