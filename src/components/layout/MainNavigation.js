@@ -3,34 +3,34 @@ import classes from "./MainNavigation.module.scss";
 import Sidebar from "./Sidebar";
 import Plus from "@/components/svg/Plus";
 import Hamburger from "@/components/svg/Hamburger";
-import { useDispatch } from "react-redux";
-import { createClass } from "../../../utils/store/reducers/class";
+import { useDispatch, useSelector } from "react-redux";
 import AddClassForm from "../class/AddClassForm";
 import JoinClassForm from "../class/JoinClassForm";
+import { uiActions } from "../../../utils/store/reducers/ui";
 
 const MainNavigation = () => {
   const [showSideBar, setShowSideBar] = useState(false);
-  const [showDropdown, setShowDropdown] = useState(false);
   const [showAddClassModal, setShowAddClassModal] = useState(false);
   const [showJoinClassModal, setShowJoinClassModal] = useState(false);
   const dispatch = useDispatch();
+  const { navbarClassDropDown } = useSelector((state) => state.ui);
 
   const toggleSidebar = () => {
     setShowSideBar((prev) => !prev);
   };
 
+  const toggleDropdown = () => {
+    dispatch(uiActions.toggleNavbarClassDropdown());
+  };
+
   const handleAddClassClick = () => {
     setShowAddClassModal(true);
-    setShowDropdown(false);
+    toggleDropdown();
   };
 
   const handleJoinClassClick = () => {
     setShowJoinClassModal(true);
-    setShowDropdown(false);
-  };
-
-  const dropdown = () => {
-    setShowDropdown((prev) => !prev);
+    toggleDropdown();
   };
 
   const toggleAddClassModal = () => {
@@ -66,11 +66,14 @@ const MainNavigation = () => {
             </div>
             <div className={classes.logo}>Logo</div>
           </div>
-          <div className={classes["container_two"]}>
+          <div className={classes["container_two"]} onClick={toggleDropdown}>
             <div className={classes.addBtn}>
-              <Plus onClick={dropdown} />
-              {showDropdown === true ? (
-                <div className={classes.dropdown}>
+              <Plus />
+              {navbarClassDropDown ? (
+                <div
+                  className={classes.dropdown}
+                  onClick={(event) => event.stopPropagation()}
+                >
                   <ul>
                     <li onClick={handleJoinClassClick}>Join class</li>
                     <li onClick={handleAddClassClick}>Create class</li>

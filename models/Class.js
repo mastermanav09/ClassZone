@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { colorValidator } from "../utils/validators/colorValidator";
+const { colorValidator } = require("../utils/validators/colorValidator");
 const Schema = mongoose.Schema;
 
 const classSchema = new Schema(

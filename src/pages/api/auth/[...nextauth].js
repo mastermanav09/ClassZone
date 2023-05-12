@@ -1,6 +1,5 @@
 import NextAuth from "next-auth/next";
 import db from "../../../../utils/db";
-// import User from "../../../"
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import bcrypt from "bcryptjs";
@@ -72,6 +71,9 @@ export const authOptions = {
           });
 
           await newUser.save();
+
+          await db.disconnect();
+
           return profile.email_verified && profile.email.endsWith("@gmail.com");
         } catch (error) {
           console.log(error);

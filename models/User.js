@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema(
@@ -39,7 +39,6 @@ const userSchema = new Schema(
       {
         type: Schema.Types.ObjectId,
         ref: "Class",
-        required: true,
       },
     ],
 
@@ -47,7 +46,6 @@ const userSchema = new Schema(
       {
         type: Schema.Types.ObjectId,
         ref: "Class",
-        required: true,
       },
     ],
   },

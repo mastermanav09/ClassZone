@@ -18,7 +18,9 @@ async function connect() {
   }
 
   try {
-    const db = await mongoose.connect(process.env.MONGO_URI);
+    const db = await mongoose.connect(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+    });
     if (!db) {
       throw new Error("Internal server error!");
     }

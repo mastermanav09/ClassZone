@@ -1,3 +1,10 @@
+const badRequestResponse = (message) => {
+  return {
+    status: 400,
+    message: message || "Bad request",
+  };
+};
+
 const serverErrorResponse = (message) => {
   return {
     status: 500,
@@ -31,4 +38,5 @@ module.exports = {
   unauthorizedErrorResponse,
   serverErrorResponse,
   validationErrorResponse,
+  badRequestResponse,
 };
