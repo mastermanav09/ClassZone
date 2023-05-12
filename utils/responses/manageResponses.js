@@ -16,6 +16,10 @@ export default function manageResponses(statusCode, message) {
     return errorResponses.serverErrorResponse(message);
   }
 
+  if (statusCode === 400) {
+    return errorResponses.badRequestResponse(message);
+  }
+
   if (statusCode === 404) {
     return errorResponses.notFoundErrorResponse(message);
   }

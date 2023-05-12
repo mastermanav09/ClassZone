@@ -1,8 +1,10 @@
 import User from "../../../../models/User";
+
 import db from "../../../../utils/db";
 import { authOptions } from "../auth/[...nextauth]";
 import manageResponses from "../../../../utils/responses/manageResponses";
 import { getServerSession } from "next-auth/next";
+import Class from "../../../../models/Class";
 
 const handler = async (req, res) => {
   if (req.method !== "GET") {
@@ -21,13 +23,16 @@ const handler = async (req, res) => {
     }
 
     const { user } = session;
-    const { email } = user;
+    let filter = { _id: user._id };
+    if (!user._id) {
+      filter = { "credentials.email": user.email };
+    }
 
     await db.connect();
 
-    const userResponse = await User.findOne({
-      "credentials.email": email,
-    }).select("-credentials.password -__v -createdAt -updatedAt -provider");
+    const userResponse = await User.findOne(filter).select(
+      "-credentials.password -__v -createdAt -updatedAt -provider"
+    );
 
     if (!userResponse) {
       const error = new Error("User not found!");
@@ -39,18 +44,14 @@ const handler = async (req, res) => {
       teachingClasses = [];
 
     let user_doc;
-    user_doc = await User.findOne({
-      "credentials.email": email,
-    })
+    user_doc = await User.findOne(filter)
       .select("teaching")
       .populate("teaching", "name backgroundColor _id")
       .sort({ updatedAt: -1 });
 
     teachingClasses = user_doc.teaching;
 
-    user_doc = await User.findOne({
-      "credentials.email": email,
-    })
+    user_doc = await User.findOne(filter)
       .select("enrolled")
       .populate({
         path: "enrolled",

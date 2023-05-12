@@ -100,9 +100,11 @@ export const loadUser = createAsyncThunk(
       });
 
       const user = res.data.user;
+
       const { enrolled: userEnrolledClasses, teaching: userTeachingClasses } =
         res.data.user;
 
+      console.log(user);
       dispatch(userActions.setUser(user));
       dispatch(
         classActions.loadClasses({ userEnrolledClasses, userTeachingClasses })

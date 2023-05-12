@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import classes from "./AuthForm.module.scss";
-import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import Google from "../svg/Google";
@@ -12,7 +11,6 @@ import { useRouter } from "next/router";
 
 const AuthForm = ({ isRegister }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const { data: session } = useSession;
   const router = useRouter();
   const dispatch = useDispatch();
   const submitHandler = async ({ name, email, password }, event) => {

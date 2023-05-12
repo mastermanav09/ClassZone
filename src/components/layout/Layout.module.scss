@@ -1,9 +1,9 @@
 .main {
   height: 100vh;
+}
 
-  &.authorized {
-    height: calc(100vh - 65px);
-  }
+.main_showNavbar {
+  height: calc(100vh - 65px);
 }
 
 .toast-container {

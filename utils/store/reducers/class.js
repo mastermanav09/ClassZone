@@ -24,10 +24,47 @@ export const createClass = createAsyncThunk(
 
       const newClass = res.data.class;
       const message = res.data.message;
-      console.log(newClass);
+      console.log("new Class", newClass);
       dispatch(classActions.addUserTeachingClasses(newClass));
 
       router.push(`/classes/${newClass._id}`);
+
+      setTimeout(
+        () => notifyAndUpdate(SUCCESS_TOAST, "success", message, toast),
+        1000
+      );
+    } catch (error) {
+      console.log(error);
+      const message = getError(error);
+      notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+    }
+
+    setIsLoading(false);
+  }
+);
+
+export const joinClass = createAsyncThunk(
+  "class/joinClass",
+  async (data, { _, dispatch }) => {
+    const { classId, setIsLoading, router } = data;
+
+    setIsLoading(true);
+
+    try {
+      const res = await axios({
+        method: "POST",
+        url: `/api/class/join`,
+        data: {
+          classId,
+        },
+      });
+
+      const joindedClass = res.data.class;
+      console.log("joinded class", joindedClass);
+      const message = res.data.message;
+
+      dispatch(classActions.addUserEnrolledClasses(joindedClass));
+      router.push(`/classes/${joindedClass._id}`);
 
       setTimeout(
         () => notifyAndUpdate(SUCCESS_TOAST, "success", message, toast),

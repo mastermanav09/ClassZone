@@ -4,19 +4,26 @@ import { useRouter } from "next/router";
 import classes from "./JoinClassForm.module.scss";
 import LoadingSpinner from "../progress/LoadingSpinner";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { joinClass } from "../../../utils/store/reducers/class";
 const JoinClassForm = (props) => {
-  const [isLoading, setisLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { toggleJoinClassModal, showJoinClassModal } = props;
   const form = useForm();
   const { register, handleSubmit } = form;
   const router = useRouter();
+  const dispatch = useDispatch();
 
-  const onSubmit = (data) => {
+  const onSubmit = ({ classCode }) => {
+    dispatch(
+      joinClass({
+        setIsLoading,
+        router,
+        classId: classCode,
+      })
+    );
+
     toggleJoinClassModal();
-    router.replace({
-      pathname: "/class/[classId]",
-      query: { classId: data.classCode },
-    });
   };
 
   return (
@@ -63,8 +70,12 @@ const JoinClassForm = (props) => {
             </div>
           </form>
           <div className={classes.btn}>
-            <button type="submit" form="joinClass-form">
-              Join
+            <button type="submit" form="joinClass-form" disabled={isLoading}>
+              {isLoading ? (
+                <LoadingSpinner className={classes.spinner} />
+              ) : (
+                "Join"
+              )}
             </button>
             <button onClick={toggleJoinClassModal}>Cancel</button>
           </div>

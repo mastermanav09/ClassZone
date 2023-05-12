@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
 import MainNavigation from "./MainNavigation";
-import { useRouter } from "next/router";
 import classes from "./Layout.module.scss";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import { useCallback } from "react";
+import { useDispatch } from "react-redux";
+import { uiActions } from "../../../utils/store/reducers/ui";
+import { useSession } from "next-auth/react";
 
 const Layout = (props) => {
-  const [authorized, setauthorized] = useState(false);
-  const router = useRouter();
-  const pathName = router.pathname;
-
+  const [showNavbar, setShowNavbar] = useState(false);
+  const dispatch = useDispatch();
+  const { data: session } = useSession();
   const hasWindow = typeof window !== "undefined";
 
   const getWindowDimensions = useCallback(() => {
@@ -38,14 +39,15 @@ const Layout = (props) => {
   }, [getWindowDimensions, hasWindow]);
 
   useEffect(() => {
-    if (windowDimensions.width <= 980) {
-      setauthorized(true);
-    } else if (pathName === "/login" || pathName === "/register") {
-      setauthorized(false);
+    console.log(session);
+    if (session) {
+      setShowNavbar(true);
+    } else if (windowDimensions.width <= 980) {
+      setShowNavbar(true);
     } else {
-      setauthorized(true);
+      setShowNavbar(false);
     }
-  }, [pathName, windowDimensions]);
+  }, [session, windowDimensions.width]);
 
   return (
     <>
@@ -56,9 +58,12 @@ const Layout = (props) => {
         hideProgressBar={false}
         className={classes["toast-container"]}
       />
-      {authorized && <MainNavigation />}
+      {showNavbar && <MainNavigation />}
       <main
-        className={authorized ? classes[`main.authorized`] : classes["main"]}
+        className={showNavbar ? classes["main_showNavbar"] : classes["main"]}
+        onClick={() =>
+          dispatch(uiActions.toggleNavbarClassDropdown({ status: false }))
+        }
       >
         {props.children}
       </main>

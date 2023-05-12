@@ -5,7 +5,6 @@ import Class from "../../../../models/Class";
 import manageResponses from "../../../../utils/responses/manageResponses";
 import { createClassValidation } from "../../../../utils/validators/createClassValidation";
 import User from "../../../../models/User";
-import mongoose from "mongoose";
 
 const colors = ["#0a9689", "#2c6fbb", "#4e2374", "#CC313D", "#7A2048"];
 
@@ -48,11 +47,9 @@ const handler = async (req, res) => {
 
     await db.connect();
 
-    const teacher = await User.findOne(filter)
-      .select(
-        "-credentials.password -credentials.isAdmin -enrolled -teaching -provider -createdAt -updatedAt -__v"
-      )
-      .lean();
+    const teacher = await User.findOne(filter).select(
+      "-credentials.password -credentials.isAdmin -enrolled -teaching -provider -createdAt -updatedAt -__v"
+    );
 
     if (!teacher) {
       const error = new Error("User do not exists!");
@@ -81,7 +78,11 @@ const handler = async (req, res) => {
     await db.disconnect();
 
     return res.status(201).json({
-      class: { ...newClass._doc, teacher: teacher },
+      class: {
+        _id: newClass._doc._id,
+        name: newClass._doc.name,
+        backgroundColor: newClass._doc.backgroundColor,
+      },
       ...manageResponses(201, "Class created successfully!"),
     });
   } catch (error) {
