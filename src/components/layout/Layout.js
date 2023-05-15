@@ -1,52 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import MainNavigation from "./MainNavigation";
 import classes from "./Layout.module.scss";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
-import { useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { uiActions } from "../../../utils/store/reducers/ui";
-import { useSession } from "next-auth/react";
 
 const Layout = (props) => {
-  const [showNavbar, setShowNavbar] = useState(false);
   const dispatch = useDispatch();
-  const { data: session } = useSession();
-  const hasWindow = typeof window !== "undefined";
-
-  const getWindowDimensions = useCallback(() => {
-    const width = hasWindow ? window.innerWidth : null;
-    const height = hasWindow ? window.innerHeight : null;
-    return {
-      width,
-      height,
-    };
-  }, [hasWindow]);
-
-  const [windowDimensions, setWindowDimensions] = useState(
-    getWindowDimensions()
-  );
-
-  useEffect(() => {
-    if (hasWindow) {
-      function handleResize() {
-        setWindowDimensions(getWindowDimensions());
-      }
-
-      window.addEventListener("resize", handleResize);
-      return () => window.removeEventListener("resize", handleResize);
-    }
-  }, [getWindowDimensions, hasWindow]);
-
-  useEffect(() => {
-    if (session) {
-      setShowNavbar(true);
-    } else if (windowDimensions.width <= 980) {
-      setShowNavbar(true);
-    } else {
-      setShowNavbar(false);
-    }
-  }, [session, windowDimensions.width]);
 
   return (
     <>
@@ -57,9 +18,9 @@ const Layout = (props) => {
         hideProgressBar={false}
         className={classes["toast-container"]}
       />
-      {showNavbar && <MainNavigation />}
+      <MainNavigation />
       <main
-        className={showNavbar ? classes["main_showNavbar"] : classes["main"]}
+        className={classes.main}
         onClick={() =>
           dispatch(uiActions.toggleNavbarClassDropdown({ status: false }))
         }
