@@ -1,5 +1,5 @@
-import db from "../../../../utils/db";
 import User from "../../../../models/User";
+import db from "../../../../utils/db";
 import bcrypt from "bcryptjs";
 import { userSignupValidation } from "../../../../utils/validators/userSignupValidation";
 import { validationErrorResponse } from "../../../../utils/responses/errorResponse";

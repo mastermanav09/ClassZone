@@ -1,7 +1,7 @@
+import Class from "../../../../models/Class";
+import User from "../../../../models/User";
 import mongoose from "mongoose";
 import { authOptions } from "../auth/[...nextauth]";
-import User from "../../../../models/User";
-import Class from "../../../../models/Class";
 import manageResponses from "../../../../utils/responses/manageResponses";
 import db from "../../../../utils/db";
 import { getServerSession } from "next-auth";
