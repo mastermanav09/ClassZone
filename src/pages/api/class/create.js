@@ -6,7 +6,14 @@ import manageResponses from "../../../../utils/responses/manageResponses";
 import { createClassValidation } from "../../../../utils/validators/createClassValidation";
 import User from "../../../../models/User";
 
-const colors = ["#0a9689", "#2c6fbb", "#4e2374", "#CC313D", "#7A2048"];
+const colors = [
+  "#0a9689",
+  "#2c6fbb",
+  "#4e2374",
+  "#CC313D",
+  "#7A2048",
+  "#008d7d",
+];
 
 const handler = async (req, res) => {
   if (req.method !== "POST") {

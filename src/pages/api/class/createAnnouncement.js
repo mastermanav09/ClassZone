@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import Class from "../../../../models/Class";
 import manageResponses from "../../../../utils/responses/manageResponses";
 import { authOptions } from "../auth/[...nextauth]";
@@ -21,13 +20,6 @@ const handler = async (req, res) => {
       const error = new Error("Sign in required!");
       error.statusCode = 401;
       throw error;
-    }
-
-    const { user } = session;
-    let filter = { _id: user._id };
-
-    if (!user._id) {
-      filter = { "credentials.email": user.email };
     }
 
     await db.connect();

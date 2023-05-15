@@ -6,30 +6,36 @@ import Image from "next/image";
 import { createNewAnnouncement } from "../../../utils/store/reducers/class";
 import { useDispatch } from "react-redux";
 
-const ClassUI = ({ classId }) => {
+const ClassUI = ({ classDetails }) => {
   const [textEditor, setTextEditor] = useState(false);
   const [content, setContent] = useState("");
   const dispatch = useDispatch();
+  const { _id, name, backgroundColor, teacher, batch } = classDetails;
+
+  console.log(classDetails);
 
   const Editor = dynamic(() => import("./Editor"), { ssr: false });
   const getValue = (value) => {
     setContent(value);
   };
+
   const cancelButton = () => {
     setContent("");
     setTextEditor(false);
   };
 
   const createAnnouncement = () => {
-    dispatch(
-      createNewAnnouncement({ classId: "645ecdcc0cf138cc8100c3be", content })
-    );
+    dispatch(createNewAnnouncement({ classId: _id, content }));
   };
 
   return (
     <div className={classes.class}>
-      <div className={classes["class__nameBox"]}>
-        <div className={classes["class__name"]}>NAME</div>
+      <div
+        className={classes["class__nameBox"]}
+        style={{ backgroundColor: backgroundColor }}
+      >
+        <div className={classes["class__name"]}>{name}</div>
+        <div className={classes["class__batch"]}>{batch}</div>
       </div>
       <div className={classes.container}>
         <div className={classes["classes__upcoming"]}>
@@ -46,7 +52,7 @@ const ClassUI = ({ classId }) => {
             <Image
               width={60}
               height={60}
-              src="/static/profileImages/user.jpg"
+              src={teacher.credentials.userImage}
               alt="User image"
             />
             <input
