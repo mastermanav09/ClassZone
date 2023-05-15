@@ -1,7 +1,8 @@
 .wrapper {
+  position: relative;
 
   .navbar {
-    height: 65px;
+    height: 50px;
     box-shadow: 0 3px 6px blue;
     background-color: white;
     color: black;
@@ -62,13 +63,11 @@
           border-radius: 10px;
           cursor: pointer;
         }
-        
+
         li:hover {
           background-color: rgba(0, 0, 0, 0.14);
         }
       }
     }
   }
-
-  
 }
