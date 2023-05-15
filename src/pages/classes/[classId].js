@@ -1,5 +1,5 @@
-import ClassUI from "@/components/class/ClassUI";
 import Class from "../../../models/Class";
+import ClassUI from "@/components/class/ClassUI";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../api/auth/[...nextauth]";
 import db from "../../../utils/db";

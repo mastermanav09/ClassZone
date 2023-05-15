@@ -1,10 +1,11 @@
+import Class from "../../../../models/Class";
+import User from "../../../../models/User";
 import db from "../../../../utils/db";
 import { authOptions } from "../auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
-import Class from "../../../../models/Class";
+
 import manageResponses from "../../../../utils/responses/manageResponses";
 import { createClassValidation } from "../../../../utils/validators/createClassValidation";
-import User from "../../../../models/User";
 
 const colors = [
   "#0a9689",

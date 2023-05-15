@@ -1,9 +1,9 @@
+import User from "../../../../models/User";
 import NextAuth from "next-auth/next";
 import db from "../../../../utils/db";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import bcrypt from "bcryptjs";
-import User from "../../../../models/User";
 
 export const authOptions = {
   session: {
