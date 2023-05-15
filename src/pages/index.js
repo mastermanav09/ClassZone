@@ -1,6 +1,6 @@
 import Dashboard from "@/components/home/Dashboard";
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { authOptions } from "./api/auth/[...nextauth]";
 import { getSession } from "next-auth/react";
 import { getServerSession } from "next-auth/next";
@@ -10,6 +10,10 @@ import Head from "next/head";
 
 function HomePage() {
   const [isLoading, setIsLoading] = useState(true);
+  const { userEnrolledClasses, userTeachingClasses } = useSelector(
+    (state) => state.class
+  );
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -17,7 +21,7 @@ function HomePage() {
     const authenticateUser = async () => {
       session = await getSession();
       if (session?.user) {
-        dispatch(loadUser({ setIsLoading }));
+        dispatch(loadUser({ setIsLoading, user: session?.user }));
       }
     };
 
@@ -37,7 +41,10 @@ function HomePage() {
           content="It is a learning management system which is designed to manage and deliver online educational content, including online courses, training programs, and other educational content."
         />
       </Head>
-      <Dashboard />
+      <Dashboard
+        userEnrolledClasses={userEnrolledClasses}
+        userTeachingClasses={userTeachingClasses}
+      />
     </>
   );
 }

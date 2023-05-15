@@ -24,7 +24,7 @@ export const createClass = createAsyncThunk(
 
       const newClass = res.data.class;
       const message = res.data.message;
-      console.log("new Class", newClass);
+
       dispatch(classActions.addUserTeachingClasses(newClass));
 
       router.push(`/classes/${newClass._id}`);
@@ -60,7 +60,6 @@ export const joinClass = createAsyncThunk(
       });
 
       const joindedClass = res.data.class;
-      console.log("joinded class", joindedClass);
       const message = res.data.message;
 
       dispatch(classActions.addUserEnrolledClasses(joindedClass));
@@ -77,6 +76,34 @@ export const joinClass = createAsyncThunk(
     }
 
     setIsLoading(false);
+  }
+);
+
+export const createNewAnnouncement = createAsyncThunk(
+  "class/createAnnouncement",
+  async (data, { _, dispatch }) => {
+    const { classId, content, setIsLoading } = data;
+
+    // setIsLoading(true);
+
+    try {
+      const res = await axios({
+        method: "POST",
+        url: `/api/class/createAnnouncement`,
+        data: {
+          classId,
+          content,
+        },
+      });
+
+      console.log(res.data);
+    } catch (error) {
+      console.log(error);
+      const message = getError(error);
+      notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+    }
+
+    // setIsLoading(false);
   }
 );
 
@@ -107,6 +134,10 @@ const classSlice = createSlice({
       }
 
       state.userEnrolledClasses.unshift(action.payload);
+    },
+
+    addNewAnnouncement(state, action) {
+      const classIndex = state.userTeachingClasses.findIndex();
     },
   },
 });

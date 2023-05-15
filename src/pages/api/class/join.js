@@ -75,8 +75,6 @@ const handler = async (req, res) => {
         },
       });
 
-    console.log(updatedClass);
-
     await db.disconnect();
     return res.status(200).json({
       class: updatedClass,

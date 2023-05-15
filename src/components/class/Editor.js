@@ -16,8 +16,6 @@ const Editor = (props) => {
     toolbarAdaptive: false,
   };
 
-  console.log(content);
-
   return useMemo(
     () => (
       <JoditEditor
