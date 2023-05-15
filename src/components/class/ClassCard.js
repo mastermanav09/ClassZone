@@ -1,10 +1,11 @@
 import React from "react";
-import classes from "./Card.module.scss";
+import classes from "./ClassCard.module.scss";
 import { useRouter } from "next/router";
 import Image from "next/image";
 
-const Card = ({ classId }) => {
+const ClassCard = ({ classDetails }) => {
   const router = useRouter();
+  const { _id, name: className, teacher } = classDetails;
 
   return (
     <div
@@ -13,20 +14,22 @@ const Card = ({ classId }) => {
       onClick={() =>
         router.push({
           pathname: "/classes/[classId]",
-          query: { classId: classId },
+          query: { classId: _id },
         })
       }
     >
       <div className={classes["classCard__upper"]}>
         <div className={classes["classCard_desc"]}>
-          <span className={classes["classCard__className"]}>Name</span>
-          <span className={classes["classCard__creatorName"]}>Creator</span>
+          <span className={classes["classCard__className"]}>{className}</span>
+          <span className={classes["classCard__creatorName"]}>
+            {teacher.credentials.name}
+          </span>
         </div>
 
         <Image
           width={60}
           height={60}
-          src="/static/profileImages/user.jpg"
+          src={teacher.credentials.userImage}
           alt="user_img"
           className={classes["classCard__creatorPhoto"]}
         />
@@ -37,4 +40,4 @@ const Card = ({ classId }) => {
   );
 };
 
-export default Card;
+export default ClassCard;

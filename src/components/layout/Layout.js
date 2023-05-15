@@ -39,7 +39,6 @@ const Layout = (props) => {
   }, [getWindowDimensions, hasWindow]);
 
   useEffect(() => {
-    console.log(session);
     if (session) {
       setShowNavbar(true);
     } else if (windowDimensions.width <= 980) {
