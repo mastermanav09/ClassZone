@@ -9,28 +9,32 @@
 
 .class__nameBox {
   width: 100%;
-  background-color: #0a9689;
   color: white;
   height: 15rem;
-  margin-top: 1.9rem;
+  margin-top: 2rem;
   border-radius: 0.6rem;
   display: flex;
   flex-direction: column;
+  justify-content: end;
   align-items: flex-start;
-  padding: 1.9rem;
+  padding: 2rem 2rem 1rem 2rem;
   font-weight: bold;
-  font-size: 2.5rem;
   position: relative;
+
+  @media screen and (max-width: 768px) {
+    padding: 1rem 1rem 0.5rem 1rem !important;
+  }
 
   @media screen and (max-width: 560px) {
     height: 8rem;
-    font-size: 1.5rem;
   }
 
   .class__name {
-    position: absolute;
-    bottom: 0;
-    margin-bottom: 1rem;
+    font-size: clamp(24px, 4vw, 44px);
+  }
+
+  .class__batch {
+    font-size: clamp(16px, 2.5vw, 28px);
   }
 }
 
@@ -74,6 +78,7 @@
         text-align: center;
         padding: 0.5rem;
         width: 5rem;
+        border-radius: 5px;
       }
 
       .viewAll:hover {

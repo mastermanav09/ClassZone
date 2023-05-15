@@ -41,5 +41,20 @@ async function disconnect() {
   }
 }
 
-const db = { connect, disconnect };
+function convertDocToObj(doc) {
+  doc._id = doc._id.toString();
+  if (doc?.teacher?.credentials) {
+    doc.teacher.credentials.name = doc.teacher.credentials.name.toString();
+    doc.teacher.credentials.userImage =
+      doc.teacher.credentials.userImage.toString();
+    doc.teacher.credentials.email = doc.teacher.credentials.email.toString();
+  }
+
+  doc.createdAt = doc.createdAt.toString();
+  doc.updatedAt = doc.updatedAt.toString();
+
+  return doc;
+}
+
+const db = { connect, disconnect, convertDocToObj };
 export default db;

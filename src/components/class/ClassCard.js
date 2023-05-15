@@ -5,7 +5,7 @@ import Image from "next/image";
 
 const ClassCard = ({ classDetails }) => {
   const router = useRouter();
-  const { _id, name: className, teacher } = classDetails;
+  const { _id, name: className, teacher, backgroundColor } = classDetails;
 
   return (
     <div
@@ -18,7 +18,10 @@ const ClassCard = ({ classDetails }) => {
         })
       }
     >
-      <div className={classes["classCard__upper"]}>
+      <div
+        className={classes["classCard__upper"]}
+        style={{ backgroundColor: backgroundColor }}
+      >
         <div className={classes["classCard_desc"]}>
           <span className={classes["classCard__className"]}>{className}</span>
           <span className={classes["classCard__creatorName"]}>

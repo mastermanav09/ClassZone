@@ -1,20 +1,18 @@
 import ClassUI from "@/components/class/ClassUI";
+import Class from "../../../models/Class";
 import { getServerSession } from "next-auth/next";
-import { useRouter } from "next/router";
 import { authOptions } from "../api/auth/[...nextauth]";
+import db from "../../../utils/db";
 
-const Class = () => {
-  const { query } = useRouter();
-
-  return <ClassUI classId={query.classId} />;
+const ClassPage = ({ classDetails, error }) => {
+  return <ClassUI classDetails={classDetails} />;
 };
 
-Class.auth = true;
-export default Class;
+ClassPage.auth = true;
+export default ClassPage;
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
-
   if (!session) {
     return {
       redirect: {
@@ -24,7 +22,39 @@ export async function getServerSideProps(context) {
     };
   }
 
-  return {
-    props: {},
-  };
+  let userClass = null;
+  try {
+    const query = context.query;
+    const { classId } = query;
+    await db.connect();
+
+    userClass = await Class.findById(classId)
+      .populate({
+        path: "teacher",
+        select: {
+          "credentials.name": 1,
+          "credentials.email": 1,
+          "credentials.userImage": 1,
+          _id: 0,
+        },
+      })
+      .lean();
+
+    await db.disconnect();
+
+    return {
+      props: {
+        classDetails: db.convertDocToObj(userClass),
+      },
+    };
+  } catch (error) {
+    return {
+      redirect: {
+        permanent: true,
+        destination: "/not_found",
+      },
+    };
+  }
+
+  return {};
 }

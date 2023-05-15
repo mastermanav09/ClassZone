@@ -4,7 +4,6 @@ import db from "../../../../utils/db";
 import { authOptions } from "../auth/[...nextauth]";
 import manageResponses from "../../../../utils/responses/manageResponses";
 import { getServerSession } from "next-auth/next";
-import Class from "../../../../models/Class";
 
 const handler = async (req, res) => {
   if (req.method !== "GET") {
