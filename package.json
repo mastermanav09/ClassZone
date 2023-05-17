@@ -27,6 +27,7 @@
     "react-redux": "^8.0.5",
     "react-responsive-modal": "^6.4.1",
     "react-toastify": "^9.1.2",
+    "react-virtualized": "^9.22.5",
     "sass": "^1.60.0",
     "shortid": "^2.2.16",
     "zustand": "^4.3.7"
