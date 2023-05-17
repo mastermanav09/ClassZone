@@ -1,9 +1,18 @@
+.dashboard{
+  .enrolledContainer{
+    margin: 2rem;
+  }
+  .teachingContainer{
+    margin: 2rem;
+  }
+}
 .dashboard__classContainer {
   display: flex;
   flex-direction: column;
   padding: 15px;
   flex-wrap: wrap;
-
   padding-top: 2rem;
   padding-bottom: 1rem;
+  width: 100%;
+  height: 60vh;
 }
