@@ -1,28 +1,14 @@
-import React, { useState } from "react";
-import dynamic from "next/dynamic";
+import React from "react";
 import Link from "next/link";
 import classes from "./ClassUI.module.scss";
 import Image from "next/image";
 import { createNewAnnouncement } from "../../../utils/store/reducers/class";
 import { useDispatch } from "react-redux";
+import EditorWrapper from "./EditorWrapper";
 
 const ClassUI = ({ classDetails }) => {
-  const [textEditor, setTextEditor] = useState(false);
-  const [content, setContent] = useState("");
   const dispatch = useDispatch();
   const { _id, name, backgroundColor, teacher, batch } = classDetails;
-
-  console.log(classDetails);
-
-  const Editor = dynamic(() => import("./Editor"), { ssr: false });
-  const getValue = (value) => {
-    setContent(value);
-  };
-
-  const cancelButton = () => {
-    setContent("");
-    setTextEditor(false);
-  };
 
   const createAnnouncement = () => {
     dispatch(createNewAnnouncement({ classId: _id, content }));
@@ -47,33 +33,13 @@ const ClassUI = ({ classDetails }) => {
             </Link>
           </div>
         </div>
-        {!textEditor && (
-          <div className={classes["class__announce"]}>
-            <Image
-              width={60}
-              height={60}
-              src={teacher.credentials.userImage}
-              alt="User image"
-            />
-            <input
-              type="text"
-              placeholder="Announce something to your class"
-              onClick={() => setTextEditor(true)}
-            />
-          </div>
-        )}
-        {textEditor && (
-          <div className={classes.editor}>
-            <Editor contents={content} getValue={getValue} />
-            <div className={classes.container}>
-              <button onClick={createAnnouncement}>Post</button>
-              <button onClick={cancelButton}>Cancel</button>
-            </div>
-          </div>
-        )}
+        <EditorWrapper
+          createAnnouncement={createAnnouncement}
+          teacher={teacher}
+        />
       </div>
     </div>
   );
 };
 
-export default ClassUI;
+export default React.memo(ClassUI);
