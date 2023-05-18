@@ -50,30 +50,30 @@ const handler = async (req, res) => {
 
     teachingClasses = user_doc.teaching;
 
-    // user_doc = await User.findOne(filter)
-    //   .select("enrolled")
-    //   .populate({
-    //     path: "enrolled",
-    //     select: {
-    //       name: 1,
-    //       backgroundColor: 1,
-    //       _id: 1,
-    //       teacher: 1,
-    //     },
+    user_doc = await User.findOne(filter)
+      .select("enrolled")
+      .populate({
+        path: "enrolled",
+        select: {
+          name: 1,
+          backgroundColor: 1,
+          _id: 1,
+          teacher: 1,
+        },
 
-    //     populate: {
-    //       path: "teacher",
-    //       select: {
-    //         "credentials.name": 1,
-    //         "credentials.email": 1,
-    //         "credentials.userImage": 1,
-    //         _id: 0,
-    //       },
-    //     },
-    //   })
-    //   .sort({ updatedAt: -1 });
+        populate: {
+          path: "teacher",
+          select: {
+            "credentials.name": 1,
+            "credentials.email": 1,
+            "credentials.userImage": 1,
+            _id: 0,
+          },
+        },
+      })
+      .sort({ updatedAt: -1 });
 
-    // enrolledClasses = user_doc.enrolled;
+    enrolledClasses = user_doc.enrolled;
 
     await db.disconnect();
 

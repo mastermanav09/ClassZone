@@ -140,13 +140,8 @@ export const loadUser = createAsyncThunk(
 const userSlice = createSlice({
   name: "user",
   initialState: {
-    id: "",
-    credentials: {
-      name: "",
-      email: "",
-      userImage: "",
-      isAdmin: null,
-    },
+    id: null,
+    credentials: null,
   },
 
   reducers: {
