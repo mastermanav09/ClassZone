@@ -1,0 +1,29 @@
+.announcement {
+  width: 100%;
+  padding: 0.6rem;
+  display: flex;
+  border-radius: 0.5rem;
+  border: 1px solid #bdbdbd;
+  margin-bottom: 1.2rem;
+  .imageContainer {
+    img{
+    height: 50px;
+    width: 50px;
+    border-radius: 9999px;
+    }
+  }
+  .contentContainer{
+    display: flex;
+    flex-direction: column;
+    margin-left: 1rem;
+    justify-content: space-around;
+    .content{
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    .date{
+      color: #424242;
+      font-size: 0.8rem;
+    }
+  }
+}
