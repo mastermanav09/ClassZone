@@ -2,7 +2,7 @@
   position: relative;
 
   .navbar {
-    height: 50px;
+    height: 55px;
     box-shadow: 0 3px 6px blue;
     background-color: white;
     color: black;
@@ -18,7 +18,7 @@
 
     .container_one {
       display: flex;
-
+      align-items: center;
       .sidebarBtn {
         height: 30px;
         width: 30px;
@@ -28,7 +28,16 @@
       }
 
       .logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         margin-left: 15px;
+        gap: 5px;
+
+        a {
+          display: flex;
+          align-items: center;
+        }
       }
     }
 

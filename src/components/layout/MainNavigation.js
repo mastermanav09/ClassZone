@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 import AddClassForm from "../class/AddClassForm";
 import JoinClassForm from "../class/JoinClassForm";
 import { uiActions } from "../../../utils/store/reducers/ui";
+import Image from "next/image";
+import Link from "next/link";
 
 const MainNavigation = () => {
   const [showSideBar, setShowSideBar] = useState(false);
@@ -64,7 +66,12 @@ const MainNavigation = () => {
             <div className={classes.sidebarBtn}>
               <Hamburger onClick={toggleSidebar} />
             </div>
-            <div className={classes.logo}>Logo</div>
+            <div className={classes.logo}>
+              <Link href="/">
+                <Image src="/logo.png" width={45} height={45} alt="logo" />
+              </Link>
+              <Image src="/logo_text.png" width={130} height={40} alt="logo" />
+            </div>
           </div>
           <div className={classes["container_two"]} onClick={toggleDropdown}>
             <div className={classes.addBtn}>

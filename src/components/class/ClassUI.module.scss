@@ -86,7 +86,15 @@
       }
     }
   }
-  .announcementContainer{
+
+  h3 {
+    margin: 1rem auto;
+    font-size: clamp(18px, 3vw, 24px);
+    text-align: center;
+    font-weight: 400;
+  }
+
+  .announcementContainer {
     width: 100%;
     display: flex;
     flex-direction: column;
