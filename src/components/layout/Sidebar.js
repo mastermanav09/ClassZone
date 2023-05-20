@@ -3,6 +3,7 @@ import classes from "./Sidebar.module.scss";
 import Cross from "@/components/svg/Cross";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
+import Image from "next/image";
 
 const Sidebar = (props) => {
   const { toggleSidebar, showSideBar } = props;
@@ -18,7 +19,12 @@ const Sidebar = (props) => {
         showSideBar ? classes.open : classes.close,
       ].join(" ")}
     >
-      <div className={classes.header}></div>
+      <div className={classes.header}>
+        <Link href="/">
+          <Image src="/logo.png" width={60} height={60} alt="logo" />
+        </Link>
+        <Image src="/logo_text.png" width={130} height={40} alt="logo" />
+      </div>
       <div className={classes["list-section"]}>
         <ul className={classes["list"]}>
           <Link href={`/`}>

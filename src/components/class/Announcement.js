@@ -17,7 +17,7 @@ const Announcement = ({ teacher, announcement }) => {
       </div>
       <div className={classes.contentContainer}>
         <div className={classes.content}>
-          <pre>{HTMLReactParser(announcement.text)}</pre>
+          {HTMLReactParser(announcement.text)}
         </div>
         <div className={classes.date}>
           <div>{moment(announcement.date).format("LLL")}</div>

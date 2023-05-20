@@ -20,6 +20,14 @@
   .header {
     padding-left: 1rem;
     padding-right: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+
+    a {
+      display: flex;
+      align-items: center;
+    }
   }
 
   &__close {

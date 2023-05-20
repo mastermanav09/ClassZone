@@ -45,8 +45,7 @@ const handler = async (req, res) => {
     let user_doc;
     user_doc = await User.findOne(filter)
       .select("teaching")
-      .populate("teaching", "name backgroundColor _id")
-      .sort({ updatedAt: -1 });
+      .populate("teaching", "name backgroundColor _id");
 
     teachingClasses = user_doc.teaching;
 
@@ -70,8 +69,7 @@ const handler = async (req, res) => {
             _id: 0,
           },
         },
-      })
-      .sort({ updatedAt: -1 });
+      });
 
     enrolledClasses = user_doc.enrolled;
 
