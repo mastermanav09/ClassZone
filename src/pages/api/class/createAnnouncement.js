@@ -22,8 +22,18 @@ const handler = async (req, res) => {
       throw error;
     }
 
-    await db.connect();
     const { classId, content } = req.body;
+    const plainString = content.replace(/<[^>]+>/g, "");
+    const updatedStr = plainString.split("&nbsp;").join("");
+
+    if (updatedStr.trim().length === 0) {
+      const error = new Error("Announcement should contain valid text!");
+      error.statusCode = 422;
+      throw error;
+    }
+
+    await db.connect();
+
     const userClass = await Class.findById(classId);
 
     if (!userClass) {
@@ -35,7 +45,12 @@ const handler = async (req, res) => {
     const updatedClass = await Class.findByIdAndUpdate(
       userClass._id,
       {
-        $push: { announcements: { text: content, date: new Date() } },
+        $push: {
+          announcements: {
+            $each: [{ text: content, date: new Date() }],
+            $sort: { date: -1 },
+          },
+        },
       },
       { new: true }
     );

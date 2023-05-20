@@ -1,28 +1,34 @@
 .announcement {
   width: 100%;
-  padding: 0.6rem;
+  padding: 1rem 0.5rem 0.5rem;
   display: flex;
   border-radius: 0.5rem;
   border: 1px solid #bdbdbd;
   margin-bottom: 1.2rem;
+
   .imageContainer {
-    img{
-    height: 50px;
-    width: 50px;
-    border-radius: 9999px;
+    img {
+      height: 50px;
+      width: 50px;
+      border-radius: 9999px;
     }
   }
-  .contentContainer{
+
+  .contentContainer {
     display: flex;
     flex-direction: column;
     margin-left: 1rem;
     justify-content: space-around;
-    .content{
-      font-weight: 600;
+    width: 100%;
+
+    .content {
       font-size: 0.9rem;
     }
-    .date{
-      color: #424242;
+
+    .date {
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+      color: #797878;
       font-size: 0.8rem;
     }
   }

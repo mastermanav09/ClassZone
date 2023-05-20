@@ -61,7 +61,9 @@ const Dashboard = ({ userEnrolledClasses, userTeachingClasses }) => {
     <>
       <div className={classes.dashboard}>
         <div className={classes.enrolledContainer}>
-          <h3>Enrolled</h3>
+          <div className={classes.title}>
+            <h3>Enrolled</h3>
+          </div>
           <hr />
           <div className={classes["dashboard__classContainer"]}>
             {!userEnrolledClasses ? (
@@ -92,7 +94,9 @@ const Dashboard = ({ userEnrolledClasses, userTeachingClasses }) => {
           </div>
         </div>
         <div className={classes.teachingContainer}>
-          <h3>Teaching</h3>
+          <div className={classes.title}>
+            <h3>Teaching</h3>
+          </div>
           <hr />
           <div className={classes["dashboard__classContainer"]}>
             {!userTeachingClasses ? (

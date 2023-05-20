@@ -40,11 +40,12 @@ export async function getServerSideProps(context) {
       })
       .lean();
 
+    userClass = JSON.stringify(userClass);
     await db.disconnect();
 
     return {
       props: {
-        classDetails: db.convertDocToObj(userClass),
+        classDetails: JSON.parse(userClass),
       },
     };
   } catch (error) {

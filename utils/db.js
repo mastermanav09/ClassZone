@@ -43,11 +43,15 @@ async function disconnect() {
 
 function convertDocToObj(doc) {
   doc._id = doc._id.toString();
-  if (doc?.teacher?.credentials) {
+  if (doc.teacher?.credentials) {
     doc.teacher.credentials.name = doc.teacher.credentials.name.toString();
     doc.teacher.credentials.userImage =
       doc.teacher.credentials.userImage.toString();
     doc.teacher.credentials.email = doc.teacher.credentials.email.toString();
+  }
+
+  if (doc.students) {
+    doc.students.name = doc.teacher.credentials.name.toString();
   }
 
   doc.createdAt = doc.createdAt.toString();
