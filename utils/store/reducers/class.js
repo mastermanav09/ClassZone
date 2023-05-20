@@ -83,8 +83,7 @@ export const createNewAnnouncement = createAsyncThunk(
   "class/createAnnouncement",
   async (data, { _, dispatch }) => {
     const { classId, content, setIsLoading } = data;
-
-    // setIsLoading(true);
+    setIsLoading(true);
 
     try {
       const res = await axios({
@@ -96,14 +95,18 @@ export const createNewAnnouncement = createAsyncThunk(
         },
       });
 
-      console.log(res.data);
+      dispatch(
+        classSlice.actions.addNewAnnouncement({
+          announcements: res.data.announcements,
+        })
+      );
     } catch (error) {
       console.log(error);
       const message = getError(error);
       notifyAndUpdate(ERROR_TOAST, "error", message, toast);
     }
 
-    // setIsLoading(false);
+    setIsLoading(false);
   }
 );
 
@@ -112,6 +115,7 @@ const classSlice = createSlice({
   initialState: {
     userEnrolledClasses: null,
     userTeachingClasses: null,
+    currentClassDetails: {},
   },
 
   reducers: {
@@ -136,8 +140,12 @@ const classSlice = createSlice({
       state.userEnrolledClasses.unshift(action.payload);
     },
 
+    setCurrentClass(state, action) {
+      state.currentClassDetails = action.payload;
+    },
+
     addNewAnnouncement(state, action) {
-      const classIndex = state.userTeachingClasses.findIndex();
+      state.currentClassDetails.announcements = action.payload.announcements;
     },
   },
 });

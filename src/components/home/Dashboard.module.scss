@@ -6,6 +6,17 @@
     margin: 2rem;
   }
 }
+
+.title {
+  width: fit-content;
+  color: white;
+  padding: 0.5rem 1rem;
+  margin: 0.5rem 0;
+  font-size: 0.8rem;
+  border-radius: 10px;
+  background-color: #2fc251;
+}
+
 .dashboard__classContainer {
   display: flex;
   flex-direction: column;

@@ -23,3 +23,14 @@ button {
   border: none;
   cursor: pointer;
 }
+
+.ReactVirtualized__Grid::-webkit-scrollbar {
+  background-color: rgb(233, 231, 231);
+  border-radius: 10px;
+  width: 5px;
+}
+
+.ReactVirtualized__Grid::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #2fc251;
+}

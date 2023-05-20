@@ -1,3 +1,32 @@
+@mixin spinner($type) {
+  display: block;
+
+  &::after {
+    content: " ";
+    display: block;
+    border-radius: 50%;
+    border: 5px solid #008d7d;
+    border-color: #008d7d transparent #008d7d transparent;
+    animation: spinner 1s linear infinite;
+  }
+
+  @if $type == "one" {
+    width: 50px;
+    height: 50px;
+    margin: 1rem auto;
+
+    @media screen and (max-width: 1024px) {
+      width: 35px;
+    }
+  } @else {
+    margin: auto;
+    width: 22px;
+    height: 22px;
+  }
+
+  @content;
+}
+
 .class__announce {
   display: flex;
   align-items: center;
@@ -10,6 +39,7 @@
   margin-top: 1.2rem;
   height: 4.5rem;
   cursor: pointer;
+
   @media screen and (max-width: 560px) {
     height: 4rem;
     font-size: 1.5rem;
@@ -62,9 +92,16 @@
         margin: 0.5rem;
       }
 
-      &:nth-child(1):hover {
-        background-color: #0eac9c;
-        color: white;
+      &:nth-child(1):enabled {
+        &:nth-child(1):hover {
+          background-color: #0eac9c;
+          color: white;
+        }
+      }
+
+      &:nth-child(1):disabled {
+        background-color: whitesmoke;
+        cursor: default !important;
       }
 
       &:nth-child(2) {
@@ -78,32 +115,29 @@
   }
 }
 
-.spinner {
-  display: block;
-  width: 60px;
-  height: 60px;
-  margin: 1rem auto;
+.spinner_one {
+  @include spinner("one") {
+    &::after {
+      width: 50px;
+      height: 50px;
 
-  @media screen and (max-width: 768px) {
-    width: 40px;
+      @media screen and (max-width: 1024px) {
+        width: 35px;
+        height: 35px;
+      }
+    }
   }
 }
 
-.spinner:after {
-  content: " ";
-  display: block;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  border: 5px solid blue;
-  border-color: blue transparent blue transparent;
-  animation: spinner 1s linear infinite;
-
-  @media screen and (max-width: 768px) {
-    width: 35px;
-    height: 35px;
+.spinner_two {
+  @include spinner("two") {
+    &::after {
+      width: 12px;
+      height: 12px;
+    }
   }
 }
+
 @keyframes spinner {
   0% {
     transform: rotate(0deg);
