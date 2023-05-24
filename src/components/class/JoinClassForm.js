@@ -17,13 +17,12 @@ const JoinClassForm = (props) => {
   const onSubmit = ({ classCode }) => {
     dispatch(
       joinClass({
+        toggleJoinClassModal,
         setIsLoading,
         router,
         classId: classCode,
       })
     );
-
-    toggleJoinClassModal();
   };
 
   return (
