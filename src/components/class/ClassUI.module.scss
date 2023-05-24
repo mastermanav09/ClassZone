@@ -41,12 +41,8 @@
 .container {
   display: flex;
 
-  .classes__upcoming {
-    @media screen and (max-width: 880px) {
-      display: none;
-    }
-
-    height: 9rem;
+  .copy_code_container {
+    height: 5rem;
     width: 16rem;
     border: 1px solid lightgray;
     margin-top: 1.2rem;
@@ -57,37 +53,29 @@
     justify-content: space-between;
     padding: 0.7rem;
 
-    h4 {
+    & > div {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    h3 {
+      color: rgb(86, 85, 85);
       font-size: 0.9rem;
     }
 
-    p {
-      font-size: 0.8rem;
+    .class_code {
+      font-size: 1rem;
       text-align: left;
       color: #0a9689;
     }
 
-    .viewAllContainer {
-      display: flex;
-      flex-direction: row-reverse;
-
-      .viewAll {
-        color: blueviolet;
-        font-size: 1rem;
-        border: none;
-        text-align: center;
-        padding: 0.5rem;
-        width: 5rem;
-        border-radius: 5px;
-      }
-
-      .viewAll:hover {
-        background-color: whitesmoke;
-      }
+    @media screen and (max-width: 880px) {
+      display: none;
     }
   }
 
-  h3 {
+  .no_announcement_found_text {
     margin: 1rem auto;
     font-size: clamp(18px, 3vw, 24px);
     text-align: center;

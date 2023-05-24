@@ -10,7 +10,7 @@
     img {
       height: 50px;
       width: 50px;
-      border-radius: 9999px;
+      border-radius: 50%;
     }
   }
 
@@ -19,8 +19,7 @@
     flex-direction: column;
     margin-left: 1rem;
     justify-content: space-around;
-    width: 100%;
-
+    width: 95%;
     .content {
       font-size: 1rem;
       word-break: break-all;

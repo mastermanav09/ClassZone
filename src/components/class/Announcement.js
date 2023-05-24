@@ -3,6 +3,7 @@ import Image from "next/image";
 import classes from "./Announcement.module.scss";
 import moment from "moment/moment";
 import HTMLReactParser from "html-react-parser";
+import ThreeDots from "../svg/ThreeDots";
 
 const Announcement = ({ teacher, announcement }) => {
   return (
@@ -23,6 +24,7 @@ const Announcement = ({ teacher, announcement }) => {
           <div>{moment(announcement.date).format("LLL")}</div>
         </div>
       </div>
+      <ThreeDots />
     </div>
   );
 };
