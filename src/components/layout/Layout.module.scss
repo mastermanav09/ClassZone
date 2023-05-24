@@ -1,5 +1,7 @@
 .main {
-  height: calc(100vh - 50px);
+  min-height: calc(100vh - 50px);
+  padding-top: 2rem;
+  padding-bottom: 2rem;
 }
 
 .toast-container {

@@ -4,7 +4,7 @@ import classes from "./Layout.module.scss";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
 import { useDispatch } from "react-redux";
-import { uiActions } from "../../../utils/store/reducers/ui";
+import { closeUIComponents } from "@/helper/closeOpenUIComponents";
 
 const Layout = (props) => {
   const dispatch = useDispatch();
@@ -19,12 +19,7 @@ const Layout = (props) => {
         className={classes["toast-container"]}
       />
       <MainNavigation />
-      <main
-        className={classes.main}
-        onClick={() =>
-          dispatch(uiActions.toggleNavbarClassDropdown({ status: false }))
-        }
-      >
+      <main className={classes.main} onClick={() => closeUIComponents()}>
         {props.children}
       </main>
     </>

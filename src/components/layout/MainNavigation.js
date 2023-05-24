@@ -3,36 +3,35 @@ import classes from "./MainNavigation.module.scss";
 import Sidebar from "./Sidebar";
 import Plus from "@/components/svg/Plus";
 import Hamburger from "@/components/svg/Hamburger";
-import { useDispatch, useSelector } from "react-redux";
 import AddClassForm from "../class/AddClassForm";
 import JoinClassForm from "../class/JoinClassForm";
-import { uiActions } from "../../../utils/store/reducers/ui";
 import Image from "next/image";
 import Link from "next/link";
+import {
+  closeUIComponents,
+  registerForUIToggle,
+} from "@/helper/closeOpenUIComponents";
 
 const MainNavigation = () => {
   const [showSideBar, setShowSideBar] = useState(false);
   const [showAddClassModal, setShowAddClassModal] = useState(false);
   const [showJoinClassModal, setShowJoinClassModal] = useState(false);
-  const dispatch = useDispatch();
-  const { navbarClassDropDown } = useSelector((state) => state.ui);
+  const [showNavbarDropdown, setShowNavbarDropdown] = useState(false);
+
+  registerForUIToggle(setShowNavbarDropdown);
 
   const toggleSidebar = () => {
     setShowSideBar((prev) => !prev);
   };
 
-  const toggleDropdown = () => {
-    dispatch(uiActions.toggleNavbarClassDropdown());
-  };
-
   const handleAddClassClick = () => {
     setShowAddClassModal(true);
-    toggleDropdown();
+    setShowNavbarDropdown(false);
   };
 
   const handleJoinClassClick = () => {
     setShowJoinClassModal(true);
-    toggleDropdown();
+    setShowNavbarDropdown(false);
   };
 
   const toggleAddClassModal = () => {
@@ -68,15 +67,21 @@ const MainNavigation = () => {
             </div>
             <div className={classes.logo}>
               <Link href="/">
-                <Image src="/logo.png" width={45} height={45} alt="logo" />
+                <Image src="/logo.png" width={40} height={40} alt="logo" />
               </Link>
-              <Image src="/logo_text.png" width={130} height={40} alt="logo" />
+              <Image src="/logo_text.png" width={115} height={35} alt="logo" />
             </div>
           </div>
-          <div className={classes["container_two"]} onClick={toggleDropdown}>
+          <div
+            className={classes["container_two"]}
+            onClick={() => {
+              closeUIComponents();
+              setShowNavbarDropdown(true);
+            }}
+          >
             <div className={classes.addBtn}>
               <Plus />
-              {navbarClassDropDown ? (
+              {showNavbarDropdown ? (
                 <div
                   className={classes.dropdown}
                   onClick={(event) => event.stopPropagation()}

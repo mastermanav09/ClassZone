@@ -56,7 +56,7 @@
 }
 
 .list-section {
-  padding: 0.5rem 0;
+  padding: 0.5rem 0 4rem;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -75,7 +75,7 @@
   &:hover {
     background-color: whitesmoke;
     cursor: pointer;
-    border-left: 4px solid green;
+    border-left: 4px solid #0a9689;
 
     div {
       translate: 20px;

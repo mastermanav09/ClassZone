@@ -1,0 +1,58 @@
+.dropdown {
+  position: relative;
+  display: inline-block;
+
+  .dropdown-content {
+    position: absolute;
+
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    border-radius: 10px;
+    min-width: 160px;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    overflow: hidden;
+
+    &.bottom-left {
+      right: 0px;
+    }
+
+    &.top-left {
+      right: 0;
+      top: -150px;
+    }
+
+    &.top-right {
+      top: -150px;
+    }
+
+    div {
+      width: 100%;
+      padding: 10px 10px;
+      cursor: pointer;
+      color: black;
+      font-size: 0.85rem;
+
+      &:hover {
+        background-color: rgb(225, 222, 222);
+      }
+    }
+  }
+}
+
+.three_dots {
+  stroke-width: 1.75;
+  stroke: currentcolor;
+  width: 30px;
+  height: 30px;
+  color: rgb(86, 85, 85);
+
+  &:hover,
+  &.three_dots_open {
+    background-color: rgb(218, 218, 218);
+    border-radius: 50%;
+    cursor: pointer;
+  }
+}

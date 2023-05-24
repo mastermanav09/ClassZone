@@ -24,7 +24,7 @@ const Sidebar = (props) => {
           <Image src="/logo.png" width={60} height={60} alt="logo" />
         </Link>
         <Image src="/logo_text.png" width={130} height={40} alt="logo" />
-      </div>
+      </div>{" "}
       <div className={classes["list-section"]}>
         <ul className={classes["list"]}>
           <Link href={`/`}>
@@ -52,7 +52,6 @@ const Sidebar = (props) => {
           </li>
         </div>
       </div>
-
       <label
         htmlFor="menu-control"
         className={classes["sidebar__close"]}

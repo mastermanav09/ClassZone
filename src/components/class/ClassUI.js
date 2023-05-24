@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
 import classes from "./ClassUI.module.scss";
-import Image from "next/image";
 import {
   classActions,
   createNewAnnouncement,
@@ -11,6 +9,7 @@ import EditorWrapper from "./EditorWrapper";
 import Announcement from "./Announcement";
 import ScrollToTop from "../svg/ScrollToTop";
 import { toast } from "react-toastify";
+import ThreeDots from "../svg/ThreeDots";
 
 const ClassUI = ({ classDetails }) => {
   const dispatch = useDispatch();
@@ -38,8 +37,6 @@ const ClassUI = ({ classDetails }) => {
     dispatch(classActions.setCurrentClass(classDetails));
   }, [classDetails, dispatch]);
 
-  console.log(announcements);
-
   return (
     <div className={classes.class}>
       <div
@@ -50,14 +47,12 @@ const ClassUI = ({ classDetails }) => {
         <div className={classes["class__batch"]}>{batch}</div>
       </div>
       <div className={classes.container}>
-        <div className={classes["classes__upcoming"]}>
-          <h4>Upcoming</h4>
-          <p>Woohoo, no work due soon!</p>
-          <div className={classes.viewAllContainer}>
-            <Link href="" className={classes.viewAll}>
-              View all
-            </Link>
+        <div className={classes["copy_code_container"]}>
+          <div>
+            <h3>Class Code</h3>
+            <ThreeDots />
           </div>
+          <p className={classes["class_code"]}>{_id}</p>
         </div>
         <div className={classes.announcementContainer}>
           <EditorWrapper
@@ -76,7 +71,9 @@ const ClassUI = ({ classDetails }) => {
               />
             ))
           ) : (
-            <h3>No Announcements found!</h3>
+            <h3 className={classes["no_announcement_found_text"]}>
+              No Announcements found!
+            </h3>
           )}
         </div>
       </div>
