@@ -42,7 +42,7 @@ const handler = async (req, res) => {
       throw error;
     }
 
-    joiningUser = await User.findById(filter);
+    joiningUser = await User.findOne(filter);
     const joiningClass = await Class.findById(classId);
 
     if (!joiningClass) {

@@ -5,6 +5,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import { ERROR_TOAST, SUCCESS_TOAST } from "../../constants";
 import axios from "axios";
+import { getSession } from "next-auth/react";
 
 export const createClass = createAsyncThunk(
   "class/createClass",
@@ -25,8 +26,18 @@ export const createClass = createAsyncThunk(
       const newClass = res.data.class;
       const message = res.data.message;
 
-      dispatch(classActions.addUserTeachingClasses(newClass));
+      const session = await getSession();
+      const { user } = session;
 
+      newClass.teacher = {
+        credentials: {
+          email: user.email,
+          name: user.name,
+          userImage: user.image,
+        },
+      };
+
+      dispatch(classActions.addUserTeachingClasses(newClass));
       router.push(`/classes/${newClass._id}`);
 
       setTimeout(
