@@ -50,8 +50,6 @@ const DesignContainer = () => {
 
   return (
     <div className={classes.container}>
-      <div className={classes["background_shadow"]} />
-
       <div className={classes.box}>
         <div className={classes.emoticons}>
           <div>
