@@ -22,13 +22,12 @@ const AddClassForm = (props) => {
   const onSubmit = ({ className, subject, batch }) => {
     distpatch(
       createClass({
+        toggleAddClassModal,
         setIsLoading,
         router,
         classData: { className, subject, batch },
       })
     );
-
-    toggleAddClassModal();
   };
 
   return (

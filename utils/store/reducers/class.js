@@ -10,7 +10,7 @@ import { getSession } from "next-auth/react";
 export const createClass = createAsyncThunk(
   "class/createClass",
   async (data, { _, dispatch }) => {
-    const { setIsLoading, router, classData } = data;
+    const { setIsLoading, router, classData, toggleAddClassModal } = data;
 
     setIsLoading(true);
 
@@ -51,13 +51,14 @@ export const createClass = createAsyncThunk(
     }
 
     setIsLoading(false);
+    toggleAddClassModal();
   }
 );
 
 export const joinClass = createAsyncThunk(
   "class/joinClass",
   async (data, { _, dispatch }) => {
-    const { classId, setIsLoading, router } = data;
+    const { classId, setIsLoading, router, toggleJoinClassModal } = data;
 
     setIsLoading(true);
 
@@ -87,6 +88,7 @@ export const joinClass = createAsyncThunk(
     }
 
     setIsLoading(false);
+    toggleJoinClassModal();
   }
 );
 
