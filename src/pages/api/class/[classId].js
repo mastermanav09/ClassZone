@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Class from "../../../../models/Class";
 import manageResponses from "../../../../utils/responses/manageResponses";
 import { authOptions } from "../auth/[...nextauth]";
@@ -5,7 +6,7 @@ import { authOptions } from "../auth/[...nextauth]";
 const { getServerSession } = require("next-auth");
 
 const handler = async (req, res) => {
-  if (req.method !== "POST") {
+  if (req.method !== "GET") {
     return res.status(400).json({
       status: 400,
       message: "Bad Request!",
@@ -21,17 +22,26 @@ const handler = async (req, res) => {
       throw error;
     }
 
-    const { classId, content } = req.body;
-    const plainString = content.replace(/<[^>]+>/g, "");
-    const updatedStr = plainString.split("&nbsp;").join("");
+    const { classId } = req.query;
+    var ObjectId = mongoose.Types.ObjectId;
 
-    if (updatedStr.trim().length === 0) {
-      const error = new Error("Announcement should contain valid text!");
-      error.statusCode = 422;
+    if (!ObjectId.isValid(classId)) {
+      const error = new Error("Invalid Id!");
+      error.statusCode = 404;
       throw error;
     }
 
-    const userClass = await Class.findById(classId);
+    const userClass = await Class.findById(classId)
+      .populate({
+        path: "teacher",
+        select: {
+          "credentials.name": 1,
+          "credentials.email": 1,
+          "credentials.userImage": 1,
+          _id: 0,
+        },
+      })
+      .lean();
 
     if (!userClass) {
       const error = new Error("Class do not exists!");
@@ -39,22 +49,8 @@ const handler = async (req, res) => {
       throw error;
     }
 
-    const updatedClass = await Class.findByIdAndUpdate(
-      userClass._id,
-      {
-        $push: {
-          announcements: {
-            $each: [{ text: content, date: new Date() }],
-            $sort: { date: -1 },
-          },
-        },
-      },
-      { new: true }
-    );
-
     return res.status(201).json({
-      announcements: updatedClass.announcements,
-      message: "Announcement created successfully!",
+      class: userClass,
     });
   } catch (error) {
     console.log(error);

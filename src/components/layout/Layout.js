@@ -7,8 +7,6 @@ import { useDispatch } from "react-redux";
 import { closeUIComponents } from "@/helper/closeOpenUIComponents";
 
 const Layout = (props) => {
-  const dispatch = useDispatch();
-
   return (
     <>
       <ToastContainer

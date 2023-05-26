@@ -3,7 +3,6 @@ import User from "../../../../models/User";
 import mongoose from "mongoose";
 import { authOptions } from "../auth/[...nextauth]";
 import manageResponses from "../../../../utils/responses/manageResponses";
-import db from "../../../../utils/db";
 import { getServerSession } from "next-auth";
 
 const handler = async (req, res) => {
@@ -29,7 +28,6 @@ const handler = async (req, res) => {
     }
 
     const { classId } = req.body;
-    await db.connect();
 
     let joiningUser = await User.findOne({
       ...filter,
@@ -75,7 +73,6 @@ const handler = async (req, res) => {
         },
       });
 
-    await db.disconnect();
     return res.status(200).json({
       class: updatedClass,
       ...manageResponses(200, "Class joined successfully!"),

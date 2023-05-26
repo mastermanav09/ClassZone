@@ -27,8 +27,6 @@ const handler = async (req, res) => {
       filter = { "credentials.email": user.email };
     }
 
-    await db.connect();
-
     const userResponse = await User.findOne(filter).select(
       "-credentials.password -__v -createdAt -updatedAt -provider"
     );
@@ -72,8 +70,6 @@ const handler = async (req, res) => {
       });
 
     enrolledClasses = user_doc.enrolled;
-
-    await db.disconnect();
 
     return res.status(200).json({
       ...manageResponses(200, null),

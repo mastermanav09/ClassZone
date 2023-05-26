@@ -101,4 +101,4 @@ const MainNavigation = () => {
   );
 };
 
-export default MainNavigation;
+export default React.memo(MainNavigation);

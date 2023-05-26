@@ -91,8 +91,6 @@ export const loadUser = createAsyncThunk(
   async (data, { _, dispatch }) => {
     const { setIsLoading } = data;
 
-    setIsLoading(true);
-
     try {
       const res = await axios({
         method: "GET",
@@ -120,7 +118,6 @@ export const loadUser = createAsyncThunk(
         }
       );
 
-      dispatch(userActions.setUser(user));
       dispatch(
         classActions.loadClasses({
           userEnrolledClasses,
@@ -132,24 +129,14 @@ export const loadUser = createAsyncThunk(
       const message = getError(error);
       notifyAndUpdate(ERROR_TOAST, "error", message, toast);
     }
-
-    setIsLoading(false);
   }
 );
 
 const userSlice = createSlice({
   name: "user",
-  initialState: {
-    id: null,
-    credentials: null,
-  },
+  initialState: {},
 
-  reducers: {
-    setUser(state, action) {
-      state.id = action.payload._id;
-      state.credentials = action.payload.credentials;
-    },
-  },
+  reducers: {},
 });
 
 export default userSlice.reducer;

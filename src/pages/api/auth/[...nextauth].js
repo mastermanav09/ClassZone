@@ -72,8 +72,6 @@ export const authOptions = {
 
           await newUser.save();
 
-          await db.disconnect();
-
           return profile.email_verified && profile.email.endsWith("@gmail.com");
         } catch (error) {
           console.log(error);
@@ -113,8 +111,6 @@ export const authOptions = {
         if (!validatedToken) {
           return null;
         }
-
-        await db.disconnect();
 
         return {
           _id: user._id,
