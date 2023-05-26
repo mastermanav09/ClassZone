@@ -14,13 +14,12 @@ function HomePage() {
     (state) => state.class
   );
 
-  const { credentials } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   useEffect(() => {
     const authenticateUser = async () => {
       const session = await getSession();
-      if (session?.user && !credentials) {
+      if (session?.user) {
         dispatch(loadUser({ setIsLoading, user: session.user }));
       }
 
@@ -28,7 +27,7 @@ function HomePage() {
     };
 
     authenticateUser();
-  }, [dispatch, credentials]);
+  }, [dispatch]);
 
   if (isLoading) {
     return <PageLoader />;

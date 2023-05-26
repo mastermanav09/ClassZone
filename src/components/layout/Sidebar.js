@@ -4,9 +4,11 @@ import Cross from "@/components/svg/Cross";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
 import Image from "next/image";
+import { useDispatch } from "react-redux";
 
 const Sidebar = (props) => {
   const { toggleSidebar, showSideBar } = props;
+  const dispatch = useDispatch();
 
   const logoutHandler = () => {
     signOut();

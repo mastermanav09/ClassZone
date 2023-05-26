@@ -51,7 +51,6 @@ const handler = async (req, res) => {
     });
 
     await newUser.save();
-    await db.disconnect();
 
     return res.status(201).json(manageResponses(201, null));
   } catch (error) {

@@ -1,6 +1,5 @@
 import Class from "../../../../models/Class";
 import User from "../../../../models/User";
-import db from "../../../../utils/db";
 import { authOptions } from "../auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
 
@@ -53,8 +52,6 @@ const handler = async (req, res) => {
       throw error;
     }
 
-    await db.connect();
-
     const teacher = await User.findOne(filter).select(
       "-credentials.password -credentials.isAdmin -enrolled -teaching -provider -createdAt -updatedAt -__v"
     );
@@ -82,8 +79,6 @@ const handler = async (req, res) => {
     await User.findByIdAndUpdate(teacher._id, {
       $push: { teaching: newClass._id },
     });
-
-    await db.disconnect();
 
     return res.status(201).json({
       class: {

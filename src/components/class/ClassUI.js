@@ -3,21 +3,31 @@ import classes from "./ClassUI.module.scss";
 import {
   classActions,
   createNewAnnouncement,
+  getClass,
 } from "../../../utils/store/reducers/class";
 import { useDispatch, useSelector } from "react-redux";
 import EditorWrapper from "./EditorWrapper";
 import Announcement from "./Announcement";
 import ScrollToTop from "../svg/ScrollToTop";
 import { toast } from "react-toastify";
+import { useRouter } from "next/router";
 import ThreeDots from "../svg/ThreeDots";
+import PageLoader from "../progress/PageLoader";
 
-const ClassUI = ({ classDetails }) => {
+const ClassUI = () => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
-  const { _id, name, backgroundColor, teacher, batch } = classDetails;
-  const { announcements = [] } = useSelector(
-    (state) => state.class.currentClassDetails
-  );
+  const router = useRouter();
+  const { classId } = router.query;
+
+  const {
+    announcements = [],
+    _id,
+    name,
+    backgroundColor,
+    teacher,
+    batch,
+  } = useSelector((state) => state.class.currentClassDetails);
 
   const createAnnouncement = (id, content) => {
     const plainString = content.replace(/<[^>]+>/g, "");
@@ -34,8 +44,14 @@ const ClassUI = ({ classDetails }) => {
   };
 
   useEffect(() => {
-    dispatch(classActions.setCurrentClass(classDetails));
-  }, [classDetails, dispatch]);
+    if (_id !== classId) {
+      dispatch(getClass({ classId, router }));
+    }
+  }, [_id, dispatch, classId, router]);
+
+  if (_id != classId) {
+    return <PageLoader />;
+  }
 
   return (
     <div className={classes.class}>

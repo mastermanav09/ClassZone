@@ -123,11 +123,49 @@ export const createNewAnnouncement = createAsyncThunk(
   }
 );
 
+export const getClass = createAsyncThunk(
+  "class/getClass",
+  async (data, { getState, dispatch }) => {
+    const { classId, router } = data;
+
+    try {
+      const state = getState();
+      const { class: classState } = state;
+
+      const requestedClass = classState.classesCache.find(
+        (item) => item._id === classId
+      );
+
+      if (requestedClass) {
+        return dispatch(classActions.setCurrentClass(requestedClass));
+      }
+
+      const res = await axios({
+        method: "GET",
+        url: `/api/class/${classId}`,
+      });
+
+      dispatch(classSlice.actions.setCurrentClass(res.data.class));
+      dispatch(classSlice.actions.cacheTheClass(res.data.class));
+    } catch (error) {
+      console.log(error);
+
+      if (error.status === 404 || error.response?.data?.status === 404) {
+        return router.replace("/not_found");
+      }
+
+      const message = getError(error);
+      notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+    }
+  }
+);
+
 const classSlice = createSlice({
   name: "class",
   initialState: {
     userEnrolledClasses: null,
     userTeachingClasses: null,
+    classesCache: [],
     currentClassDetails: {},
   },
 
@@ -159,6 +197,10 @@ const classSlice = createSlice({
 
     addNewAnnouncement(state, action) {
       state.currentClassDetails.announcements = action.payload.announcements;
+    },
+
+    cacheTheClass(state, action) {
+      state.classesCache.push(action.payload);
     },
   },
 });
