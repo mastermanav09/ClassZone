@@ -27,6 +27,7 @@ const handler = async (req, res) => {
       filter = { "credentials.email": user.email };
     }
 
+    await db.connect();
     const userResponse = await User.findOne(filter).select(
       "-credentials.password -__v -createdAt -updatedAt -provider"
     );

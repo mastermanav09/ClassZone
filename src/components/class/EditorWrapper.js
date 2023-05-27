@@ -9,10 +9,20 @@ const Editor = dynamic(() => import("./Editor"), {
   loading: () => <LoadingSpinner className={classes.spinner_one} />,
 });
 
-const EditorWrapper = (props) => {
-  const { teacher } = props;
-  const [textEditor, setTextEditor] = useState(false);
-  const [content, setContent] = useState("");
+const EditorWrapper = ({
+  manageAnnouncementHandler,
+  classId,
+  isLoading,
+  isEditAnnouncement,
+  teacher,
+  textEditor,
+  setTextEditor,
+  content,
+  setContent,
+}) => {
+  const announcementHandler = () => {
+    manageAnnouncementHandler(classId, content);
+  };
 
   const cancelButton = () => {
     setContent("");
@@ -27,12 +37,21 @@ const EditorWrapper = (props) => {
     <>
       {!textEditor && (
         <div className={classes["class__announce"]}>
-          <Image
-            width={60}
-            height={60}
-            src={teacher.credentials.userImage}
-            alt="User image"
-          />
+          {teacher ? (
+            <Image
+              width={60}
+              height={60}
+              src={teacher.credentials.userImage}
+              alt="User image"
+            />
+          ) : (
+            <Image
+              width={60}
+              height={60}
+              src="/static/profileImages/no-img.png"
+              alt="User image"
+            />
+          )}
           <input
             type="text"
             placeholder="Announce something to your class"
@@ -44,19 +63,11 @@ const EditorWrapper = (props) => {
         <div className={classes.editor}>
           <Editor contents={content} getValue={getValue} />
           <div className={classes.container}>
-            <button
-              onClick={() => {
-                const isValid = props.createAnnouncement(props.id, content);
-                if (isValid) {
-                  setContent("");
-                }
-              }}
-              disabled={props.isLoading}
-            >
-              {props.isLoading ? (
+            <button onClick={announcementHandler} disabled={isLoading}>
+              {isLoading ? (
                 <LoadingSpinner className={classes.spinner_two} />
               ) : (
-                "Post"
+                <>{isEditAnnouncement ? "Update" : "Post"}</>
               )}
             </button>
             <button onClick={cancelButton}>Cancel</button>

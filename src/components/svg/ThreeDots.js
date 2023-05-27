@@ -11,7 +11,7 @@ import {
   registerForUIToggle,
 } from "@/helper/closeOpenUIComponents";
 
-const ThreeDots = () => {
+const ThreeDots = ({ fields }) => {
   const [toggleDropdown, setToggleDropdown] = useState(false);
   const [dropdownCurrPos, setDropdownCurrPos] = useState("bottom-right");
   const dropdownRef = useRef(null);
@@ -115,9 +115,11 @@ const ThreeDots = () => {
             ].join(" ")}
             ref={dropdownRef}
           >
-            <div>Option 1</div>
-            <div>Option 2</div>
-            <div>Option 3</div>
+            {fields.map((field, index) => (
+              <div key={index} onClick={field.action}>
+                {field.text}
+              </div>
+            ))}
           </div>
         )}
       </div>

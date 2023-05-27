@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import classes from "./ClassUI.module.scss";
 import {
-  classActions,
-  createNewAnnouncement,
+  manageAnnouncement,
   getClass,
 } from "../../../utils/store/reducers/class";
 import { useDispatch, useSelector } from "react-redux";
@@ -13,10 +12,14 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import ThreeDots from "../svg/ThreeDots";
 import PageLoader from "../progress/PageLoader";
+import { validateAnnouncement } from "@/helper/validateAnnouncement";
 
 const ClassUI = () => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
+  const [textEditor, setTextEditor] = useState(false);
+  const [content, setContent] = useState("");
+  const [isEditAnnouncement, setIsEditAnnouncement] = useState(null);
   const router = useRouter();
   const { classId } = router.query;
 
@@ -29,18 +32,36 @@ const ClassUI = () => {
     batch,
   } = useSelector((state) => state.class.currentClassDetails);
 
-  const createAnnouncement = (id, content) => {
-    const plainString = content.replace(/<[^>]+>/g, "");
-    const updatedStr = plainString.split("&nbsp;").join("");
-
-    if (updatedStr.trim().length === 0) {
+  const manageAnnouncementHandler = (classId, content) => {
+    if (!validateAnnouncement(content)) {
       toast.info("Announcement should contain valid text!");
       toast.clearWaitingQueue();
       return false;
     }
 
-    dispatch(createNewAnnouncement({ classId: id, content, setIsLoading }));
-    return true;
+    dispatch(
+      manageAnnouncement({
+        classId,
+        content,
+        setIsLoading,
+        setTextEditor,
+        isEditAnnouncement,
+      })
+    );
+
+    setContent("");
+    setIsEditAnnouncement(null);
+  };
+
+  const editAnnouncementHandler = (text, announcementId) => {
+    setTextEditor(true);
+    setIsEditAnnouncement(announcementId);
+    setContent(text);
+
+    window.scrollTo({
+      top: 0,
+      behavior: "instant",
+    });
   };
 
   useEffect(() => {
@@ -49,7 +70,7 @@ const ClassUI = () => {
     }
   }, [_id, dispatch, classId, router]);
 
-  if (_id != classId) {
+  if (_id !== classId) {
     return <PageLoader />;
   }
 
@@ -72,8 +93,13 @@ const ClassUI = () => {
         </div>
         <div className={classes.announcementContainer}>
           <EditorWrapper
-            id={_id}
-            createAnnouncement={createAnnouncement}
+            classId={_id}
+            textEditor={textEditor}
+            setTextEditor={setTextEditor}
+            isEditAnnouncement={isEditAnnouncement}
+            content={content}
+            setContent={setContent}
+            manageAnnouncementHandler={manageAnnouncementHandler}
             teacher={teacher}
             isLoading={isLoading}
             backgroundColor={backgroundColor}
@@ -81,9 +107,11 @@ const ClassUI = () => {
           {Array.isArray(announcements) && announcements.length !== 0 ? (
             announcements.map((announcement) => (
               <Announcement
+                classId={_id}
                 key={announcement._id}
                 teacher={teacher}
                 announcement={announcement}
+                editAnnouncementHandler={editAnnouncementHandler}
               />
             ))
           ) : (

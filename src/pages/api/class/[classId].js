@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import Class from "../../../../models/Class";
 import manageResponses from "../../../../utils/responses/manageResponses";
 import { authOptions } from "../auth/[...nextauth]";
+import db from "../../../../utils/db";
 
 const { getServerSession } = require("next-auth");
 
@@ -27,9 +28,11 @@ const handler = async (req, res) => {
 
     if (!ObjectId.isValid(classId)) {
       const error = new Error("Invalid Id!");
-      error.statusCode = 404;
+      error.statusCode = 422;
       throw error;
     }
+
+    await db.connect();
 
     const userClass = await Class.findById(classId)
       .populate({

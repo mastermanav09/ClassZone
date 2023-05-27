@@ -23,6 +23,7 @@ const classSchema = new Schema(
       {
         text: { type: String },
         date: { type: Date },
+        isEdited: { type: Boolean, default: false },
       },
     ],
 

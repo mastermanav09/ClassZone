@@ -2,7 +2,7 @@
   width: 75%;
   margin: auto;
 
-  @media screen and (max-width: 980px) {
+  @media screen and (max-width: 1024px) {
     width: 90%;
   }
 }
@@ -15,7 +15,7 @@
   border-radius: 0.6rem;
   display: flex;
   flex-direction: column;
-  justify-content: end;
+  justify-content: flex-end;
   align-items: flex-start;
   padding: 2rem 2rem 1rem 2rem;
   font-weight: bold;
@@ -30,11 +30,11 @@
   }
 
   .class__name {
-    font-size: clamp(24px, 4vw, 44px);
+    font-size: clamp(26px, 4vw, 44px);
   }
 
   .class__batch {
-    font-size: clamp(16px, 2.5vw, 28px);
+    font-size: clamp(18px, 2.5vw, 28px);
   }
 }
 
