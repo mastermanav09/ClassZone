@@ -10,8 +10,6 @@ import { SessionProvider, useSession } from "next-auth/react";
 import PageLoader from "@/components/progress/PageLoader";
 import { Progress } from "@/components/progress";
 import { useProgressStore } from "../../utils/store/progress-store/useProgressStore";
-import "react-responsive-modal/styles.css";
-import db from "../../utils/db";
 
 export default function App({ Component, pageProps, session }) {
   const setIsAnimating = useProgressStore((state) => state.setIsAnimating);
@@ -84,8 +82,4 @@ function Auth({ children, adminOnly }) {
   }
 
   return children;
-}
-
-export async function getServerSideProps() {
-  await db.connect();
 }

@@ -92,37 +92,6 @@ export const joinClass = createAsyncThunk(
   }
 );
 
-export const createNewAnnouncement = createAsyncThunk(
-  "class/createAnnouncement",
-  async (data, { _, dispatch }) => {
-    const { classId, content, setIsLoading } = data;
-    setIsLoading(true);
-
-    try {
-      const res = await axios({
-        method: "POST",
-        url: `/api/class/createAnnouncement`,
-        data: {
-          classId,
-          content,
-        },
-      });
-
-      dispatch(
-        classSlice.actions.addNewAnnouncement({
-          announcements: res.data.announcements,
-        })
-      );
-    } catch (error) {
-      console.log(error);
-      const message = getError(error);
-      notifyAndUpdate(ERROR_TOAST, "error", message, toast);
-    }
-
-    setIsLoading(false);
-  }
-);
-
 export const getClass = createAsyncThunk(
   "class/getClass",
   async (data, { getState, dispatch }) => {
@@ -154,6 +123,97 @@ export const getClass = createAsyncThunk(
         return router.replace("/not_found");
       }
 
+      const message = getError(error);
+      notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+    }
+  }
+);
+
+export const manageAnnouncement = createAsyncThunk(
+  "class/manageAnnouncement",
+  async (data, { _, dispatch }) => {
+    const {
+      classId,
+      content,
+      setIsLoading,
+      setTextEditor,
+      isEditAnnouncement: announcementId,
+    } = data;
+
+    setIsLoading(true);
+    let method = announcementId ? "PATCH" : "POST";
+
+    try {
+      const res = await axios({
+        method: method,
+        url: `/api/class/announcement/manage`,
+        data: {
+          classId,
+          content,
+          ...(announcementId && { announcementId }),
+        },
+      });
+
+      if (res.status !== 201 && res.status !== 200) {
+        const error = new Error("Couldn't update the announcement!");
+        error.statusCode = 400;
+        throw error;
+      }
+
+      if (announcementId) {
+        dispatch(
+          classSlice.actions.editAnnouncement({
+            announcementId,
+            content,
+          })
+        );
+      } else {
+        dispatch(
+          classSlice.actions.addNewAnnouncement({
+            announcements: res.data.announcements,
+          })
+        );
+      }
+    } catch (error) {
+      console.log(error);
+      const message = getError(error);
+      notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+    }
+
+    setIsLoading(false);
+    setTextEditor(false);
+  }
+);
+
+export const deleteAnnouncement = createAsyncThunk(
+  "class/deleteAnnouncement",
+  async (data, { getState, dispatch }) => {
+    const { _id: announcementId, classId } = data;
+
+    try {
+      const res = await axios.delete(`/api/class/announcement/delete`, {
+        params: {
+          announcementId,
+          classId,
+        },
+      });
+
+      if (res.status !== 200) {
+        const error = new Error("Couldn't delete the announcement!");
+        error.statusCode = 400;
+        throw error;
+      }
+
+      dispatch(
+        classSlice.actions.deleteAnnouncement({
+          announcementId,
+        })
+      );
+
+      const { message } = res.data;
+      notifyAndUpdate(SUCCESS_TOAST, "success", message, toast);
+    } catch (error) {
+      console.log(error);
       const message = getError(error);
       notifyAndUpdate(ERROR_TOAST, "error", message, toast);
     }
@@ -195,12 +255,38 @@ const classSlice = createSlice({
       state.currentClassDetails = action.payload;
     },
 
+    cacheTheClass(state, action) {
+      state.classesCache.push(action.payload);
+    },
+
+    // announcement
     addNewAnnouncement(state, action) {
       state.currentClassDetails.announcements = action.payload.announcements;
     },
 
-    cacheTheClass(state, action) {
-      state.classesCache.push(action.payload);
+    editAnnouncement(state, action) {
+      const { announcementId, content } = action.payload;
+      const updatedAnnouncements = state.currentClassDetails.announcements;
+
+      const ind = updatedAnnouncements.findIndex(
+        (item) => item._id === announcementId
+      );
+
+      updatedAnnouncements[ind].text = content;
+      updatedAnnouncements[ind].isEdited = true;
+      state.currentClassDetails.announcements = updatedAnnouncements;
+    },
+
+    deleteAnnouncement(state, action) {
+      const { announcementId } = action.payload;
+      const updatedAnnouncements = state.currentClassDetails.announcements;
+
+      const ind = updatedAnnouncements.findIndex(
+        (item) => item._id === announcementId
+      );
+
+      updatedAnnouncements.splice(ind, 1);
+      state.currentClassDetails.announcements = updatedAnnouncements;
     },
   },
 });

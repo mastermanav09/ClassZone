@@ -21,7 +21,7 @@
     justify-content: space-around;
     width: 95%;
     .content {
-      font-size: 1rem;
+      font-size: clamp(15px, 1.5vw, 18px);
       word-break: break-all;
     }
 
@@ -29,7 +29,14 @@
       margin-top: 0.5rem;
       margin-bottom: 0.5rem;
       color: #797878;
-      font-size: 0.8rem;
+      font-size: clamp(13px, 1.8vw, 15px);
     }
+  }
+
+  .isEdited_text {
+    margin-left: 1rem;
+    margin-right: 0.5rem;
+    color: #797878;
+    font-size: clamp(13px, 1.8vw, 15px);
   }
 }
