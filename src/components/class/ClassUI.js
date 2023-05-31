@@ -20,11 +20,13 @@ const ClassUI = () => {
   const [textEditor, setTextEditor] = useState(false);
   const [content, setContent] = useState("");
   const [isEditAnnouncement, setIsEditAnnouncement] = useState(null);
+
   const router = useRouter();
   const { classId } = router.query;
 
   const {
     announcements = [],
+    pinnedAnnouncements = [],
     _id,
     name,
     backgroundColor,
@@ -45,7 +47,8 @@ const ClassUI = () => {
         content,
         setIsLoading,
         setTextEditor,
-        isEditAnnouncement,
+        announcementId: isEditAnnouncement?.id,
+        isPinned: isEditAnnouncement?.isPinned,
       })
     );
 
@@ -53,9 +56,9 @@ const ClassUI = () => {
     setIsEditAnnouncement(null);
   };
 
-  const editAnnouncementHandler = (text, announcementId) => {
+  const editAnnouncementHandler = (text, announcementId, isPinned) => {
     setTextEditor(true);
-    setIsEditAnnouncement(announcementId);
+    setIsEditAnnouncement({ id: announcementId, isPinned });
     setContent(text);
 
     window.scrollTo({
@@ -104,7 +107,22 @@ const ClassUI = () => {
             isLoading={isLoading}
             backgroundColor={backgroundColor}
           />
-          {Array.isArray(announcements) && announcements.length !== 0 ? (
+          {pinnedAnnouncements?.length !== 0 && (
+            <>
+              {pinnedAnnouncements.map((announcement) => (
+                <Announcement
+                  classId={_id}
+                  key={announcement._id}
+                  teacher={teacher}
+                  announcement={announcement}
+                  backgroundColor={backgroundColor}
+                  editAnnouncementHandler={editAnnouncementHandler}
+                />
+              ))}
+            </>
+          )}
+
+          {announcements?.length !== 0 &&
             announcements.map((announcement) => (
               <Announcement
                 classId={_id}
@@ -113,8 +131,9 @@ const ClassUI = () => {
                 announcement={announcement}
                 editAnnouncementHandler={editAnnouncementHandler}
               />
-            ))
-          ) : (
+            ))}
+
+          {pinnedAnnouncements?.length === 0 && announcements?.length === 0 && (
             <h3 className={classes["no_announcement_found_text"]}>
               No Announcements found!
             </h3>

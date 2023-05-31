@@ -22,7 +22,9 @@ const classSchema = new Schema(
     announcements: [
       {
         text: { type: String },
-        date: { type: Date },
+        createdAt: { type: Date },
+        updatedAt: { type: Date },
+        isPinned: { type: Boolean, default: false },
         isEdited: { type: Boolean, default: false },
       },
     ],

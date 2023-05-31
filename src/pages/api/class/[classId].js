@@ -52,8 +52,22 @@ const handler = async (req, res) => {
       throw error;
     }
 
-    return res.status(201).json({
-      class: userClass,
+    let announcements = [],
+      pinnedAnnouncements = [];
+
+    for (let item of userClass.announcements) {
+      if (item.isPinned) {
+        pinnedAnnouncements.push(item);
+      } else {
+        announcements.push(item);
+      }
+    }
+
+    announcements.sort((a, b) => b.createdAt - a.createdAt);
+    pinnedAnnouncements.sort((a, b) => b.updatedAt - a.updatedAt);
+
+    return res.status(200).json({
+      class: { ...userClass, announcements, pinnedAnnouncements },
     });
   } catch (error) {
     console.log(error);

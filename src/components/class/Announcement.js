@@ -4,33 +4,42 @@ import classes from "./Announcement.module.scss";
 import moment from "moment/moment";
 import HTMLReactParser from "html-react-parser";
 import ThreeDots from "../svg/ThreeDots";
-import { deleteAnnouncement } from "../../../utils/store/reducers/class";
+import {
+  deleteAnnouncement,
+  manageAnnouncementPin,
+} from "../../../utils/store/reducers/class";
 import { useDispatch } from "react-redux";
+import Pin from "../svg/Pin";
 
 const Announcement = ({
   teacher,
   announcement,
   classId,
   editAnnouncementHandler,
+  backgroundColor,
 }) => {
-  const { _id, text, date, isEdited } = announcement;
+  const { _id, text, createdAt, isEdited, isPinned } = announcement;
   const dispatch = useDispatch();
 
-  const PinAnnouncementHandler = () => {};
+  const manageAnnouncementPinHandler = (isPinned) => {
+    dispatch(manageAnnouncementPin({ classId, _id, isPinned }));
+  };
 
   const deleteAnnouncementHandler = () => {
-    dispatch(deleteAnnouncement({ classId, _id }));
+    dispatch(deleteAnnouncement({ classId, _id, isPinned }));
   };
 
   const fields = [
     {
-      text: "Pin",
-      action: PinAnnouncementHandler,
+      text: isPinned ? "Unpin" : "Pin",
+      action: isPinned
+        ? () => manageAnnouncementPinHandler(true)
+        : () => manageAnnouncementPinHandler(false),
     },
 
     {
       text: "Edit",
-      action: () => editAnnouncementHandler(text, _id),
+      action: () => editAnnouncementHandler(text, _id, isPinned),
     },
 
     {
@@ -40,7 +49,12 @@ const Announcement = ({
   ];
 
   return (
-    <div className={classes.announcement}>
+    <div
+      className={[
+        `${classes.announcement}`,
+        isPinned && `${classes["is_pinned"]}`,
+      ].join(" ")}
+    >
       <div className={classes.imageContainer}>
         <Image
           width={60}
@@ -52,13 +66,16 @@ const Announcement = ({
       <div className={classes.contentContainer}>
         <div className={classes.content}>{HTMLReactParser(text)}</div>
         <div className={classes.date}>
-          <div>{moment(date).format("LLL")}</div>
+          <div>{moment(createdAt).format("LLL")}</div>
         </div>
       </div>
+      {isPinned && (
+        <Pin style={{ fill: backgroundColor }} className={classes.pin} />
+      )}
       {isEdited && <p className={classes["isEdited_text"]}>Edited</p>}
       <ThreeDots fields={fields} />
     </div>
   );
 };
 
-export default Announcement;
+export default React.memo(Announcement);

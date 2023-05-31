@@ -63,8 +63,14 @@ const handler = async (req, res) => {
         {
           $push: {
             announcements: {
-              $each: [{ text: content, date: new Date(), isEdited: false }],
-              $sort: { date: -1 },
+              $each: [
+                {
+                  text: content,
+                  createdAt: new Date(),
+                  updatedAt: new Date(),
+                },
+              ],
+              $sort: { createdAt: -1 },
             },
           },
         },
@@ -83,6 +89,7 @@ const handler = async (req, res) => {
   if (req.method === "PATCH") {
     try {
       const { classId, content, announcementId } = req.body;
+      console.log(classId, content, announcementId);
       await Class.updateOne(
         { _id: classId, "announcements._id": announcementId },
         {

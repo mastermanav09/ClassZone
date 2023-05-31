@@ -3,7 +3,14 @@ import { notifyAndUpdate } from "@/helper/toastNotifyAndUpdate";
 import { createSlice } from "@reduxjs/toolkit";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
-import { ERROR_TOAST, SUCCESS_TOAST } from "../../constants";
+import {
+  ERROR_TOAST,
+  SUCCESS_TOAST,
+  SUCCESS_DELETE_TOAST,
+  UNPIN_ANNOUNCEMENT_TOAST,
+  PIN_ANNOUNCEMENT_TOAST,
+  SUCCESS_CREATE_EDIT_TOAST,
+} from "../../constants";
 import axios from "axios";
 import { getSession } from "next-auth/react";
 
@@ -137,7 +144,8 @@ export const manageAnnouncement = createAsyncThunk(
       content,
       setIsLoading,
       setTextEditor,
-      isEditAnnouncement: announcementId,
+      announcementId,
+      isPinned,
     } = data;
 
     setIsLoading(true);
@@ -165,6 +173,7 @@ export const manageAnnouncement = createAsyncThunk(
           classSlice.actions.editAnnouncement({
             announcementId,
             content,
+            isPinned,
           })
         );
       } else {
@@ -174,6 +183,9 @@ export const manageAnnouncement = createAsyncThunk(
           })
         );
       }
+
+      let { message } = res.data;
+      notifyAndUpdate(SUCCESS_CREATE_EDIT_TOAST, "success", message, toast);
     } catch (error) {
       console.log(error);
       const message = getError(error);
@@ -188,7 +200,7 @@ export const manageAnnouncement = createAsyncThunk(
 export const deleteAnnouncement = createAsyncThunk(
   "class/deleteAnnouncement",
   async (data, { getState, dispatch }) => {
-    const { _id: announcementId, classId } = data;
+    const { _id: announcementId, classId, isPinned } = data;
 
     try {
       const res = await axios.delete(`/api/class/announcement/delete`, {
@@ -207,12 +219,59 @@ export const deleteAnnouncement = createAsyncThunk(
       dispatch(
         classSlice.actions.deleteAnnouncement({
           announcementId,
+          isPinned,
         })
       );
 
       const { message } = res.data;
-      notifyAndUpdate(SUCCESS_TOAST, "success", message, toast);
+
+      notifyAndUpdate(SUCCESS_DELETE_TOAST, "success", message, toast);
     } catch (error) {
+      console.log(error);
+      const message = getError(error);
+      notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+    }
+  }
+);
+
+export const manageAnnouncementPin = createAsyncThunk(
+  "class/manageAnnouncementPin",
+  async (data, { dispatch }) => {
+    const { _id: announcementId, classId, isPinned } = data;
+
+    try {
+      dispatch(
+        classSlice.actions.manageAnnouncementPin({
+          announcementId,
+          isPinned,
+        })
+      );
+
+      const res = await axios({
+        method: "PATCH",
+        url: `/api/class/announcement/managePin`,
+        data: {
+          announcementId,
+          classId,
+          isPinned,
+        },
+      });
+
+      let type = isPinned ? "unpin" : "pin";
+
+      if (res.status !== 200) {
+        const error = new Error(`Couldn't ${type} the announcement!`);
+        error.statusCode = 400;
+        throw error;
+      }
+    } catch (error) {
+      dispatch(
+        classSlice.actions.manageAnnouncementPin({
+          announcementId,
+          isPinned: !isPinned,
+        })
+      );
+
       console.log(error);
       const message = getError(error);
       notifyAndUpdate(ERROR_TOAST, "error", message, toast);
@@ -265,8 +324,10 @@ const classSlice = createSlice({
     },
 
     editAnnouncement(state, action) {
-      const { announcementId, content } = action.payload;
-      const updatedAnnouncements = state.currentClassDetails.announcements;
+      const { announcementId, content, isPinned } = action.payload;
+      const updatedAnnouncements = isPinned
+        ? state.currentClassDetails.pinnedAnnouncements
+        : state.currentClassDetails.announcements;
 
       const ind = updatedAnnouncements.findIndex(
         (item) => item._id === announcementId
@@ -274,19 +335,60 @@ const classSlice = createSlice({
 
       updatedAnnouncements[ind].text = content;
       updatedAnnouncements[ind].isEdited = true;
-      state.currentClassDetails.announcements = updatedAnnouncements;
+
+      if (isPinned) {
+        state.currentClassDetails.pinnedAnnouncements = updatedAnnouncements;
+      } else {
+        state.currentClassDetails.announcements = updatedAnnouncements;
+      }
     },
 
     deleteAnnouncement(state, action) {
-      const { announcementId } = action.payload;
-      const updatedAnnouncements = state.currentClassDetails.announcements;
+      const { announcementId, isPinned } = action.payload;
+      const updatedAnnouncements = isPinned
+        ? state.currentClassDetails.pinnedAnnouncements
+        : state.currentClassDetails.announcements;
 
       const ind = updatedAnnouncements.findIndex(
         (item) => item._id === announcementId
       );
 
       updatedAnnouncements.splice(ind, 1);
-      state.currentClassDetails.announcements = updatedAnnouncements;
+
+      if (isPinned) {
+        state.currentClassDetails.pinnedAnnouncements = updatedAnnouncements;
+      } else {
+        state.currentClassDetails.announcements = updatedAnnouncements;
+      }
+    },
+
+    manageAnnouncementPin(state, action) {
+      const { announcementId, isPinned } = action.payload;
+      const updatedAnnouncements = isPinned
+        ? state.currentClassDetails.pinnedAnnouncements
+        : state.currentClassDetails.announcements;
+
+      const ind = updatedAnnouncements.findIndex(
+        (item) => item._id === announcementId
+      );
+
+      updatedAnnouncements[ind].isPinned = !isPinned;
+      const announcement = updatedAnnouncements[ind];
+      updatedAnnouncements.splice(ind, 1);
+
+      if (isPinned) {
+        let sortedAnnouncements = state.currentClassDetails.announcements;
+        sortedAnnouncements.push(announcement);
+        sortedAnnouncements.sort(
+          (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+        );
+
+        state.currentClassDetails.announcements = sortedAnnouncements;
+        state.currentClassDetails.pinnedAnnouncements = updatedAnnouncements;
+      } else {
+        state.currentClassDetails.pinnedAnnouncements.unshift(announcement);
+        state.currentClassDetails.announcements = updatedAnnouncements;
+      }
     },
   },
 });

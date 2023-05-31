@@ -115,11 +115,12 @@ const ThreeDots = ({ fields }) => {
             ].join(" ")}
             ref={dropdownRef}
           >
-            {fields.map((field, index) => (
-              <div key={index} onClick={field.action}>
-                {field.text}
-              </div>
-            ))}
+            {Array.isArray(fields) &&
+              fields?.map((field, index) => (
+                <div key={index} onClick={field.action}>
+                  {field.text}
+                </div>
+              ))}
           </div>
         )}
       </div>
