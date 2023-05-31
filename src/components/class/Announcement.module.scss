@@ -21,7 +21,7 @@
     justify-content: space-around;
     width: 95%;
     .content {
-      font-size: clamp(15px, 1.5vw, 18px);
+      font-size: clamp(16px, 2vw, 18px);
       word-break: break-all;
     }
 
@@ -33,10 +33,22 @@
     }
   }
 
+  .pin {
+    width: 32px;
+    height: 24px;
+    max-width: 32px;
+    max-height: 24px;
+  }
+
   .isEdited_text {
-    margin-left: 1rem;
+    margin-left: 0.5rem;
     margin-right: 0.5rem;
     color: #797878;
     font-size: clamp(13px, 1.8vw, 15px);
   }
+}
+
+.is_pinned {
+  background-color: rgba(96, 192, 244, 0.306);
+  border-color: rgba(96, 192, 244, 0.306);
 }
