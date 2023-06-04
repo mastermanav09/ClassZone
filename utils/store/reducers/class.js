@@ -199,10 +199,17 @@ export const manageAnnouncement = createAsyncThunk(
 
 export const deleteAnnouncement = createAsyncThunk(
   "class/deleteAnnouncement",
-  async (data, { getState, dispatch }) => {
-    const { _id: announcementId, classId, isPinned } = data;
+  async (data, { _, dispatch }) => {
+    const {
+      _id: announcementId,
+      classId,
+      isPinned,
+      setIsLoading,
+      closeConfirmDeleteAnnouncementHandler,
+    } = data;
 
     try {
+      setIsLoading(true);
       const res = await axios.delete(`/api/class/announcement/delete`, {
         params: {
           announcementId,
@@ -231,6 +238,9 @@ export const deleteAnnouncement = createAsyncThunk(
       const message = getError(error);
       notifyAndUpdate(ERROR_TOAST, "error", message, toast);
     }
+
+    setIsLoading(false);
+    closeConfirmDeleteAnnouncementHandler();
   }
 );
 
