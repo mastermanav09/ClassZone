@@ -18,7 +18,6 @@ const MainNavigation = () => {
   const [showJoinClassModal, setShowJoinClassModal] = useState(false);
   const [showNavbarDropdown, setShowNavbarDropdown] = useState(false);
   registerForUIToggle(setShowSideBar);
-
   registerForUIToggle(setShowNavbarDropdown);
 
   const toggleSidebar = () => {
