@@ -1,0 +1,56 @@
+.bgImage{
+  background: url("../../public/static/background/classparticipation.png");
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  background-position: center;
+.container{
+  width: 50%;
+  margin: auto;
+  min-height: 100vh;
+  background-color: white;
+  height: 100%;
+  padding: 1rem;
+  p{
+    font-size: 2rem;
+    color: blueviolet;
+  }
+  .blueHR{
+    border-top: 1px solid blueviolet;
+    margin-top: 1rem;
+  }
+  .search-box{
+    position: relative;
+    display: flex;
+    align-items: center;
+    .searchText{
+      width: 0rem;
+      border-radius: 1.5rem;
+      // padding: 0.5rem;
+      border: none;
+      outline: none;
+      transition: all 0.2s linear;
+    }
+    .searchText:focus{
+      outline: none;
+    }
+    .searchBtn{
+      width: 2rem;
+      height: 2rem;
+      position: absolute;
+      display: grid;
+      place-items: center;
+      right: 0.5rem;
+    }
+  }
+  .search-box:hover > .searchText {
+    width: 12rem;
+    padding: 0.5rem;
+    border: 1px solid blue;
+    box-shadow: 0 2rem 2rem -1.5rem rgba(0 , 0 , 0, 0.5);
+  }
+  .HR{
+    border-top: 1px;
+  }
+}
+}

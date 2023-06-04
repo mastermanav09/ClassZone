@@ -1,0 +1,15 @@
+.container{
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  .userinfo{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .img{
+      border-radius: 50%;
+      margin-right: 0.5rem;
+    }
+  }
+}
