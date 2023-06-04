@@ -26,8 +26,6 @@ const Announcement = ({
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
 
-  registerForUIToggle(setConfirmDelete);
-
   const manageAnnouncementPinHandler = (isPinned) => {
     dispatch(manageAnnouncementPin({ classId, _id, isPinned }));
   };
@@ -77,7 +75,7 @@ const Announcement = ({
         <Modal
           classNames={classes["react-responsive-modal-modal"]}
           center
-          onClose={() => {}}
+          onClose={closeConfirmDeleteAnnouncementHandler}
           open={confirmDelete}
           animationDuration={200}
           styles={{
@@ -111,6 +109,7 @@ const Announcement = ({
                 type="button"
                 className={classes["cancel-button"]}
                 data-dismiss="modal"
+                onClick={closeConfirmDeleteAnnouncementHandler}
               >
                 Cancel
               </button>
