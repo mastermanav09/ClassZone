@@ -19,12 +19,25 @@
     .container_one {
       display: flex;
       align-items: center;
+
       .sidebarBtn {
-        height: 30px;
-        width: 30px;
-        position: relative;
+        height: 40px;
+        width: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         margin-left: 20px;
         cursor: pointer;
+
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.14);
+          border-radius: 50%;
+        }
+
+        svg {
+          height: 30px;
+          width: 30px;
+        }
       }
 
       .logo {
@@ -51,6 +64,11 @@
         margin-left: 1rem;
         margin-right: 1rem;
         cursor: pointer;
+
+        svg {
+          width: 1.5rem;
+          height: 1.5rem;
+        }
       }
       .dropdown {
         position: absolute;
