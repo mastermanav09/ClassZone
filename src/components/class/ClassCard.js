@@ -7,10 +7,6 @@ const ClassCard = ({ classDetails }) => {
   const router = useRouter();
   const { _id, name: className, teacher, backgroundColor } = classDetails;
 
-  if (_id === "646e5099a9fd1b938b7e1400") {
-    // console.log(teacher);
-  }
-
   return (
     <div
       className={classes.classCard}
@@ -27,19 +23,22 @@ const ClassCard = ({ classDetails }) => {
         style={{ backgroundColor: backgroundColor }}
       >
         <div className={classes["classCard_desc"]}>
-          <span className={classes["classCard__className"]}>{className}</span>
-          <span className={classes["classCard__creatorName"]}>
-            {teacher?.credentials?.name}
-          </span>
+          <div className={classes["classCard__className"]}>{className}</div>
+          {teacher?.credentials?.name && (
+            <div className={classes["classCard__creatorName"]}>
+              {teacher?.credentials?.name}
+            </div>
+          )}
         </div>
-
-        <Image
-          width={60}
-          height={60}
-          src={teacher?.credentials?.userImage}
-          alt="user_img"
-          className={classes["classCard__creatorPhoto"]}
-        />
+        {teacher?.credentials?.userImage && (
+          <Image
+            width={60}
+            height={60}
+            src={teacher?.credentials?.userImage}
+            alt="user_img"
+            className={classes["classCard__creatorPhoto"]}
+          />
+        )}
       </div>
       <div className={classes["classCard__middle"]}></div>
       <div className={classes["classCard__lower"]}></div>

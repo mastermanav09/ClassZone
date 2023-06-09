@@ -3,13 +3,13 @@
 
   .navbar {
     height: 55px;
-    box-shadow: 0 3px 6px blue;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 2px 5px;
     background-color: white;
     color: black;
     z-index: 100;
     display: flex;
     align-items: center;
-    position: sticky;
+    position: fixed;
     justify-content: space-between;
     width: 100%;
     top: 0;
@@ -26,7 +26,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-left: 20px;
+
         cursor: pointer;
 
         &:hover {

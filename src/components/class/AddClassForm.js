@@ -9,7 +9,7 @@ import LoadingSpinner from "../progress/LoadingSpinner";
 
 const AddClassForm = (props) => {
   const [isLoading, setIsLoading] = useState(false);
-  const { toggleAddClassModal, showAddClassModal } = props;
+  const { toggleAddClassModal, showAddClassModal, pathname } = props;
   const form = useForm();
   const distpatch = useDispatch();
   const router = useRouter();
@@ -25,6 +25,7 @@ const AddClassForm = (props) => {
         toggleAddClassModal,
         setIsLoading,
         router,
+        pathname,
         classData: { className, subject, batch },
       })
     );
