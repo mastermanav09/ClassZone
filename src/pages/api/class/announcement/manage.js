@@ -26,6 +26,7 @@ const handler = async (req, res) => {
       throw error;
     }
 
+    const { user } = session;
     const { classId, content } = req.body;
     const plainString = content.replace(/<[^>]+>/g, "");
     const updatedStr = plainString.split("&nbsp;").join("");
@@ -43,12 +44,26 @@ const handler = async (req, res) => {
       throw error;
     }
 
-    const userClass = await Class.findById(classId);
+    const userClass = await Class.findById(classId).populate("teacher");
 
     if (!userClass) {
       const error = new Error("Class do not exists!");
       error.statusCode = 404;
       throw error;
+    }
+
+    if (user._id) {
+      if (userClass.teacher._id.toString() !== user._id) {
+        const error = new Error("Not authorized!");
+        error.statusCode = 401;
+        throw error;
+      }
+    } else {
+      if (userClass.teacher.credentials.email !== user.email) {
+        const error = new Error("Not authorized!");
+        error.statusCode = 401;
+        throw error;
+      }
     }
   } catch (error) {
     return sendErrorResponse(res, error);
@@ -89,7 +104,7 @@ const handler = async (req, res) => {
   if (req.method === "PATCH") {
     try {
       const { classId, content, announcementId } = req.body;
-      console.log(classId, content, announcementId);
+
       await Class.updateOne(
         { _id: classId, "announcements._id": announcementId },
         {

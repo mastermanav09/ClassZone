@@ -13,6 +13,10 @@ import { useRouter } from "next/router";
 import ThreeDots from "../svg/ThreeDots";
 import PageLoader from "../progress/PageLoader";
 import { validateAnnouncement } from "@/helper/validateAnnouncement";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
+import { notifyAndUpdate } from "@/helper/toastNotifyAndUpdate";
+import { INFO } from "../../../utils/constants";
 
 const ClassUI = () => {
   const dispatch = useDispatch();
@@ -20,6 +24,9 @@ const ClassUI = () => {
   const [textEditor, setTextEditor] = useState(false);
   const [content, setContent] = useState("");
   const [isEditAnnouncement, setIsEditAnnouncement] = useState(null);
+
+  const { data: session } = useSession();
+  const { user } = session;
 
   const router = useRouter();
   const { classId } = router.query;
@@ -36,9 +43,13 @@ const ClassUI = () => {
 
   const manageAnnouncementHandler = (classId, content) => {
     if (!validateAnnouncement(content)) {
-      toast.info("Announcement should contain valid text!");
-      toast.clearWaitingQueue();
-      return false;
+      notifyAndUpdate(
+        INFO + "1",
+        "info",
+        "Announcement should contain valid text!",
+        toast
+      );
+      return;
     }
 
     dispatch(
@@ -67,6 +78,24 @@ const ClassUI = () => {
     });
   };
 
+  const generateClassInviteLink = () => {};
+  const copyCodeHandler = () => {
+    navigator.clipboard.writeText(_id);
+    notifyAndUpdate(INFO + "2", "info", "Class code copied", toast);
+  };
+
+  const fields = [
+    {
+      text: "Copy class code",
+      action: copyCodeHandler,
+    },
+
+    {
+      text: "Copy class invite link",
+      action: generateClassInviteLink,
+    },
+  ];
+
   useEffect(() => {
     if (_id !== classId) {
       dispatch(getClass({ classId, router }));
@@ -87,26 +116,48 @@ const ClassUI = () => {
         <div className={classes["class__batch"]}>{batch}</div>
       </div>
       <div className={classes.container}>
-        <div className={classes["copy_code_container"]}>
-          <div>
-            <h3>Class Code</h3>
-            <ThreeDots />
+        {user?._id === teacher?.credentials._id ||
+        user?.email === teacher?.credentials.email ? (
+          <div className={classes["copy_code_container"]}>
+            <div>
+              <h3>Class Code</h3>
+              <ThreeDots fields={fields} />
+            </div>
+            <p className={classes["class_code"]}>{_id}</p>
           </div>
-          <p className={classes["class_code"]}>{_id}</p>
-        </div>
+        ) : (
+          <div className={classes["classes__upcoming"]}>
+            <h4>Upcoming</h4>
+            <p>Woohoo, no work due soon!</p>
+            <div className={classes.viewAllContainer}>
+              <Link
+                href="/"
+                style={{ color: backgroundColor }}
+                className={classes.viewAll}
+              >
+                View all
+              </Link>
+            </div>
+          </div>
+        )}
+
         <div className={classes.announcementContainer}>
-          <EditorWrapper
-            classId={_id}
-            textEditor={textEditor}
-            setTextEditor={setTextEditor}
-            isEditAnnouncement={isEditAnnouncement}
-            content={content}
-            setContent={setContent}
-            manageAnnouncementHandler={manageAnnouncementHandler}
-            teacher={teacher}
-            isLoading={isLoading}
-            backgroundColor={backgroundColor}
-          />
+          {(user?._id === teacher?.credentials._id ||
+            user?.email === teacher?.credentials.email) && (
+            <EditorWrapper
+              classId={_id}
+              textEditor={textEditor}
+              setTextEditor={setTextEditor}
+              isEditAnnouncement={isEditAnnouncement}
+              content={content}
+              setContent={setContent}
+              manageAnnouncementHandler={manageAnnouncementHandler}
+              teacher={teacher}
+              isLoading={isLoading}
+              backgroundColor={backgroundColor}
+            />
+          )}
+
           {pinnedAnnouncements?.length !== 0 && (
             <>
               {pinnedAnnouncements.map((announcement) => (
@@ -121,7 +172,6 @@ const ClassUI = () => {
               ))}
             </>
           )}
-
           {announcements?.length !== 0 &&
             announcements.map((announcement) => (
               <Announcement
@@ -132,7 +182,6 @@ const ClassUI = () => {
                 editAnnouncementHandler={editAnnouncementHandler}
               />
             ))}
-
           {pinnedAnnouncements?.length === 0 && announcements?.length === 0 && (
             <h3 className={classes["no_announcement_found_text"]}>
               No Announcements found!

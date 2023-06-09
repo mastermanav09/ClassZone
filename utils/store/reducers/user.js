@@ -103,25 +103,10 @@ export const loadUser = createAsyncThunk(
       const { enrolled: userEnrolledClasses, teaching: userTeachingClasses } =
         res.data.user;
 
-      const updatedUserTeachingClasses = userTeachingClasses.map(
-        (teachingClass) => {
-          return {
-            ...teachingClass,
-            teacher: {
-              credentials: {
-                email: user.credentials.email,
-                name: user.credentials.name,
-                userImage: user.credentials.userImage,
-              },
-            },
-          };
-        }
-      );
-
       dispatch(
         classActions.loadClasses({
           userEnrolledClasses,
-          userTeachingClasses: updatedUserTeachingClasses,
+          userTeachingClasses,
         })
       );
     } catch (error) {

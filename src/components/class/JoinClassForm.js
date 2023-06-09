@@ -8,7 +8,7 @@ import { useDispatch } from "react-redux";
 import { joinClass } from "../../../utils/store/reducers/class";
 const JoinClassForm = (props) => {
   const [isLoading, setIsLoading] = useState(false);
-  const { toggleJoinClassModal, showJoinClassModal } = props;
+  const { toggleJoinClassModal, showJoinClassModal, pathname } = props;
   const form = useForm();
   const { register, handleSubmit } = form;
   const router = useRouter();
@@ -20,6 +20,7 @@ const JoinClassForm = (props) => {
         toggleJoinClassModal,
         setIsLoading,
         router,
+        pathname,
         classId: classCode,
       })
     );

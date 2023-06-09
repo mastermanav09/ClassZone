@@ -11,7 +11,7 @@ const Layout = (props) => {
     <>
       <ToastContainer
         position="top-right"
-        limit={1}
+        limit={2}
         autoClose={2000}
         hideProgressBar={false}
         className={classes["toast-container"]}

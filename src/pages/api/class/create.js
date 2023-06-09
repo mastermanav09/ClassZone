@@ -39,7 +39,14 @@ const handler = async (req, res) => {
       filter = { "credentials.email": user.email };
     }
 
-    const { className, subject, batch } = req.body;
+    const { className, subject, batch, pathname } = req.body;
+
+    if (pathname !== "/") {
+      const error = new Error("Invalid request");
+      error.statusCode = 400;
+      throw error;
+    }
+
     const validationResponse = createClassValidation({
       className,
       subject,

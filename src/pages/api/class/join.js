@@ -27,7 +27,20 @@ const handler = async (req, res) => {
       filter = { "credentials.email": user.email };
     }
 
-    const { classId } = req.body;
+    const { classId, pathname } = req.body;
+
+    if (pathname !== "/") {
+      const error = new Error("Invalid request");
+      error.statusCode = 400;
+      throw error;
+    }
+
+    var ObjectId = mongoose.Types.ObjectId;
+    if (!ObjectId.isValid(classId)) {
+      const error = new Error("Invalid Id!");
+      error.statusCode = 422;
+      throw error;
+    }
 
     let joiningUser = await User.findOne({
       ...filter,

@@ -3,6 +3,7 @@ const constants = {
   SUCCESS_DELETE_TOAST: "successDeleteToast",
   SUCCESS_CREATE_EDIT_TOAST: "successCreateEditToast",
   ERROR_TOAST: "errorToast",
+  INFO: "infoToast",
   SERVER_ERROR_TOAST: "serverErrorToast",
 };
 

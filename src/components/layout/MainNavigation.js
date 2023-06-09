@@ -5,6 +5,7 @@ import Plus from "@/components/svg/Plus";
 import Hamburger from "@/components/svg/Hamburger";
 import AddClassForm from "../class/AddClassForm";
 import JoinClassForm from "../class/JoinClassForm";
+import { useRouter } from "next/router";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -17,6 +18,9 @@ const MainNavigation = () => {
   const [showAddClassModal, setShowAddClassModal] = useState(false);
   const [showJoinClassModal, setShowJoinClassModal] = useState(false);
   const [showNavbarDropdown, setShowNavbarDropdown] = useState(false);
+  const router = useRouter();
+  const { pathname } = router;
+
   registerForUIToggle(setShowSideBar);
   registerForUIToggle(setShowNavbarDropdown);
 
@@ -51,12 +55,14 @@ const MainNavigation = () => {
         <AddClassForm
           toggleAddClassModal={toggleAddClassModal}
           showAddClassModal={showAddClassModal}
+          pathname={pathname}
         />
       )}
       {showJoinClassModal && (
         <JoinClassForm
           toggleJoinClassModal={toggleJoinClassModal}
           showJoinClassModal={showJoinClassModal}
+          pathname={pathname}
         />
       )}
       <div className={classes.wrapper}>
@@ -72,28 +78,31 @@ const MainNavigation = () => {
               <Image src="/logo_text.png" width={115} height={35} alt="logo" />
             </div>
           </div>
-          <div
-            className={classes["container_two"]}
-            onClick={() => {
-              closeUIComponents();
-              setShowNavbarDropdown(true);
-            }}
-          >
-            <div className={classes.addBtn}>
-              <Plus />
-              {showNavbarDropdown ? (
-                <div
-                  className={classes.dropdown}
-                  onClick={(event) => event.stopPropagation()}
-                >
-                  <ul>
-                    <li onClick={handleJoinClassClick}>Join class</li>
-                    <li onClick={handleAddClassClick}>Create class</li>
-                  </ul>
-                </div>
-              ) : null}
+
+          {pathname === "/" && (
+            <div
+              className={classes["container_two"]}
+              onClick={() => {
+                closeUIComponents();
+                setShowNavbarDropdown(true);
+              }}
+            >
+              <div className={classes.addBtn}>
+                <Plus />
+                {showNavbarDropdown ? (
+                  <div
+                    className={classes.dropdown}
+                    onClick={(event) => event.stopPropagation()}
+                  >
+                    <ul>
+                      <li onClick={handleJoinClassClick}>Join class</li>
+                      <li onClick={handleAddClassClick}>Create class</li>
+                    </ul>
+                  </div>
+                ) : null}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </>

@@ -55,9 +55,11 @@ export default function App({ Component, pageProps, session }) {
               </Layout>
             </Auth>
           ) : (
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
+            <>
+              <Layout>
+                <Component {...pageProps} />
+              </Layout>
+            </>
           )}
         </StoreProvider>
       </Suspense>
