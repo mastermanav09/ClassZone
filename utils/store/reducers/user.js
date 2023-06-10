@@ -85,8 +85,7 @@ export const login = createAsyncThunk("user/login", async (data) => {
   try {
     setIsLoading(true);
     const res = await signIn("credentials", {
-      // redirect: false,
-      callbackUrl: process.env.NEXT_PUBLIC_NEXTAUTH_URL + redirectLink,
+      redirect: false,
       email,
       password,
     });

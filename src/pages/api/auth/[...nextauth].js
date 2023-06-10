@@ -42,7 +42,7 @@ export const authOptions = {
       return session;
     },
 
-    async signIn({ account, profile, ...rest }) {
+    async signIn({ account, profile }) {
       if (account.provider === "google") {
         const { name, email, picture } = profile;
 
@@ -82,12 +82,6 @@ export const authOptions = {
 
       return false;
     },
-
-    // async redirect({ url, baseUrl }) {
-    //   if (url.startsWith("/")) return `${baseUrl}${url}`;
-    //   else if (new URL(url).origin === baseUrl) return url;
-    //   return baseUrl;
-    // },
   },
 
   providers: [

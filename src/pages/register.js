@@ -1,21 +1,13 @@
 import { authOptions } from "./api/auth/[...nextauth]";
-import React, { useEffect } from "react";
+import React from "react";
 import Auth from "@/components/auth/Auth";
 import { getServerSession } from "next-auth/next";
 import Head from "next/head";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
 const RegisterPage = () => {
   const router = useRouter();
-  const { data: session } = useSession();
   const { redirect, joinClass, id } = router.query;
-
-  useEffect(() => {
-    if (session?.user) {
-      router.push(redirect || "/");
-    }
-  }, [router, redirect, session?.user]);
 
   return (
     <>
