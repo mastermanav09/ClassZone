@@ -78,13 +78,19 @@ const ClassUI = () => {
     });
   };
 
-  const generateClassInviteLink = () => {};
+  const generateClassInviteLink = () => {
+    const joinLink =
+      process.env.NEXT_PUBLIC_NEXTAUTH_URL +
+      `/login?redirect=/&joinClass=true&id=${_id}`;
+    navigator.clipboard.writeText(joinLink);
+    notifyAndUpdate(INFO + "3", "info", "Class invite link copied", toast);
+  };
   const copyCodeHandler = () => {
     navigator.clipboard.writeText(_id);
     notifyAndUpdate(INFO + "2", "info", "Class code copied", toast);
   };
 
-  const fields = [
+  const classCodefields = [
     {
       text: "Copy class code",
       action: copyCodeHandler,
@@ -121,7 +127,7 @@ const ClassUI = () => {
           <div className={classes["copy_code_container"]}>
             <div>
               <h3>Class Code</h3>
-              <ThreeDots fields={fields} />
+              <ThreeDots fields={classCodefields} />
             </div>
             <p className={classes["class_code"]}>{_id}</p>
           </div>

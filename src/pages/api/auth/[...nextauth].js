@@ -82,6 +82,12 @@ export const authOptions = {
 
       return false;
     },
+
+    // async redirect({ url, baseUrl }) {
+    //   if (url.startsWith("/")) return `${baseUrl}${url}`;
+    //   else if (new URL(url).origin === baseUrl) return url;
+    //   return baseUrl;
+    // },
   },
 
   providers: [
@@ -109,7 +115,7 @@ export const authOptions = {
         );
 
         if (!validatedToken) {
-          return null;
+          throw new Error("Password is incorrect.");
         }
 
         return {

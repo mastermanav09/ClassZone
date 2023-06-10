@@ -15,7 +15,16 @@ import { classActions } from "./class";
 export const signup = createAsyncThunk(
   "user/signup",
   async (data, { getState, dispatch }) => {
-    const { name, email, password, router, setIsLoading } = data;
+    const {
+      name,
+      email,
+      password,
+      setIsLoading,
+      redirect,
+      router,
+      joinClass,
+      classId,
+    } = data;
 
     setIsLoading(true);
 
@@ -36,7 +45,17 @@ export const signup = createAsyncThunk(
         throw error;
       }
 
-      dispatch(login({ email, password, setIsLoading, router }));
+      dispatch(
+        login({
+          email,
+          password,
+          router,
+          setIsLoading,
+          redirect,
+          joinClass,
+          classId,
+        })
+      );
     } catch (error) {
       console.log(error);
       const message = getError(error);
@@ -48,12 +67,26 @@ export const signup = createAsyncThunk(
 );
 
 export const login = createAsyncThunk("user/login", async (data) => {
-  const { email, password, router, setIsLoading } = data;
+  const {
+    email,
+    password,
+    setIsLoading,
+    redirect,
+    joinClass,
+    classId,
+    router,
+  } = data;
+
+  let redirectLink = "/";
+  if (redirect && joinClass === "true" && classId) {
+    redirectLink = `/?joinClass=true&id=${classId}`;
+  }
 
   try {
     setIsLoading(true);
     const res = await signIn("credentials", {
-      redirect: false,
+      // redirect: false,
+      callbackUrl: process.env.NEXT_PUBLIC_NEXTAUTH_URL + redirectLink,
       email,
       password,
     });
@@ -73,7 +106,7 @@ export const login = createAsyncThunk("user/login", async (data) => {
       throw error;
     }
 
-    router.replace("/");
+    router.replace(redirectLink);
   } catch (error) {
     const message = getError(error);
     if (error.statusCode === 500) {
