@@ -8,6 +8,7 @@ import JoinClassForm from "../class/JoinClassForm";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 import {
   closeUIComponents,
   registerForUIToggle,
@@ -15,11 +16,11 @@ import {
 
 const MainNavigation = () => {
   const [showSideBar, setShowSideBar] = useState(false);
-  const [showAddClassModal, setShowAddClassModal] = useState(false);
-  const [showJoinClassModal, setShowJoinClassModal] = useState(false);
   const [showNavbarDropdown, setShowNavbarDropdown] = useState(false);
   const router = useRouter();
-  const { pathname } = router;
+  const { pathname, query } = router;
+  const { addClass, joinClass, id: classId } = query;
+  const { data: session } = useSession();
 
   registerForUIToggle(setShowSideBar);
   registerForUIToggle(setShowNavbarDropdown);
@@ -29,21 +30,11 @@ const MainNavigation = () => {
   };
 
   const handleAddClassClick = () => {
-    setShowAddClassModal(true);
     setShowNavbarDropdown(false);
   };
 
   const handleJoinClassClick = () => {
-    setShowJoinClassModal(true);
     setShowNavbarDropdown(false);
-  };
-
-  const toggleAddClassModal = () => {
-    setShowAddClassModal(false);
-  };
-
-  const toggleJoinClassModal = () => {
-    setShowJoinClassModal(false);
   };
 
   return (
@@ -51,18 +42,19 @@ const MainNavigation = () => {
       {showSideBar && (
         <Sidebar toggleSidebar={toggleSidebar} showSideBar={showSideBar} />
       )}
-      {showAddClassModal && (
+      {addClass === "true" && session?.user && (
         <AddClassForm
-          toggleAddClassModal={toggleAddClassModal}
-          showAddClassModal={showAddClassModal}
+          toggleAddClassModal={() => router.replace("/")}
+          showAddClassModal={addClass}
           pathname={pathname}
         />
       )}
-      {showJoinClassModal && (
+      {joinClass === "true" && session?.user && (
         <JoinClassForm
-          toggleJoinClassModal={toggleJoinClassModal}
-          showJoinClassModal={showJoinClassModal}
+          toggleJoinClassModal={() => router.replace("/")}
+          showJoinClassModal={joinClass}
           pathname={pathname}
+          classId={classId}
         />
       )}
       <div className={classes.wrapper}>
@@ -95,8 +87,12 @@ const MainNavigation = () => {
                     onClick={(event) => event.stopPropagation()}
                   >
                     <ul>
-                      <li onClick={handleJoinClassClick}>Join class</li>
-                      <li onClick={handleAddClassClick}>Create class</li>
+                      <Link href={`/?joinClass=true`}>
+                        <li onClick={handleJoinClassClick}>Join class</li>
+                      </Link>
+                      <Link href={`/?addClass=true`}>
+                        <li onClick={handleAddClassClick}>Create class</li>
+                      </Link>
                     </ul>
                   </div>
                 ) : null}
