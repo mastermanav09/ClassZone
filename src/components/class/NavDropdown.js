@@ -31,7 +31,16 @@ const NavDropdown = ({ _id }) => {
 								<p style={{ marginLeft: "10px" }}>Stream</p>
 							</div>
 						</li>
-						<li>
+						<li
+							onClick={() =>
+								router.push({
+									pathname: "/assignment",
+									query: {
+										_id: _id,
+									},
+								})
+							}
+						>
 							<div style={{ display: "flex", justifyContent: "center" }}>
 								<Assignment />
 								<p style={{ marginLeft: "10px" }}>Classwork</p>
