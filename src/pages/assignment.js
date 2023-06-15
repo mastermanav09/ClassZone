@@ -7,7 +7,7 @@ import { Modal } from "react-responsive-modal";
 import { useForm } from "react-hook-form";
 import "react-responsive-modal/styles.css";
 import LoadingSpinner from "@/components/progress/LoadingSpinner";
-const assignment = () => {
+const AssignmentPage = () => {
 	const router = useRouter();
 	const { _id } = router.query;
 	const [openAssignmentModal, setOpenAssignmentModal] = useState(false);
@@ -158,4 +158,4 @@ const assignment = () => {
 	);
 };
 
-export default assignment;
+export default AssignmentPage;
