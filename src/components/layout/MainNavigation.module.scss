@@ -52,6 +52,15 @@
           align-items: center;
         }
       }
+
+      .logo_text {
+        display: flex;
+        align-items: center;
+
+        @media screen and (max-width: 540px) {
+          display: none;
+        }
+      }
     }
 
     .container_two {

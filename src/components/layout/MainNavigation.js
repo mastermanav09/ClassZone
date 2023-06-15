@@ -67,7 +67,14 @@ const MainNavigation = () => {
               <Link href="/">
                 <Image src="/logo.png" width={40} height={40} alt="logo" />
               </Link>
-              <Image src="/logo_text.png" width={115} height={35} alt="logo" />
+              <div className={classes["logo_text"]}>
+                <Image
+                  src="/logo_text.png"
+                  width={115}
+                  height={35}
+                  alt="logo"
+                />
+              </div>
             </div>
           </div>
 
