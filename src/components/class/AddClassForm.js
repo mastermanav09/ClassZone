@@ -10,7 +10,7 @@ import "react-responsive-modal/styles.css";
 
 const AddClassForm = (props) => {
 	const [isLoading, setIsLoading] = useState(false);
-	const { toggleAddClassModal, showAddClassModal } = props;
+	const { toggleAddClassModal, showAddClassModal, pathname } = props;
 	const form = useForm();
 	const distpatch = useDispatch();
 	const router = useRouter();
@@ -23,9 +23,9 @@ const AddClassForm = (props) => {
 	const onSubmit = ({ className, subject, batch }) => {
 		distpatch(
 			createClass({
-				toggleAddClassModal,
 				setIsLoading,
 				router,
+				pathname,
 				classData: { className, subject, batch },
 			})
 		);

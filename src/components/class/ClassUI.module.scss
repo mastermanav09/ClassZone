@@ -11,7 +11,7 @@
   width: 100%;
   color: white;
   height: 15rem;
-  margin-top: 2rem;
+  margin-top: 5rem;
   border-radius: 0.6rem;
   display: flex;
   flex-direction: column;
@@ -42,15 +42,14 @@
   display: flex;
 
   .copy_code_container {
-    height: 5rem;
-    width: 16rem;
+    height: max-content;
+    width: 18.5rem;
     border: 1px solid lightgray;
     margin-top: 1.2rem;
     border-radius: 0.5rem;
     margin-right: 1rem;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
     padding: 0.7rem;
 
     & > div {
@@ -65,6 +64,7 @@
     }
 
     .class_code {
+      margin: 0.2rem 0;
       font-size: 1rem;
       text-align: left;
       color: #0a9689;
@@ -75,8 +75,52 @@
     }
   }
 
+  .classes__upcoming {
+    min-height: 5rem;
+    width: 18.5rem;
+    border: 1px solid lightgray;
+    margin-top: 1.2rem;
+    border-radius: 0.5rem;
+    margin-right: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 0.7rem;
+
+    h4 {
+      font-size: 0.9rem;
+    }
+
+    p {
+      margin: 0.2rem 0 0.4rem;
+      font-size: 0.8rem;
+      text-align: left;
+      color: #0a9689;
+    }
+
+    .viewAllContainer {
+      display: flex;
+      flex-direction: row-reverse;
+
+      .viewAll {
+        text-align: center;
+        padding: 0.3rem;
+        border-radius: 5px;
+        font-size: 0.85rem;
+      }
+
+      .viewAll:hover {
+        background-color: whitesmoke;
+      }
+    }
+
+    @media screen and (max-width: 880px) {
+      display: none;
+    }
+  }
+
   .no_announcement_found_text {
-    margin: 1rem auto;
+    margin: 1.5rem auto;
     font-size: clamp(18px, 3vw, 24px);
     text-align: center;
     font-weight: 400;

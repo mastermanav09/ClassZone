@@ -42,7 +42,7 @@ export const authOptions = {
       return session;
     },
 
-    async signIn({ account, profile, ...rest }) {
+    async signIn({ account, profile }) {
       if (account.provider === "google") {
         const { name, email, picture } = profile;
 
@@ -109,7 +109,7 @@ export const authOptions = {
         );
 
         if (!validatedToken) {
-          return null;
+          throw new Error("Password is incorrect.");
         }
 
         return {

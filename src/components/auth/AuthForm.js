@@ -9,17 +9,39 @@ import { login, signup } from "../../../utils/store/reducers/user";
 import LoadingSpinner from "../progress/LoadingSpinner";
 import { useRouter } from "next/router";
 
-const AuthForm = ({ isRegister }) => {
-  const [isLoading, setIsLoading] = useState(false);
+const AuthForm = (props) => {
   const router = useRouter();
+  const { isRegister, redirect, joinClass, classId } = props;
+  const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
   const submitHandler = async ({ name, email, password }, event) => {
     event.preventDefault();
 
     if (isRegister) {
-      dispatch(signup({ name, email, password, setIsLoading, router }));
+      dispatch(
+        signup({
+          name,
+          email,
+          password,
+          setIsLoading,
+          router,
+          redirect,
+          joinClass,
+          classId,
+        })
+      );
     } else {
-      dispatch(login({ email, password, setIsLoading, router }));
+      dispatch(
+        login({
+          email,
+          password,
+          router,
+          setIsLoading,
+          redirect,
+          joinClass,
+          classId,
+        })
+      );
     }
   };
 
@@ -122,13 +144,29 @@ const AuthForm = ({ isRegister }) => {
           </button>
 
           {!isRegister ? (
-            <Link className={classes.link} href="/register">
+            <Link
+              className={classes.link}
+              href={[
+                `/register`,
+                redirect ? `?redirect=${redirect || "/"}` : "",
+                joinClass ? `&joinClass=true` : "",
+                classId ? `&id=${classId}` : "",
+              ].join("")}
+            >
               {" "}
               <span> Don&apos;t have an account </span>{" "}
               <span> Register here</span>
             </Link>
           ) : (
-            <Link className={classes.link} href="/login">
+            <Link
+              className={classes.link}
+              href={[
+                `/login`,
+                redirect ? `?redirect=${redirect || "/"}` : "",
+                joinClass ? `&joinClass=true` : "",
+                classId ? `&id=${classId}` : "",
+              ].join("")}
+            >
               {" "}
               <span>Already have an account</span> <span>Signin here</span>
             </Link>

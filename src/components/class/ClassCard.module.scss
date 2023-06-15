@@ -8,22 +8,23 @@
   .classCard_desc {
     display: inline-block;
     max-width: 10rem;
-    overflow: hidden !important;
-    text-overflow: ellipsis;
 
     .classCard__className {
       width: 100%;
+      overflow: hidden !important;
+      text-overflow: ellipsis;
+      white-space: nowrap;
       font-weight: 600;
-      font-size: 1.5rem;
+      font-size: 1.4rem;
+      float: left;
     }
 
     .classCard__creatorName {
-      display: inline-block;
+      width: 100%;
       overflow: hidden !important;
       text-overflow: ellipsis;
       padding-top: 0.2rem;
       padding-bottom: 0.2rem;
-      width: 100%;
       font-size: 0.75rem;
     }
   }
@@ -34,7 +35,11 @@
   border: 1px solid #dcdcdc;
   border-radius: 10px;
   overflow: hidden;
-  cursor: pointer;
+
+  &:hover {
+    cursor: pointer;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+  }
 
   @media screen and (max-width: 480px) {
     width: 320px;

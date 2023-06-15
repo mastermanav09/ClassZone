@@ -41,7 +41,6 @@ const handler = async (req, res) => {
           "credentials.name": 1,
           "credentials.email": 1,
           "credentials.userImage": 1,
-          _id: 0,
         },
       })
       .lean();

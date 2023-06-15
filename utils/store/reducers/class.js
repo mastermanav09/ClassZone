@@ -17,7 +17,7 @@ import { getSession } from "next-auth/react";
 export const createClass = createAsyncThunk(
   "class/createClass",
   async (data, { _, dispatch }) => {
-    const { setIsLoading, router, classData, toggleAddClassModal } = data;
+    const { setIsLoading, router, classData, pathname } = data;
 
     setIsLoading(true);
 
@@ -27,6 +27,7 @@ export const createClass = createAsyncThunk(
         url: `/api/class/create`,
         data: {
           ...classData,
+          pathname,
         },
       });
 
@@ -45,7 +46,7 @@ export const createClass = createAsyncThunk(
       };
 
       dispatch(classActions.addUserTeachingClasses(newClass));
-      router.push(`/classes/${newClass._id}`);
+      router.replace(`/classes/${newClass._id}`);
 
       setTimeout(
         () => notifyAndUpdate(SUCCESS_TOAST, "success", message, toast),
@@ -58,14 +59,13 @@ export const createClass = createAsyncThunk(
     }
 
     setIsLoading(false);
-    toggleAddClassModal();
   }
 );
 
 export const joinClass = createAsyncThunk(
   "class/joinClass",
   async (data, { _, dispatch }) => {
-    const { classId, setIsLoading, router, toggleJoinClassModal } = data;
+    const { classId, setIsLoading, router, pathname } = data;
 
     setIsLoading(true);
 
@@ -75,6 +75,7 @@ export const joinClass = createAsyncThunk(
         url: `/api/class/join`,
         data: {
           classId,
+          pathname,
         },
       });
 
@@ -82,7 +83,7 @@ export const joinClass = createAsyncThunk(
       const message = res.data.message;
 
       dispatch(classActions.addUserEnrolledClasses(joindedClass));
-      router.push(`/classes/${joindedClass._id}`);
+      router.replace(`/classes/${joindedClass._id}`);
 
       setTimeout(
         () => notifyAndUpdate(SUCCESS_TOAST, "success", message, toast),
@@ -95,7 +96,6 @@ export const joinClass = createAsyncThunk(
     }
 
     setIsLoading(false);
-    toggleJoinClassModal();
   }
 );
 
