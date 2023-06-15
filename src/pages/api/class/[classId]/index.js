@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
-import Class from "../../../../models/Class";
-import manageResponses from "../../../../utils/responses/manageResponses";
-import { authOptions } from "../auth/[...nextauth]";
-import db from "../../../../utils/db";
+import Class from "../../../../../models/Class";
+import manageResponses from "../../../../../utils/responses/manageResponses";
+import { authOptions } from "../../auth/[...nextauth]";
+import db from "../../../../../utils/db";
 
 const { getServerSession } = require("next-auth");
 
@@ -43,6 +43,7 @@ const handler = async (req, res) => {
           "credentials.userImage": 1,
         },
       })
+      .select("-students")
       .lean();
 
     if (!userClass) {

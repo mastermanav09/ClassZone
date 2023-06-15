@@ -136,6 +136,31 @@ export const getClass = createAsyncThunk(
   }
 );
 
+export const getClassPeople = createAsyncThunk(
+  "class/getClassPeople",
+  async (data, { dispatch }) => {
+    const { classId, router } = data;
+
+    try {
+      const res = await axios({
+        method: "GET",
+        url: `/api/class/${classId}/people`,
+      });
+
+      dispatch(classSlice.actions.setClassPeople(res.data.people));
+    } catch (error) {
+      console.log(error);
+
+      if (error.status === 404 || error.response?.data?.status === 404) {
+        return router.back();
+      }
+
+      const message = getError(error);
+      notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+    }
+  }
+);
+
 export const manageAnnouncement = createAsyncThunk(
   "class/manageAnnouncement",
   async (data, { _, dispatch }) => {
@@ -322,6 +347,13 @@ const classSlice = createSlice({
 
     setCurrentClass(state, action) {
       state.currentClassDetails = action.payload;
+    },
+
+    setClassPeople(state, action) {
+      state.currentClassDetails = {
+        people: action.payload,
+        ...state.currentClassDetails,
+      };
     },
 
     cacheTheClass(state, action) {
