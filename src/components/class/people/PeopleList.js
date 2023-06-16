@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import NavDropdown from "../ClassNavDropdown";
+import ClassNavDropdown from "../ClassNavDropdown";
 import UserCard from "../UserCard";
 import Search from "@/components/svg/Search";
 import classes from "./PeopleList.module.scss";
@@ -60,7 +60,7 @@ const PeopleList = () => {
   return (
     <>
       <div className={classes.people}>
-        <NavDropdown _id={classId} backgroundColor={backgroundColor} />
+        <ClassNavDropdown _id={classId} backgroundColor={backgroundColor} />
         <div className={classes.container}>
           <div>
             <p>Teacher</p>

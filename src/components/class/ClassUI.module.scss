@@ -12,6 +12,7 @@
   color: white;
   height: 15rem;
   margin-top: 5rem;
+  margin-bottom: 1.2rem;
   border-radius: 0.6rem;
   display: flex;
   flex-direction: column;
@@ -45,7 +46,6 @@
     height: max-content;
     width: 18.5rem;
     border: 1px solid lightgray;
-    margin-top: 1.2rem;
     border-radius: 0.5rem;
     margin-right: 1rem;
     display: flex;
@@ -76,10 +76,9 @@
   }
 
   .classes__upcoming {
-    min-height: 5rem;
+    height: 6rem;
     width: 18.5rem;
     border: 1px solid lightgray;
-    margin-top: 1.2rem;
     border-radius: 0.5rem;
     margin-right: 1rem;
     display: flex;

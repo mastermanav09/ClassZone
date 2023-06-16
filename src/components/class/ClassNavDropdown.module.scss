@@ -4,10 +4,24 @@
   left: 0;
   right: 0;
   z-index: 101;
-  width: 6rem;
+  height: 55px;
+  width: 50%;
   padding: 0.6rem;
   position: fixed;
   margin: auto;
+
+  @media screen and (max-width: 480px) {
+    // margin: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    svg {
+      position: relative;
+      width: 25px;
+      height: 25px;
+    }
+  }
 }
 
 .dropdown[open] {

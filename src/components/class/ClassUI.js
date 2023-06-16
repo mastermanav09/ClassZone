@@ -124,8 +124,8 @@ const ClassUI = () => {
         <div className={classes["class__batch"]}>{batch}</div>
       </div>
       <div className={classes.container}>
-        {user?._id === teacher?.credentials._id ||
-        user?.email === teacher?.credentials.email ? (
+        {(user?._id && user?._id === teacher?.credentials._id) ||
+        (user?.email && user?.email === teacher?.credentials.email) ? (
           <div className={classes["copy_code_container"]}>
             <div>
               <h3>Class Code</h3>
@@ -150,21 +150,21 @@ const ClassUI = () => {
         )}
 
         <div className={classes.announcementContainer}>
-          {(user?._id === teacher?.credentials._id ||
-            user?.email === teacher?.credentials.email) && (
-            <EditorWrapper
-              classId={_id}
-              textEditor={textEditor}
-              setTextEditor={setTextEditor}
-              isEditAnnouncement={isEditAnnouncement}
-              content={content}
-              setContent={setContent}
-              manageAnnouncementHandler={manageAnnouncementHandler}
-              teacher={teacher}
-              isLoading={isLoading}
-              backgroundColor={backgroundColor}
-            />
-          )}
+          {(user?._id && user?._id === teacher?.credentials._id) ||
+            (user?.email && user?.email === teacher?.credentials.email && (
+              <EditorWrapper
+                classId={_id}
+                textEditor={textEditor}
+                setTextEditor={setTextEditor}
+                isEditAnnouncement={isEditAnnouncement}
+                content={content}
+                setContent={setContent}
+                manageAnnouncementHandler={manageAnnouncementHandler}
+                teacher={teacher}
+                isLoading={isLoading}
+                backgroundColor={backgroundColor}
+              />
+            ))}
 
           {pinnedAnnouncements?.length !== 0 && (
             <>
