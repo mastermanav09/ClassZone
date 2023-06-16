@@ -19,9 +19,8 @@
       width: 35px;
     }
   } @else {
-    margin: auto;
-    width: 22px;
-    height: 22px;
+    width: 100%;
+    height: 100%;
   }
 
   @content;
@@ -36,7 +35,6 @@
   box-shadow: 0px 1px 6px -2px black;
   justify-content: space-between;
   border-radius: 0.5rem;
-  margin-top: 1.2rem;
   height: 4.5rem;
   cursor: pointer;
 
@@ -133,8 +131,9 @@
 .spinner_two {
   @include spinner("two") {
     &::after {
-      width: 12px;
-      height: 12px;
+      margin: auto;
+      width: 11px;
+      height: 11px;
     }
   }
 }

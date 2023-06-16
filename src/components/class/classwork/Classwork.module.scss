@@ -1,23 +1,24 @@
-.assignment{
+.assignment {
   width: 75%;
-  margin: auto;
+  margin: 4rem auto;
   @media screen and (max-width: 1024px) {
     width: 90%;
   }
 }
-.assignment{
-  .container{
+
+.assignment {
+  .container {
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
     position: relative;
-    h2{
+    h2 {
       text-align: center;
-			margin-top: 3rem;
-			margin-bottom: 0.5rem;
+      margin-top: 3rem;
+      margin-bottom: 0.5rem;
     }
-    button{
+    button {
       height: 3rem;
       width: 10rem;
       position: absolute;
@@ -31,7 +32,7 @@
       background-color: white;
       border: 1px solid #bdbdbd;
     }
-    button:hover{
+    button:hover {
       background-color: aliceblue;
     }
   }
