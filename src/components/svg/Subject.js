@@ -19,8 +19,8 @@ const Subject = () => {
           y2="32"
           gradientUnits="userSpaceOnUse"
         >
-          <stop offset="0" stop-color="#9cffac"></stop>
-          <stop offset="1" stop-color="#00b59c"></stop>
+          <stop offset="0" stopColor="#9cffac"></stop>
+          <stop offset="1" stopColor="#00b59c"></stop>
         </linearGradient>
       </defs>
       <path

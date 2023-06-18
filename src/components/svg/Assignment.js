@@ -5,7 +5,7 @@ const Assignment = () => {
     <svg
       version="1.1"
       viewBox="0 0 105 105"
-      enable-background="new 0 0 100 100"
+      enableBackground="new 0 0 100 100"
       height="35"
       width="33"
       fill="url(#a)"
@@ -17,8 +17,8 @@ const Assignment = () => {
           transform="matrix(1 0 0 1 66 -19.5)"
           display="inline"
           fill="#000000"
-          font-family="'Helvetica'"
-          font-size="2.4"
+          fontFamily="'Helvetica'"
+          fontSize="2.4"
         >
           http://thenounproject.com
         </text>
@@ -27,8 +27,8 @@ const Assignment = () => {
             x="0"
             y="0"
             fill="#000000"
-            font-family="'Helvetica-Bold'"
-            font-size="6.1578"
+            fontFamily="'Helvetica-Bold'"
+            fontSize="6.1578"
           >
             The Noun Project
           </tspan>
@@ -36,8 +36,8 @@ const Assignment = () => {
             x="1.12"
             y="4.8"
             fill="#000000"
-            font-family="'Helvetica-Bold'"
-            font-size="4"
+            fontFamily="'Helvetica-Bold'"
+            fontSize="4"
           >
             Icon Template
           </tspan>
@@ -46,8 +46,8 @@ const Assignment = () => {
           transform="matrix(1 0 0 1 -178.5 10.5)"
           display="inline"
           fill="#000000"
-          font-family="'Helvetica-Bold'"
-          font-size="6.1578"
+          fontFamily="'Helvetica-Bold'"
+          fontSize="6.1578"
         >
           Reminders
         </text>
@@ -55,7 +55,7 @@ const Assignment = () => {
           display="inline"
           fill="#000000"
           stroke="#FFFFFF"
-          stroke-miterlimit="10"
+          strokeMiterlimit="10"
           x1="8"
           y1="-14.5"
           x2="18"
@@ -65,7 +65,7 @@ const Assignment = () => {
           display="inline"
           fill="#000000"
           stroke="#FFFFFF"
-          stroke-miterlimit="10"
+          strokeMiterlimit="10"
           x1="-179"
           y1="16.5"
           x2="-162"
@@ -105,8 +105,8 @@ const Assignment = () => {
             x="0"
             y="0"
             fill="#000000"
-            font-family="'Helvetica-Bold'"
-            font-size="3"
+            fontFamily="'Helvetica-Bold'"
+            fontSize="3"
           >
             Strokes
           </tspan>
@@ -114,8 +114,8 @@ const Assignment = () => {
             x="0"
             y="5"
             fill="#000000"
-            font-family="'Helvetica'"
-            font-size="2.4"
+            fontFamily="'Helvetica'"
+            fontSize="2.4"
           >
             Try to keep strokes at 4px
           </tspan>
@@ -123,8 +123,8 @@ const Assignment = () => {
             x="0"
             y="10"
             fill="#000000"
-            font-family="'Helvetica'"
-            font-size="2.4"
+            fontFamily="'Helvetica'"
+            fontSize="2.4"
           >
             Minimum stroke weight is 2px
           </tspan>
@@ -132,8 +132,8 @@ const Assignment = () => {
             x="0"
             y="14.5"
             fill="#000000"
-            font-family="'Helvetica'"
-            font-size="2.4"
+            fontFamily="'Helvetica'"
+            fontSize="2.4"
           >
             For thicker strokes use even{" "}
           </tspan>
@@ -141,8 +141,8 @@ const Assignment = () => {
             x="0"
             y="17.5"
             fill="#000000"
-            font-family="'Helvetica'"
-            font-size="2.4"
+            fontFamily="'Helvetica'"
+            fontSize="2.4"
           >
             numbers: 6px, 8px etc.
           </tspan>
@@ -150,8 +150,8 @@ const Assignment = () => {
             x="0"
             y="22"
             fill="#000000"
-            font-family="'Helvetica-Bold'"
-            font-size="2.4"
+            fontFamily="'Helvetica-Bold'"
+            fontSize="2.4"
           >
             Remember to expand strokes{" "}
           </tspan>
@@ -159,8 +159,8 @@ const Assignment = () => {
             x="0"
             y="25"
             fill="#000000"
-            font-family="'Helvetica-Bold'"
-            font-size="2.4"
+            fontFamily="'Helvetica-Bold'"
+            fontSize="2.4"
           >
             before saving as an SVG{" "}
           </tspan>
@@ -178,8 +178,8 @@ const Assignment = () => {
             x="0"
             y="0"
             fill="#000000"
-            font-family="'Helvetica-Bold'"
-            font-size="3"
+            fontFamily="'Helvetica-Bold'"
+            fontSize="3"
           >
             Size
           </tspan>
@@ -187,8 +187,8 @@ const Assignment = () => {
             x="0"
             y="5"
             fill="#000000"
-            font-family="'Helvetica'"
-            font-size="2.4"
+            fontFamily="'Helvetica'"
+            fontSize="2.4"
           >
             Cannot be wider or taller than{" "}
           </tspan>
@@ -196,8 +196,8 @@ const Assignment = () => {
             x="0"
             y="8.5"
             fill="#000000"
-            font-family="'Helvetica'"
-            font-size="2.4"
+            fontFamily="'Helvetica'"
+            fontSize="2.4"
           >
             100px (artboard size)
           </tspan>
@@ -205,8 +205,8 @@ const Assignment = () => {
             x="0"
             y="13.5"
             fill="#000000"
-            font-family="'Helvetica'"
-            font-size="2.4"
+            fontFamily="'Helvetica'"
+            fontSize="2.4"
           >
             Scale your icon to fill as much of{" "}
           </tspan>
@@ -214,8 +214,8 @@ const Assignment = () => {
             x="0"
             y="16.5"
             fill="#000000"
-            font-family="'Helvetica'"
-            font-size="2.4"
+            fontFamily="'Helvetica'"
+            fontSize="2.4"
           >
             the artboard as possible
           </tspan>
@@ -233,8 +233,8 @@ const Assignment = () => {
             x="0"
             y="0"
             fill="#000000"
-            font-family="'Helvetica-Bold'"
-            font-size="3"
+            fontFamily="'Helvetica-Bold'"
+            fontSize="3"
           >
             Ungroup
           </tspan>
@@ -242,8 +242,8 @@ const Assignment = () => {
             x="0"
             y="5"
             fill="#000000"
-            font-family="'Helvetica'"
-            font-size="2.4"
+            fontFamily="'Helvetica'"
+            fontSize="2.4"
           >
             If your design has more than one{" "}
           </tspan>
@@ -251,8 +251,8 @@ const Assignment = () => {
             x="0"
             y="8"
             fill="#000000"
-            font-family="'Helvetica'"
-            font-size="2.4"
+            fontFamily="'Helvetica'"
+            fontSize="2.4"
           >
             shape, make sure to ungroup
           </tspan>
@@ -270,8 +270,8 @@ const Assignment = () => {
             x="0"
             y="0"
             fill="#000000"
-            font-family="'Helvetica-Bold'"
-            font-size="3"
+            fontFamily="'Helvetica-Bold'"
+            fontSize="3"
           >
             Save as
           </tspan>
@@ -279,8 +279,8 @@ const Assignment = () => {
             x="0"
             y="5"
             fill="#000000"
-            font-family="'Helvetica'"
-            font-size="2.4"
+            fontFamily="'Helvetica'"
+            fontSize="2.4"
           >
             Save as .SVG and make sure “Use{" "}
           </tspan>
@@ -288,8 +288,8 @@ const Assignment = () => {
             x="0"
             y="8"
             fill="#000000"
-            font-family="'Helvetica'"
-            font-size="2.4"
+            fontFamily="'Helvetica'"
+            fontSize="2.4"
           >
             Artboards” is checked
           </tspan>
@@ -298,8 +298,8 @@ const Assignment = () => {
           transform="matrix(1.0074 0 0 1 -125.542 30.5933)"
           display="inline"
           fill="#000000"
-          font-family="'Helvetica'"
-          font-size="2.5731"
+          fontFamily="'Helvetica'"
+          fontSize="2.5731"
         >
           100px
         </text>
@@ -307,8 +307,8 @@ const Assignment = () => {
           transform="matrix(1.0074 0 0 1 -41 39)"
           display="inline"
           fill="#000000"
-          font-family="'Helvetica-Bold'"
-          font-size="5.1462"
+          fontFamily="'Helvetica-Bold'"
+          fontSize="5.1462"
         >
           .SVG
         </text>
@@ -366,7 +366,7 @@ const Assignment = () => {
           display="inline"
           fill="#000000"
           stroke="#FFFFFF"
-          stroke-miterlimit="10"
+          strokeMiterlimit="10"
           width="30"
           height="30"
         />
@@ -376,7 +376,7 @@ const Assignment = () => {
           display="inline"
           fill="#000000"
           stroke="#FFFFFF"
-          stroke-miterlimit="10"
+          strokeMiterlimit="10"
           width="30"
           height="30"
         />
@@ -386,7 +386,7 @@ const Assignment = () => {
           display="inline"
           fill="#000000"
           stroke="#FFFFFF"
-          stroke-miterlimit="10"
+          strokeMiterlimit="10"
           width="30"
           height="30"
         />
@@ -396,7 +396,7 @@ const Assignment = () => {
           display="inline"
           fill="#000000"
           stroke="#FFFFFF"
-          stroke-miterlimit="10"
+          strokeMiterlimit="10"
           width="30"
           height="30"
         />
