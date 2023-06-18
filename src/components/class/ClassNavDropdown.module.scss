@@ -41,6 +41,7 @@
   width: 75%;
   background-color: white;
   align-items: center;
+  overflow: hidden;
 
   @media screen and (max-width: 1024px) {
     width: 90%;
@@ -71,7 +72,6 @@
     height: 3.5rem;
     width: 100%;
     text-align: center;
-    cursor: pointer;
 
     @media screen and (max-width: 540px) {
       p {
@@ -83,8 +83,21 @@
       }
     }
   }
+}
 
-  li:hover {
-    background-color: #e5e8f0;
+.navlink {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+
+  &.active {
+    background-color: #1965b2;
+    color: white;
+  }
+
+  &.in:hover {
+    background-color: aliceblue;
   }
 }

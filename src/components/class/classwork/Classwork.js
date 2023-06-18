@@ -9,6 +9,7 @@ import "react-responsive-modal/styles.css";
 
 const Classwork = () => {
   const router = useRouter();
+  console.log(router.query);
   const { classId, bc: backgroundColor } = router.query;
   const [openAssignmentModal, setOpenAssignmentModal] = useState(false);
   const form = useForm();
@@ -118,42 +119,10 @@ const Classwork = () => {
           </button>
         </div>
         <hr style={{ marginBottom: "1rem" }} />
-        <AssignmentCard
-          id={1}
-          text={
-            "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchange"
-          }
-        />
-        <AssignmentCard
-          id={2}
-          text={
-            "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchange"
-          }
-        />
-        <AssignmentCard
-          id={3}
-          text={
-            "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchange"
-          }
-        />
-        <AssignmentCard
-          id={4}
-          text={
-            "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchange"
-          }
-        />
-        <AssignmentCard
-          id={5}
-          text={
-            "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchange"
-          }
-        />
-        <AssignmentCard
-          id={6}
-          text={
-            "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchange"
-          }
-        />
+        <AssignmentCard id={1} text={"Physics Assignment 1"} />
+        <AssignmentCard id={2} text={"Maths Assignment 2"} />
+        <AssignmentCard id={3} text={"Chemistry Assignment 3"} />
+        <AssignmentCard id={4} text={"C++ Assignment 4"} />
       </div>
     </>
   );
