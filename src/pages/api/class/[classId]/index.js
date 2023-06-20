@@ -17,7 +17,11 @@ const handler = async (req, res) => {
   try {
     const session = await getServerSession(req, res, authOptions);
 
-    if (!session || !session.user) {
+    if (
+      !session ||
+      !session.user ||
+      (!session.user.email && !session.user._id)
+    ) {
       const error = new Error("Sign in required!");
       error.statusCode = 401;
       throw error;

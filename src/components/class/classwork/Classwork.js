@@ -6,22 +6,60 @@ import AssignmentCard from "@/components/class/AssignmentCard";
 import { Modal } from "react-responsive-modal";
 import { useForm } from "react-hook-form";
 import "react-responsive-modal/styles.css";
+import { notifyAndUpdate } from "@/helper/toastNotifyAndUpdate";
+import { ERROR_TOAST } from "../../../../utils/constants";
+import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { createAssignment } from "../../../../utils/store/reducers/Assignment";
 
 const Classwork = () => {
   const router = useRouter();
-  console.log(router.query);
   const { classId, bc: backgroundColor } = router.query;
   const [openAssignmentModal, setOpenAssignmentModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const form = useForm();
+  const dispatch = useDispatch();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = form;
+  const [isNewFileSelected, setIsNewFileSelected] = useState(false);
+  const [file, setFile] = useState(null);
+
+  const fileHandler = (event) => {
+    if (event.target.files) {
+      setFile(event.target.files[0]);
+      setIsNewFileSelected(true);
+    }
+  };
+
+  const submitHandler = ({ title, description }) => {
+    if (title.trim().length < 3 || description.trim().length < 5) {
+      notifyAndUpdate(
+        ERROR_TOAST,
+        "error",
+        "Please fill valid information!",
+        toast
+      );
+
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("title", title);
+    formData.append("description", description);
+    formData.append("file", file);
+    formData.append("classId", classId);
+
+    dispatch(
+      createAssignment({ formData, setIsLoading, setOpenAssignmentModal })
+    );
+  };
 
   return (
     <>
-      {openAssignmentModal === true ? (
+      {openAssignmentModal && (
         <Modal
           classNames={classes["react-responsive-modal-modal"]}
           onClose={() => setOpenAssignmentModal(false)}
@@ -52,7 +90,7 @@ const Classwork = () => {
               className={classes.form}
               id="my-form"
               type="text"
-              // onSubmit={handleSubmit(onSubmit)}
+              onSubmit={handleSubmit(submitHandler)}
             >
               <div>
                 <label htmlFor="title">Title</label>
@@ -63,8 +101,8 @@ const Classwork = () => {
                   {...register("title", {
                     required: "Please enter valid title for assignment",
                     minLength: {
-                      value: 5,
-                      message: "Title must be of at least 5 characters.",
+                      value: 3,
+                      message: "Title must be of at least 3 characters.",
                     },
                   })}
                 />
@@ -77,15 +115,14 @@ const Classwork = () => {
               </div>
               <div>
                 <label htmlFor="description">Description</label>
-                <input
-                  type="text"
+                <textarea
                   placeholder="Description"
                   id="description"
                   {...register("description", {
                     required: "Please enter valid description",
                     minLength: {
-                      value: 3,
-                      message: "Description must be of at least 3 characters.",
+                      value: 5,
+                      message: "Description must be of at least 5 characters.",
                     },
                   })}
                 />
@@ -96,7 +133,39 @@ const Classwork = () => {
                 )}
               </div>
               <div>
-                <input type="file" />
+                <div
+                  className={classes["remove-file-text"]}
+                  onClick={() => {
+                    setIsNewFileSelected(false);
+                    setFile(null);
+                  }}
+                >
+                  <span>Remove file</span>
+                </div>
+                <div className={classes["file-edit-main"]}>
+                  <label
+                    className={[
+                      classes["file-input-box"],
+                      isNewFileSelected
+                        ? classes["selected"]
+                        : classes["not-selected"],
+                    ].join(" ")}
+                  >
+                    <i className="fas fa-cloud-upload-alt fa-3x"></i>
+                    <input
+                      type="file"
+                      className={classes["hidden"]}
+                      onChange={fileHandler}
+                    />
+                    <div className={classes["file_select_text"]}>
+                      {isNewFileSelected ? (
+                        <span>File Selected</span>
+                      ) : (
+                        <span>Select File</span>
+                      )}
+                    </div>
+                  </label>
+                </div>
               </div>
             </form>
             <div className={classes.btn}>
@@ -109,7 +178,7 @@ const Classwork = () => {
             </div>
           </div>
         </Modal>
-      ) : null}
+      )}
       <div className={classes.assignment}>
         <ClassNavDropdown _id={classId} backgroundColor={backgroundColor} />
         <div className={classes.container}>

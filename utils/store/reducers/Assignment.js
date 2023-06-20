@@ -9,20 +9,25 @@ import { toast } from "react-toastify";
 export const createAssignment = createAsyncThunk(
   "assignment/createAssignment",
   async (data, { dispatch }) => {
-    const { setIsLoading, assignmentBody } = data;
+    const { formData, setIsLoading, setOpenAssignmentModal } = data;
 
     try {
+      setIsLoading(true);
       const res = await axios({
+        url: "/api/class/assignment/create",
         method: "POST",
-        data: assignmentBody,
+        data: formData,
+        "content-type": "multipart/form-data",
       });
 
-      console.log(res);
+      setOpenAssignmentModal(false);
     } catch (error) {
       console.log(error);
       const message = getError(error);
       notifyAndUpdate(ERROR_TOAST, "error", message, toast);
     }
+
+    setIsLoading(false);
   }
 );
 
