@@ -8,7 +8,7 @@ const userSchema = new Schema(
       required: true,
     },
 
-    desc: {
+    description: {
       type: String,
       required: true,
     },

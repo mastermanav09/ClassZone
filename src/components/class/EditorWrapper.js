@@ -48,7 +48,7 @@ const EditorWrapper = ({
             <Image
               width={60}
               height={60}
-              src="/static/profileImages/no-img.png"
+              src="/profileImages/no-img.png"
               alt="User image"
             />
           )}

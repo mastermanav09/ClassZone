@@ -20,7 +20,11 @@ const handler = async (req, res) => {
   try {
     const session = await getServerSession(req, res, authOptions);
 
-    if (!session || !session.user) {
+    if (
+      !session ||
+      !session.user ||
+      (!session.user.email && !session.user._id)
+    ) {
       const error = new Error("Sign in required!");
       error.statusCode = 401;
       throw error;
@@ -92,8 +96,12 @@ const handler = async (req, res) => {
         { new: true }
       );
 
+      const unpinnedAnnouncements = updatedClass.announcements.filter(
+        (announcement) => !announcement.isPinned
+      );
+
       return res.status(201).json({
-        announcements: updatedClass.announcements,
+        announcements: unpinnedAnnouncements,
         message: "Announcement created successfully!",
       });
     } catch (error) {
