@@ -10,7 +10,7 @@ import { notifyAndUpdate } from "@/helper/toastNotifyAndUpdate";
 import { ERROR_TOAST } from "../../../../utils/constants";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-import { createAssignment } from "../../../../utils/store/reducers/Assignment";
+import { createAssignment } from "../../../../utils/store/reducers/assignment";
 
 const Classwork = () => {
   const router = useRouter();
@@ -28,7 +28,7 @@ const Classwork = () => {
   const [file, setFile] = useState(null);
 
   const fileHandler = (event) => {
-    if (event.target.files) {
+    if (event.target?.files.length > 0) {
       setFile(event.target.files[0]);
       setIsNewFileSelected(true);
     }

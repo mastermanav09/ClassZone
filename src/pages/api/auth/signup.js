@@ -42,7 +42,7 @@ const handler = async (req, res) => {
       credentials: {
         name: name,
         email: email,
-        userImage: "/profileImages/no-img.png",
+        userImage: "/images/profileImages/no-img.png",
         password: hashedPassword,
       },
 

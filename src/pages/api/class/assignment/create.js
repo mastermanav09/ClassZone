@@ -7,11 +7,30 @@ import manageResponses from "../../../../../utils/responses/manageResponses";
 import { createAssignmentValidation } from "../../../../../utils/validators/createAssignmentValidation";
 import db from "../../../../../utils/db";
 import formidable from "formidable";
+import path from "path";
+import fs from "fs";
 
 export const config = {
   api: {
     bodyParser: false,
   },
+};
+
+const readFile = async (req, dirPath) => {
+  options.filename = (name, ext, part, form) => {
+    return Date.now().toString() + "_" + part.originalFilename;
+  };
+
+  const form = formidable(options);
+  form.on("fileBegin", (formname, file) => {
+    form.emit("data", { name: "fileBegin", formname, value: file });
+  });
+
+  form.on("file", (formname, file) => {
+    form.emit("data", { name: "file", formname, value: file });
+  });
+
+  // console.log(files);
 };
 
 const handler = async (req, res) => {
@@ -41,33 +60,37 @@ const handler = async (req, res) => {
     if (!user._id) {
       filter = { "credentials.email": user.email };
     }
+    const options = {};
+    const dirPath = path.join(`/public/assignments`);
+    options.uploadDir = path.join(process.cwd(), dirPath).replaceAll("\\", "/");
+    options.keepExtensions = true;
 
-    const data = await new Promise((resolve, reject) => {
-      formidable().parse(req, (err, fields, files) => {
-        if (err) {
-          reject({ err });
-        }
+    const form = formidable(options);
+    const [fields, files] = await form.parse(req);
 
-        const titleArr = fields.title;
-        const descriptionArr = fields.description;
-        const classIdArr = fields.classId;
+    const title = fields.title[0];
+    const description = fields.description[0];
+    const classId = fields.classId[0];
+    const { file } = files;
 
-        const resolvedFields = {
-          title: titleArr[0],
-          description: descriptionArr[0],
-          classId: classIdArr[0],
-        };
+    // if (file && file[0]) {
+    //   const dirPath = path.join(
+    //     process.cwd() + `/public/assignments/${classId}`
+    //   );
 
-        resolve({ err, resolvedFields, files });
-      });
+    // try {
+    //   fs.readdirSync(dirPath);
+    // } catch (error) {
+    //   fs.mkdirSync(dirPath);
+    // }
+
+    // await readFile(req, dirPath);
+    // }
+
+    const validationResponse = createAssignmentValidation({
+      title,
+      description,
     });
-    console.log(data);
-    const { title, description, classId } = data.resolvedFields;
-    return;
-    // const validationResponse = createAssignmentValidation({
-    //   title[0],
-    //   description][],
-    // });
 
     if (validationResponse.error) {
       const error = new Error(validationResponse.error?.details[0]?.message);
@@ -110,7 +133,7 @@ const handler = async (req, res) => {
     const newAssignment = new Assignment({
       title: title,
       description: description,
-      file: req?.file?.path.replaceAll("\\", "/"),
+      file: file ? file[0].filepath.replaceAll("\\", "/") : undefined,
     });
 
     await newAssignment.save();
