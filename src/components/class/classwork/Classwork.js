@@ -29,8 +29,8 @@ const Classwork = () => {
     reset,
   } = form;
   const [isNewFileSelected, setIsNewFileSelected] = useState(false);
-  const [file, setFile] = useState(null);
   const [startDate, setStartDate] = useState(new Date());
+  const [file, setFile] = useState(null);
 
   const fileHandler = (event) => {
     if (event.target?.files.length > 0) {
