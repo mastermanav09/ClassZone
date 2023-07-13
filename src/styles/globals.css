@@ -34,3 +34,9 @@ button {
   border-radius: 10px;
   background: #2fc251;
 }
+
+.react-responsive-modal-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

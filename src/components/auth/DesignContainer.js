@@ -57,7 +57,7 @@ const DesignContainer = () => {
               width={80}
               height={80}
               fill="true"
-              src="/extra/open_book.png"
+              src="/images/extra/open_book.png"
               alt="pen book"
             />
           </div>
@@ -66,7 +66,7 @@ const DesignContainer = () => {
               width={80}
               height={80}
               fill="true"
-              src="/extra/grinning_face.png"
+              src="/images/extra/grinning_face.png"
               alt="grinning face"
             />
           </div>
@@ -75,7 +75,7 @@ const DesignContainer = () => {
               width={80}
               height={80}
               fill="true"
-              src="/extra/writing_hand.png"
+              src="/images/extra/writing_hand.png"
               alt="writing hand"
             />
           </div>

@@ -1,3 +1,4 @@
+import "react-datepicker/dist/react-datepicker.css";
 import React, { useState } from "react";
 import { useRouter } from "next/router";
 import ClassNavDropdown from "../ClassNavDropdown";
@@ -10,7 +11,9 @@ import { notifyAndUpdate } from "@/helper/toastNotifyAndUpdate";
 import { ERROR_TOAST } from "../../../../utils/constants";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-import { createAssignment } from "../../../../utils/store/reducers/Assignment";
+import { createAssignment } from "../../../../utils/store/reducers/assignment";
+import LoadingSpinner from "@/components/progress/LoadingSpinner";
+import DatePicker from "react-datepicker";
 
 const Classwork = () => {
   const router = useRouter();
@@ -23,12 +26,14 @@ const Classwork = () => {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = form;
   const [isNewFileSelected, setIsNewFileSelected] = useState(false);
+  const [startDate, setStartDate] = useState(new Date());
   const [file, setFile] = useState(null);
 
   const fileHandler = (event) => {
-    if (event.target.files) {
+    if (event.target?.files.length > 0) {
       setFile(event.target.files[0]);
       setIsNewFileSelected(true);
     }
@@ -46,15 +51,32 @@ const Classwork = () => {
       return;
     }
 
-    const formData = new FormData();
-    formData.append("title", title);
-    formData.append("description", description);
-    formData.append("file", file);
-    formData.append("classId", classId);
+    if (file && file.size / (1024 * 1024) > 10) {
+      notifyAndUpdate(
+        ERROR_TOAST,
+        "error",
+        "Maximum file size allowed is 10MB.",
+        toast
+      );
+
+      return;
+    }
 
     dispatch(
-      createAssignment({ formData, setIsLoading, setOpenAssignmentModal })
+      createAssignment({
+        title,
+        description,
+        classId,
+        startDate,
+        file,
+        setIsLoading,
+        setOpenAssignmentModal,
+        reset,
+        setFile,
+      })
     );
+
+    setStartDate(new Date());
   };
 
   return (
@@ -68,18 +90,18 @@ const Classwork = () => {
           animationDuration={200}
           styles={{
             overlay: {
-              position: "fixed",
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
               backgroundColor: "rgba(0, 0, 0, 0.75)",
             },
+
             closeIcon: {
               fill: "#ff0000",
               marginLeft: "10px",
             },
+
             modal: {
+              minHeight: "35rem",
+              width: "90%",
+              maxWidth: "35rem",
               borderRadius: "10px",
             },
           }}
@@ -142,6 +164,7 @@ const Classwork = () => {
                 >
                   <span>Remove file</span>
                 </div>
+
                 <div className={classes["file-edit-main"]}>
                   <label
                     className={[
@@ -167,10 +190,27 @@ const Classwork = () => {
                   </label>
                 </div>
               </div>
+              <div className={classes["due-date-pick"]}>
+                <label htmlFor="description">Due Date</label>
+                <DatePicker
+                  dateFormat="dd/MM/yyyy"
+                  selected={startDate}
+                  onChange={(date) => setStartDate(date)}
+                />
+              </div>
             </form>
             <div className={classes.btn}>
-              <button type="submit" form="my-form">
-                Create
+              <button
+                className={classes["create-assignment-btn"]}
+                type="submit"
+                form="my-form"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <LoadingSpinner className={classes.spinner} />
+                ) : (
+                  "Create"
+                )}
               </button>
               <button onClick={() => setOpenAssignmentModal(false)}>
                 Cancel

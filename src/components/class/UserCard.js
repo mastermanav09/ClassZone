@@ -10,7 +10,9 @@ const UserCard = ({ user }) => {
           alt="user-image"
           width={40}
           height={40}
-          src={user?.credentials?.userImage || "/profileImages/no-img.png"}
+          src={
+            user?.credentials?.userImage || "/images/profileImages/no-img.png"
+          }
           className={classes.img}
         />
         <span>{user?.credentials?.name}</span>

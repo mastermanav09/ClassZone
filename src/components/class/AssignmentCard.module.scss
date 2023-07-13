@@ -2,7 +2,6 @@
   margin-bottom: 2rem;
   display: flex;
   width: 100%;
-  // padding: 1rem 0.5rem 0.5rem;
   border-radius: 0.5rem;
   border: 1px solid #bdbdbd;
   height: 4rem;
@@ -15,7 +14,7 @@
     width: 90%;
     align-items: center;
     height: 100%;
-    border-radius: 0.5rem;
+    border-radius: 0.5rem 0 0 0.5rem;
     text-align: center;
 
     :nth-child(1) {
@@ -34,11 +33,12 @@
     height: 4rem;
   }
   .Upload {
-    border-radius: 0.5rem;
+    border-radius: 0 0.5rem 0.5rem 0;
     height: 100%;
     width: 10%;
     display: flex;
     align-items: center;
+    justify-content: center;
     margin: auto;
     svg {
       margin-left: 1rem;
@@ -50,4 +50,8 @@
 }
 .assignmentText:hover {
   background-color: aliceblue;
+}
+
+.assignment-body {
+  margin: 1rem;
 }

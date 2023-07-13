@@ -2,27 +2,23 @@ import React, { useState } from "react";
 import classes from "./AssignmentCard.module.scss";
 import Upload from "../svg/Upload";
 import { Modal } from "react-responsive-modal";
-
 import "react-responsive-modal/styles.css";
+
 const AssignmentCard = ({ id, text }) => {
   const [openContentModal, setOpenContentModal] = useState(false);
-  const [openUploadModal, setOpenUploadModal] = useState(false);
+
   return (
     <>
-      {openContentModal === true ? (
+      {openContentModal && (
         <Modal
           classNames={classes["react-responsive-modal-modal"]}
           onClose={() => setOpenContentModal(false)}
           center
-          open={openContentModal}
+          o
+          pen={openContentModal}
           animationDuration={200}
           styles={{
             overlay: {
-              position: "fixed",
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
               backgroundColor: "rgba(0, 0, 0, 0.75)",
             },
             closeIcon: {
@@ -30,46 +26,18 @@ const AssignmentCard = ({ id, text }) => {
               marginLeft: "10px",
             },
             modal: {
+              width: "90%",
+              maxWidth: "35rem",
               borderRadius: "10px",
             },
           }}
         >
-          <div style={{ padding: "10px", display: "flex" }}>
-            <span style={{ fontWeight: "600" }}>{id})&nbsp;&nbsp; </span>
-            <span>{text}</span>
+          <div className={classes["assignment-body"]}>
+            <div>{text}</div>
           </div>
         </Modal>
-      ) : (
-        <></>
       )}
-      {openUploadModal === true ? (
-        <Modal
-          classNames={classes["react-responsive-modal-modal"]}
-          onClose={() => setOpenUploadModal(false)}
-          center
-          open={openUploadModal}
-          animationDuration={200}
-          styles={{
-            overlay: {
-              position: "fixed",
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              backgroundColor: "rgba(0, 0, 0, 0.75)",
-            },
-            closeIcon: {
-              fill: "#ff0000",
-              marginLeft: "10px",
-            },
-            modal: {
-              borderRadius: "10px",
-            },
-          }}
-        >
-          <div style={{ padding: "10px" }}>{text}</div>
-        </Modal>
-      ) : null}
+
       <div className={classes.container}>
         <div
           className={classes.assignmentText}
@@ -79,10 +47,7 @@ const AssignmentCard = ({ id, text }) => {
           <div>{text}</div>
         </div>
         {/* <div className={classes.vl}></div> */}
-        <div
-          className={classes.Upload}
-          onClick={() => setOpenUploadModal(true)}
-        >
+        <div className={classes.Upload}>
           <Upload />
         </div>
       </div>

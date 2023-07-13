@@ -7,6 +7,11 @@ import manageResponses from "../../../../../utils/responses/manageResponses";
 import { createAssignmentValidation } from "../../../../../utils/validators/createAssignmentValidation";
 import db from "../../../../../utils/db";
 import formidable from "formidable";
+import FormData from "form-data";
+import fs from "fs";
+import axios from "axios";
+const cloudinary = require("cloudinary").v2;
+const { v4: uuidv4 } = require("uuid");
 
 export const config = {
   api: {
@@ -42,32 +47,27 @@ const handler = async (req, res) => {
       filter = { "credentials.email": user.email };
     }
 
-    const data = await new Promise((resolve, reject) => {
-      formidable().parse(req, (err, fields, files) => {
-        if (err) {
-          reject({ err });
-        }
+    const form = formidable({ keepExtensions: true });
+    const [fields, files] = await form.parse(req);
 
-        const titleArr = fields.title;
-        const descriptionArr = fields.description;
-        const classIdArr = fields.classId;
+    const {
+      title: titleArr,
+      description: descriptionArr,
+      classId: classIdArr,
+      dueDate: dueDateArr,
+    } = fields;
 
-        const resolvedFields = {
-          title: titleArr[0],
-          description: descriptionArr[0],
-          classId: classIdArr[0],
-        };
+    const { file } = files;
+    const title = titleArr[0];
+    const description = descriptionArr[0];
+    const classId = classIdArr[0];
+    const dueDate = dueDateArr[0];
 
-        resolve({ err, resolvedFields, files });
-      });
+    const validationResponse = createAssignmentValidation({
+      title,
+      description,
+      dueDate,
     });
-    console.log(data);
-    const { title, description, classId } = data.resolvedFields;
-    return;
-    // const validationResponse = createAssignmentValidation({
-    //   title[0],
-    //   description][],
-    // });
 
     if (validationResponse.error) {
       const error = new Error(validationResponse.error?.details[0]?.message);
@@ -107,21 +107,44 @@ const handler = async (req, res) => {
       }
     }
 
+    const url = process.env.UPLOAD_CLOUDINARY_URL;
+    let uploadedFileUrl = null;
+    if (file && file[0]) {
+      const pathId = uuidv4();
+      await cloudinary.api.create_folder(`/assignments/${pathId}`);
+      await cloudinary.api.create_folder(`/assignments/${pathId}/students`);
+
+      const formData = new FormData();
+      formData.append("file", fs.createReadStream(file[0].filepath));
+      formData.append("folder", `/assignments/${pathId}`);
+      formData.append("upload_preset", process.env.CLOUDINARY_UPLOAD_PRESET);
+      const { data } = await axios.post(url, formData);
+
+      if (!data || !data.secure_url) {
+        const error = new Error("Cannot upload File");
+        error.statusCode = 500;
+        throw error;
+      }
+
+      uploadedFileUrl = data.secure_url;
+    }
+
     const newAssignment = new Assignment({
       title: title,
       description: description,
-      file: req?.file?.path.replaceAll("\\", "/"),
+      ...(uploadedFileUrl && { file: uploadedFileUrl }),
+      responses: [],
+      dueDate: dueDate,
     });
 
     await newAssignment.save();
 
+    await Class.findOneAndUpdate(classId, {
+      $push: { assignments: new mongoose.Types.ObjectId(newAssignment._id) },
+    });
+
     return res.status(201).json({
-      assignment: {
-        _id: newAssignment._doc._id,
-        title: newAssignment._doc.title,
-        description: newAssignment._doc.description,
-        fileUrl: newAssignment?._doc?.file,
-      },
+      assignment: newAssignment._doc,
       ...manageResponses(201, "Assignment created successfully!"),
     });
   } catch (error) {

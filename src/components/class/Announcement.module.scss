@@ -71,17 +71,21 @@
 
 .modal-title {
   text-align: center;
-  font-size: 26px;
+  font-size: 1.5rem;
 }
 
 .modal-body {
   margin: 1rem auto 2rem;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
 }
 
 .modal-footer {
   display: flex;
   justify-content: space-between;
+
+  & button {
+    font-size: 0.9rem;
+  }
 }
 
 .cancel-button {

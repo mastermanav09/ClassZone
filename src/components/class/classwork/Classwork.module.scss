@@ -1,3 +1,5 @@
+$primary-color: #0a9689;
+
 .assignment {
   width: 75%;
   margin: 4rem auto;
@@ -42,16 +44,12 @@ $primary-color: #0a9689;
 .modal {
   display: flex;
   flex-direction: column;
-  width: 35rem;
-  @media screen and (max-width: 1000px) and (min-width: 491px) {
-    width: 25rem;
-  }
-  @media screen and (max-width: 490px) {
-    width: 15rem;
-  }
+  height: 100%;
+
   h2 {
     margin-bottom: 1rem;
   }
+
   .form {
     display: flex;
     flex-direction: column;
@@ -109,9 +107,14 @@ $primary-color: #0a9689;
     }
   }
 }
+
 .btn {
   display: flex;
   flex-direction: row-reverse;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 1rem;
 
   button {
     padding: 0.5rem;
@@ -183,6 +186,16 @@ $primary-color: #0a9689;
 
 .hidden {
   display: none;
+  &:disabled {
+    cursor: default !important;
+  }
+}
+
+.create-assignment-btn {
+  &:disabled {
+    cursor: default !important;
+    background-color: rgba(128, 128, 128, 0.209);
+  }
 }
 
 .remove-file-text {
@@ -200,6 +213,33 @@ $primary-color: #0a9689;
   font-weight: 500;
 }
 
+.spinner {
+  display: inline-block;
+  text-align: center;
+  height: 20px;
+}
+
+.spinner:after {
+  content: " ";
+  display: block;
+  width: 15px;
+  height: 15px;
+  margin: auto;
+  border-radius: 50%;
+  border: 4px solid $primary-color;
+  border-color: $primary-color transparent $primary-color transparent;
+  animation: spinner 1s linear infinite;
+}
+
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 @media screen and (max-width: 768px) {
   .selected {
     font-size: 16px;
@@ -211,5 +251,16 @@ $primary-color: #0a9689;
 
   .remove-file-text {
     font-size: 12px;
+  }
+
+  .modal input,
+  .modal textarea,
+  .modal label,
+  .modal button {
+    font-size: 0.8rem;
+  }
+
+  .modal h2 {
+    font-size: 1.2rem;
   }
 }

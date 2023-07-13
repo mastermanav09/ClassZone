@@ -43,6 +43,14 @@ const classSchema = new Schema(
       },
     ],
 
+    assignments: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Assignment",
+        required: true,
+      },
+    ],
+
     backgroundColor: {
       type: String,
       validator: [colorValidator, "Invalid Color"],
