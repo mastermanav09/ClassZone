@@ -3,13 +3,7 @@ $primary-color: #0a9689;
 .modal {
   display: flex;
   flex-direction: column;
-  width: 35rem;
-  @media screen and (max-width: 1000px) and (min-width: 491px) {
-    width: 25rem;
-  }
-  @media screen and (max-width: 490px) {
-    width: 15rem;
-  }
+
   h2 {
     margin-bottom: 1rem;
   }
@@ -108,5 +102,18 @@ $primary-color: #0a9689;
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .modal input,
+  .modal textarea,
+  .modal label,
+  .modal button {
+    font-size: 0.8rem;
+  }
+
+  .modal h2 {
+    font-size: 1.2rem;
   }
 }

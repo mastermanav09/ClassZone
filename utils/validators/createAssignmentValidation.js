@@ -13,6 +13,8 @@ const createAssignmentValidation = (requestBody) => {
       "any.required": `Description is a required field`,
       "string.empty": `Description cannot be an empty field`,
     }),
+
+    dueDate: Joi.date().min(new Date()).message("Please enter valid date."),
   });
 
   return schema.validate(requestBody);

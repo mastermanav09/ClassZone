@@ -16,6 +16,25 @@ const userSchema = new Schema(
     file: {
       type: String,
     },
+
+    responses: [
+      {
+        user: {
+          type: Schema.Types.ObjectId,
+          ref: "User",
+          required: true,
+        },
+
+        file: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
+
+    dueDate: {
+      type: Date,
+    },
   },
   { timestamps: true }
 );

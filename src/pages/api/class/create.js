@@ -80,6 +80,7 @@ const handler = async (req, res) => {
       subject: subject,
       batch: batch,
       announcements: [],
+      assignments: [],
       teacher: teacher._id,
       students: [],
       backgroundColor,

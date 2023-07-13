@@ -1,6 +1,6 @@
 .people {
   width: 75%;
-  margin: 4.5rem auto;
+  margin: 5rem auto;
   @media screen and (max-width: 1024px) {
     width: 90%;
   }
@@ -62,9 +62,9 @@
 }
 
 .no_found_text {
+  font-size: 1.2rem;
   text-align: center;
-  margin-top: 2rem;
-  margin-bottom: 2rem;
+  margin: 2rem auto;
 }
 
 .spinner {

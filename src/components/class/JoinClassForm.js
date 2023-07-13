@@ -42,17 +42,15 @@ const JoinClassForm = (props) => {
         animationDuration={200}
         styles={{
           overlay: {
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
             backgroundColor: "rgba(0, 0, 0, 0.75)",
           },
           closeIcon: {
             fill: "#ff0000",
           },
+
           modal: {
+            width: "90%",
+            maxWidth: "35rem",
             borderRadius: "10px",
           },
         }}

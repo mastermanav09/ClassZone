@@ -11,7 +11,6 @@ import {
 import { useDispatch } from "react-redux";
 import Pin from "../svg/Pin";
 import Modal from "react-responsive-modal";
-import { registerForUIToggle } from "@/helper/closeOpenUIComponents";
 import LoadingSpinner from "../progress/LoadingSpinner";
 
 const Announcement = ({
@@ -25,7 +24,7 @@ const Announcement = ({
   const [confirmDelete, setConfirmDelete] = useState(false);
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
-
+  console.log(teacher);
   const manageAnnouncementPinHandler = (isPinned) => {
     dispatch(manageAnnouncementPin({ classId, _id, isPinned }));
   };
@@ -80,17 +79,14 @@ const Announcement = ({
           animationDuration={200}
           styles={{
             overlay: {
-              position: "fixed",
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
               backgroundColor: "rgba(0, 0, 0, 0.75)",
             },
             closeIcon: {
               fill: "#ff0000",
             },
             modal: {
+              width: "90%",
+              maxWidth: "35rem",
               borderRadius: "10px",
             },
           }}

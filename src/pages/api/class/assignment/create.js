@@ -7,30 +7,16 @@ import manageResponses from "../../../../../utils/responses/manageResponses";
 import { createAssignmentValidation } from "../../../../../utils/validators/createAssignmentValidation";
 import db from "../../../../../utils/db";
 import formidable from "formidable";
-import path from "path";
+import FormData from "form-data";
 import fs from "fs";
+import axios from "axios";
+const cloudinary = require("cloudinary").v2;
+const { v4: uuidv4 } = require("uuid");
 
 export const config = {
   api: {
     bodyParser: false,
   },
-};
-
-const readFile = async (req, dirPath) => {
-  options.filename = (name, ext, part, form) => {
-    return Date.now().toString() + "_" + part.originalFilename;
-  };
-
-  const form = formidable(options);
-  form.on("fileBegin", (formname, file) => {
-    form.emit("data", { name: "fileBegin", formname, value: file });
-  });
-
-  form.on("file", (formname, file) => {
-    form.emit("data", { name: "file", formname, value: file });
-  });
-
-  // console.log(files);
 };
 
 const handler = async (req, res) => {
@@ -60,36 +46,27 @@ const handler = async (req, res) => {
     if (!user._id) {
       filter = { "credentials.email": user.email };
     }
-    const options = {};
-    const dirPath = path.join(`/public/assignments`);
-    options.uploadDir = path.join(process.cwd(), dirPath).replaceAll("\\", "/");
-    options.keepExtensions = true;
 
-    const form = formidable(options);
+    const form = formidable({ keepExtensions: true });
     const [fields, files] = await form.parse(req);
 
-    const title = fields.title[0];
-    const description = fields.description[0];
-    const classId = fields.classId[0];
+    const {
+      title: titleArr,
+      description: descriptionArr,
+      classId: classIdArr,
+      dueDate: dueDateArr,
+    } = fields;
+
     const { file } = files;
-
-    // if (file && file[0]) {
-    //   const dirPath = path.join(
-    //     process.cwd() + `/public/assignments/${classId}`
-    //   );
-
-    // try {
-    //   fs.readdirSync(dirPath);
-    // } catch (error) {
-    //   fs.mkdirSync(dirPath);
-    // }
-
-    // await readFile(req, dirPath);
-    // }
+    const title = titleArr[0];
+    const description = descriptionArr[0];
+    const classId = classIdArr[0];
+    const dueDate = dueDateArr[0];
 
     const validationResponse = createAssignmentValidation({
       title,
       description,
+      dueDate,
     });
 
     if (validationResponse.error) {
@@ -130,21 +107,44 @@ const handler = async (req, res) => {
       }
     }
 
+    const url = process.env.UPLOAD_CLOUDINARY_URL;
+    let uploadedFileUrl = null;
+    if (file && file[0]) {
+      const pathId = uuidv4();
+      await cloudinary.api.create_folder(`/assignments/${pathId}`);
+      await cloudinary.api.create_folder(`/assignments/${pathId}/students`);
+
+      const formData = new FormData();
+      formData.append("file", fs.createReadStream(file[0].filepath));
+      formData.append("folder", `/assignments/${pathId}`);
+      formData.append("upload_preset", process.env.CLOUDINARY_UPLOAD_PRESET);
+      const { data } = await axios.post(url, formData);
+
+      if (!data || !data.secure_url) {
+        const error = new Error("Cannot upload File");
+        error.statusCode = 500;
+        throw error;
+      }
+
+      uploadedFileUrl = data.secure_url;
+    }
+
     const newAssignment = new Assignment({
       title: title,
       description: description,
-      file: file ? file[0].filepath.replaceAll("\\", "/") : undefined,
+      ...(uploadedFileUrl && { file: uploadedFileUrl }),
+      responses: [],
+      dueDate: dueDate,
     });
 
     await newAssignment.save();
 
+    await Class.findOneAndUpdate(classId, {
+      $push: { assignments: new mongoose.Types.ObjectId(newAssignment._id) },
+    });
+
     return res.status(201).json({
-      assignment: {
-        _id: newAssignment._doc._id,
-        title: newAssignment._doc.title,
-        description: newAssignment._doc.description,
-        fileUrl: newAssignment?._doc?.file,
-      },
+      assignment: newAssignment._doc,
       ...manageResponses(201, "Assignment created successfully!"),
     });
   } catch (error) {
