@@ -40,3 +40,26 @@ button {
   align-items: center;
   justify-content: center;
 }
+
+.react-responsive-modal-modal {
+  &::-webkit-scrollbar {
+    border-radius: 10px;
+    background-color: #d2edeb;
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: #0a9689;
+  }
+}
+
+&::-webkit-scrollbar-thumb {
+  border-radius: 15px;
+  background: #0a9689;
+}
+
+&::-webkit-scrollbar {
+  background-color: #bee0dc;
+  width: 8px;
+}

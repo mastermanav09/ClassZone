@@ -2,7 +2,6 @@ import Class from "../../../../models/Class";
 import User from "../../../../models/User";
 import { authOptions } from "../auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
-
 import manageResponses from "../../../../utils/responses/manageResponses";
 import { createClassValidation } from "../../../../utils/validators/createClassValidation";
 

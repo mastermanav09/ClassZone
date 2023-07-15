@@ -29,7 +29,6 @@ const ScrollToTop = ({ backgroundColor }) => {
           viewBox="0 0 24 24"
           className={classes.scrollToTop}
           fill="none"
-          xmlns="http://www.w3.org/2000/svg"
           onClick={scrollUp}
         >
           <rect width="24" height="24" fill="white" />

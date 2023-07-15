@@ -82,7 +82,7 @@ const ClassUI = () => {
   const generateClassInviteLink = () => {
     const joinLink =
       process.env.NEXT_PUBLIC_NEXTAUTH_URL +
-      `/login?redirect=/&joinClass=true&id=${_id}`;
+      `/login?redirect=/&jc=true&id=${_id}`;
     navigator.clipboard.writeText(joinLink);
     notifyAndUpdate(INFO + "3", "info", "Class invite link copied", toast);
   };

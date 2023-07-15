@@ -51,12 +51,10 @@ const ThreeDots = ({ fields }) => {
 
   useLayoutEffect(() => {
     rightBorder =
-      // eslint-disable-next-line react-hooks/exhaustive-deps
       dropdownRef?.current?.offsetParent?.offsetLeft +
       dropdownRef?.current?.clientWidth;
 
     bottomBorder =
-      // eslint-disable-next-line react-hooks/exhaustive-deps
       dropdownRef?.current?.offsetTop + dropdownRef?.current?.offsetHeight;
 
     let pos = dropdownRef?.current?.getBoundingClientRect();

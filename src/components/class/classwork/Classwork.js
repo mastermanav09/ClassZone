@@ -3,17 +3,18 @@ import React, { useState } from "react";
 import { useRouter } from "next/router";
 import ClassNavDropdown from "../ClassNavDropdown";
 import classes from "./Classwork.module.scss";
-import AssignmentCard from "@/components/class/AssignmentCard";
 import { Modal } from "react-responsive-modal";
 import { useForm } from "react-hook-form";
 import "react-responsive-modal/styles.css";
 import { notifyAndUpdate } from "@/helper/toastNotifyAndUpdate";
 import { ERROR_TOAST } from "../../../../utils/constants";
 import { toast } from "react-toastify";
-import { useDispatch } from "react-redux";
-import { createAssignment } from "../../../../utils/store/reducers/assignment";
+import { useDispatch, useSelector } from "react-redux";
+import { createAssignment } from "../../../../utils/store/reducers/class";
 import LoadingSpinner from "@/components/progress/LoadingSpinner";
 import DatePicker from "react-datepicker";
+import AssignmentList from "./AssignmentList";
+import { useSession } from "next-auth/react";
 
 const Classwork = () => {
   const router = useRouter();
@@ -31,6 +32,9 @@ const Classwork = () => {
   const [isNewFileSelected, setIsNewFileSelected] = useState(false);
   const [file, setFile] = useState(null);
   const [startDate, setStartDate] = useState(new Date());
+  const { data: session } = useSession();
+  const { user } = session || {};
+  const { teacher } = useSelector((state) => state.class.currentClassDetails);
 
   const fileHandler = (event) => {
     if (event.target?.files.length > 0) {
@@ -84,7 +88,10 @@ const Classwork = () => {
       {openAssignmentModal && (
         <Modal
           classNames={classes["react-responsive-modal-modal"]}
-          onClose={() => setOpenAssignmentModal(false)}
+          onClose={() => {
+            setOpenAssignmentModal(false);
+            reset();
+          }}
           center
           open={openAssignmentModal}
           animationDuration={200}
@@ -196,6 +203,7 @@ const Classwork = () => {
                   dateFormat="dd/MM/yyyy"
                   selected={startDate}
                   onChange={(date) => setStartDate(date)}
+                  minDate={new Date()}
                 />
               </div>
             </form>
@@ -212,7 +220,12 @@ const Classwork = () => {
                   "Create"
                 )}
               </button>
-              <button onClick={() => setOpenAssignmentModal(false)}>
+              <button
+                onClick={() => {
+                  setOpenAssignmentModal(false);
+                  reset();
+                }}
+              >
                 Cancel
               </button>
             </div>
@@ -223,15 +236,16 @@ const Classwork = () => {
         <ClassNavDropdown _id={classId} backgroundColor={backgroundColor} />
         <div className={classes.container}>
           <h2>Classwork</h2>
-          <button onClick={() => setOpenAssignmentModal(true)}>
-            Create Assignment
-          </button>
+
+          {(user?._id && user?._id === teacher?.credentials._id) ||
+            (user?.email && user?.email === teacher?.credentials.email && (
+              <button onClick={() => setOpenAssignmentModal(true)}>
+                Create Assignment
+              </button>
+            ))}
         </div>
         <hr style={{ marginBottom: "1rem" }} />
-        <AssignmentCard id={1} text={"Physics Assignment 1"} />
-        <AssignmentCard id={2} text={"Maths Assignment 2"} />
-        <AssignmentCard id={3} text={"Chemistry Assignment 3"} />
-        <AssignmentCard id={4} text={"C++ Assignment 4"} />
+        <AssignmentList classId={classId} router={router} />
       </div>
     </>
   );

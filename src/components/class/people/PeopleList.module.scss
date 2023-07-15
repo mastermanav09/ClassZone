@@ -1,6 +1,7 @@
 .people {
   width: 75%;
-  margin: 5rem auto;
+  margin: 2rem auto;
+
   @media screen and (max-width: 1024px) {
     width: 90%;
   }
@@ -26,21 +27,24 @@
     border-top: 1px solid blueviolet;
     margin-top: 1rem;
   }
+
   .search-box {
     position: relative;
     display: flex;
     align-items: center;
+
     .searchText {
       width: 0rem;
       border-radius: 1.5rem;
-      // padding: 0.5rem;
       border: none;
       outline: none;
       transition: all 0.2s linear;
     }
+
     .searchText:focus {
       outline: none;
     }
+
     .searchBtn {
       width: 2rem;
       height: 2rem;
@@ -56,13 +60,14 @@
     border: 1px solid blue;
     box-shadow: 0 2rem 2rem -1.5rem rgba(0, 0, 0, 0.5);
   }
+
   .HR {
     border-top: 1px;
   }
 }
 
 .no_found_text {
-  font-size: 1.2rem;
+  font-size: 1rem;
   text-align: center;
   margin: 2rem auto;
 }
@@ -90,6 +95,7 @@
     height: 45px;
   }
 }
+
 @keyframes spinner {
   0% {
     transform: rotate(0deg);

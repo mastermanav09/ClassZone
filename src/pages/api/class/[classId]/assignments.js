@@ -39,25 +39,24 @@ const handler = async (req, res) => {
     await db.connect();
 
     const data = await Class.findById(classId)
-      .select("students -_id")
+      .select("assignments -_id")
       .populate({
-        path: "students",
+        path: "assignments",
         select: {
-          "credentials.email": 1,
-          "credentials.userImage": 1,
-          "credentials.name": 1,
+          updatedAt: 0,
+          __v: 0,
           _id: 1,
         },
       });
 
     if (!data) {
-      const error = new Error("No people found!");
+      const error = new Error("No assignments found!");
       error.statusCode = 404;
       throw error;
     }
 
     return res.status(200).json({
-      people: data.students,
+      assignments: data.assignments,
     });
   } catch (error) {
     console.log(error);

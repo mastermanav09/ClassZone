@@ -1,5 +1,5 @@
 @mixin button {
-  padding: 0.5rem;
+  padding: 0.6rem 0.8rem;
   border-radius: 5px;
   color: white;
 
@@ -120,17 +120,17 @@
 .spinner {
   display: block;
   margin: auto;
-  width: 50px;
-  height: 21.5px;
+  width: 41px;
+  height: 15px;
 
   &::after {
     margin: auto;
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
     content: " ";
     display: block;
     border-radius: 50%;
-    border: 4px solid white;
+    border: 3px solid white;
     border-color: white transparent white transparent;
     animation: spinner 1s linear infinite;
   }
