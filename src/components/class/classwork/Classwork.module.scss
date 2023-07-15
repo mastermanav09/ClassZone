@@ -2,7 +2,7 @@ $primary-color: #0a9689;
 
 .assignment {
   width: 75%;
-  margin: 4rem auto;
+  margin: 1rem auto;
   @media screen and (max-width: 1024px) {
     width: 90%;
   }
@@ -15,11 +15,13 @@ $primary-color: #0a9689;
     justify-content: center;
     text-align: center;
     position: relative;
+
     h2 {
       text-align: center;
       margin-top: 3rem;
       margin-bottom: 0.5rem;
     }
+
     button {
       height: 3rem;
       width: 10rem;
@@ -34,12 +36,12 @@ $primary-color: #0a9689;
       background-color: white;
       border: 1px solid #bdbdbd;
     }
+
     button:hover {
       background-color: aliceblue;
     }
   }
 }
-$primary-color: #0a9689;
 
 .modal {
   display: flex;
@@ -81,12 +83,12 @@ $primary-color: #0a9689;
         resize: none;
 
         &::-webkit-scrollbar-thumb {
-          border-radius: 10px;
-          background: #1965b2;
+          border-radius: 15px;
+          background: #0a9689;
         }
 
         &::-webkit-scrollbar {
-          background-color: rgb(233, 231, 231);
+          background-color: #bee0dc;
           border-radius: 10px;
           width: 5px;
         }

@@ -7,7 +7,7 @@ import { useRouter } from "next/router";
 
 const RegisterPage = () => {
   const router = useRouter();
-  const { redirect, joinClass, id } = router.query;
+  const { redirect, jc: joinClass, id } = router.query;
 
   return (
     <>
@@ -28,11 +28,11 @@ export default RegisterPage;
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
-  const { redirect, joinClass, id } = context.query;
+  const { redirect, jc: joinClass, id } = context.query;
 
   let redirectLink = redirect;
   if (joinClass === "true" && id) {
-    redirectLink = `${redirect}?joinClass=true&id=${id}`;
+    redirectLink = `${redirect}?jc=true&id=${id}`;
   }
 
   if (session) {

@@ -21,7 +21,6 @@ const ClassNavDropdown = ({ _id, backgroundColor }) => {
     <>
       <div className={classes.options}>
         <svg
-          xmlns="http://www.w3.org/2000/svg"
           id="Layer_1"
           data-name="Layer 1"
           width="30"

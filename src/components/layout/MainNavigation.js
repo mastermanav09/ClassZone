@@ -19,7 +19,7 @@ const MainNavigation = () => {
   const [showNavbarDropdown, setShowNavbarDropdown] = useState(false);
   const router = useRouter();
   const { pathname, query } = router;
-  const { addClass, joinClass, id: classId } = query;
+  const { addClass, jc: joinClass, id: classId } = query;
   const { data: session } = useSession();
 
   registerForUIToggle(setShowSideBar);
@@ -94,7 +94,7 @@ const MainNavigation = () => {
                     onClick={(event) => event.stopPropagation()}
                   >
                     <ul>
-                      <Link href={`/?joinClass=true`}>
+                      <Link href={`/?jc=true`}>
                         <li onClick={handleJoinClassClick}>Join class</li>
                       </Link>
                       <Link href={`/?addClass=true`}>

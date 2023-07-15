@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const userSchema = new Schema(
+const assignmentSchema = new Schema(
   {
     title: {
       type: String,
@@ -40,6 +40,6 @@ const userSchema = new Schema(
 );
 
 const Assignment =
-  mongoose.models.Assignment || mongoose.model("Assignment", userSchema);
+  mongoose.models.Assignment || mongoose.model("Assignment", assignmentSchema);
 
 export default Assignment;

@@ -79,7 +79,7 @@ export const login = createAsyncThunk("user/login", async (data) => {
 
   let redirectLink = "/";
   if (redirect && joinClass === "true" && classId) {
-    redirectLink = `/?joinClass=true&id=${classId}`;
+    redirectLink = `/?jc=true&id=${classId}`;
   }
 
   try {

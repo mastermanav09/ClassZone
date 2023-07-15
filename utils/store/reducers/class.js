@@ -7,8 +7,6 @@ import {
   ERROR_TOAST,
   SUCCESS_TOAST,
   SUCCESS_DELETE_TOAST,
-  UNPIN_ANNOUNCEMENT_TOAST,
-  PIN_ANNOUNCEMENT_TOAST,
   SUCCESS_CREATE_EDIT_TOAST,
 } from "../../constants";
 import axios from "axios";
@@ -314,6 +312,83 @@ export const manageAnnouncementPin = createAsyncThunk(
   }
 );
 
+export const getClassAssignments = createAsyncThunk(
+  "class/getClassAssignments",
+  async (data, { dispatch }) => {
+    const { classId, router, setIsLoading } = data;
+
+    try {
+      const res = await axios({
+        method: "GET",
+        url: `/api/class/${classId}/assignments`,
+      });
+
+      dispatch(classSlice.actions.setClassAssignments(res.data.assignments));
+    } catch (error) {
+      console.log(error);
+
+      if (error.status === 404 || error.response?.data?.status === 404) {
+        return router.back();
+      }
+
+      const message = getError(error);
+      notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+    }
+
+    setIsLoading(false);
+  }
+);
+
+export const createAssignment = createAsyncThunk(
+  "assignment/createAssignment",
+  async (data, { dispatch }) => {
+    const {
+      title,
+      description,
+      classId,
+      file,
+      startDate: dueDate,
+      setIsLoading,
+      setOpenAssignmentModal,
+      reset,
+      setFile,
+    } = data;
+
+    try {
+      setIsLoading(true);
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("description", description);
+      formData.append("classId", classId);
+      formData.append("dueDate", dueDate);
+      formData.append("file", file);
+
+      const res = await axios({
+        url: "/api/class/assignment/create",
+        method: "POST",
+        data: formData,
+
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      dispatch(classActions.addNewAssignment(res.data.assignment));
+      setOpenAssignmentModal(false);
+      reset();
+      setFile(null);
+      let { message } = res.data;
+      notifyAndUpdate(SUCCESS_TOAST, "success", message, toast);
+    } catch (error) {
+      console.log(error);
+      const message = getError(error);
+      notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+    }
+
+    setIsLoading(false);
+  }
+);
+
 const classSlice = createSlice({
   name: "class",
   initialState: {
@@ -324,9 +399,18 @@ const classSlice = createSlice({
   },
 
   reducers: {
+    // class
     loadClasses(state, action) {
       state.userEnrolledClasses = action.payload.userEnrolledClasses;
       state.userTeachingClasses = action.payload.userTeachingClasses;
+    },
+
+    setCurrentClass(state, action) {
+      state.currentClassDetails = action.payload;
+    },
+
+    cacheTheClass(state, action) {
+      state.classesCache.push(action.payload);
     },
 
     addUserTeachingClasses(state, action) {
@@ -345,19 +429,12 @@ const classSlice = createSlice({
       state.userEnrolledClasses.unshift(action.payload);
     },
 
-    setCurrentClass(state, action) {
-      state.currentClassDetails = action.payload;
-    },
-
+    // people
     setClassPeople(state, action) {
       state.currentClassDetails = {
         people: action.payload,
         ...state.currentClassDetails,
       };
-    },
-
-    cacheTheClass(state, action) {
-      state.classesCache.push(action.payload);
     },
 
     // announcement
@@ -431,6 +508,19 @@ const classSlice = createSlice({
         state.currentClassDetails.pinnedAnnouncements.unshift(announcement);
         state.currentClassDetails.announcements = updatedAnnouncements;
       }
+    },
+
+    // assignment
+    addNewAssignment(state, action) {
+      if (!state.currentClassDetails.assignments) {
+        state.currentClassDetails.assignments = [];
+      }
+
+      state.currentClassDetails.assignments.unshift(action.payload);
+    },
+
+    setClassAssignments(state, action) {
+      state.currentClassDetails.assignments = action.payload;
     },
   },
 });

@@ -149,7 +149,7 @@ const AuthForm = (props) => {
               href={[
                 `/register`,
                 redirect ? `?redirect=${redirect || "/"}` : "",
-                joinClass ? `&joinClass=true` : "",
+                joinClass ? `&jc=true` : "",
                 classId ? `&id=${classId}` : "",
               ].join("")}
             >
@@ -163,12 +163,12 @@ const AuthForm = (props) => {
               href={[
                 `/login`,
                 redirect ? `?redirect=${redirect || "/"}` : "",
-                joinClass ? `&joinClass=true` : "",
+                joinClass ? `&jc=true` : "",
                 classId ? `&id=${classId}` : "",
               ].join("")}
             >
               {" "}
-              <span>Already have an account</span> <span>Signin here</span>
+              <span>Already have an account</span> <span>SignIn here</span>
             </Link>
           )}
 

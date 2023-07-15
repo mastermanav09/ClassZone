@@ -1,5 +1,5 @@
-import Class from "../../../../../models/Class";
 import Assignment from "../../../../../models/Assignment";
+import Class from "../../../../../models/Class";
 import { authOptions } from "../../auth/[...nextauth]";
 import { getServerSession } from "next-auth/next";
 import mongoose from "mongoose";
@@ -139,9 +139,13 @@ const handler = async (req, res) => {
 
     await newAssignment.save();
 
-    await Class.findOneAndUpdate(classId, {
-      $push: { assignments: new mongoose.Types.ObjectId(newAssignment._id) },
-    });
+    await Class.findByIdAndUpdate(
+      classId,
+      {
+        $push: { assignments: new mongoose.Types.ObjectId(newAssignment._id) },
+      },
+      { new: true }
+    );
 
     return res.status(201).json({
       assignment: newAssignment._doc,
