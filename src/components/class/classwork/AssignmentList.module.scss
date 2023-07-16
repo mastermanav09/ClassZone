@@ -18,7 +18,8 @@
   margin-top: 15rem;
 
   @media screen and (max-width: 768px) {
-    width: 25px;
+    width: 45px;
+    height: 45px;
   }
 }
 
@@ -33,10 +34,11 @@
   animation: spinner 1s linear infinite;
 
   @media screen and (max-width: 768px) {
-    width: 22px;
-    height: 22px;
+    width: 45px;
+    height: 45px;
   }
 }
+
 @keyframes spinner {
   0% {
     transform: rotate(0deg);

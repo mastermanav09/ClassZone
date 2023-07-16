@@ -129,9 +129,6 @@ export const loadUser = createAsyncThunk(
         url: `/api/user/loaduser`,
       });
 
-      const user = res.data.user;
-      console.log(user);
-
       const { enrolled: userEnrolledClasses, teaching: userTeachingClasses } =
         res.data.user;
 

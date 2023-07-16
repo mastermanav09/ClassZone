@@ -124,12 +124,14 @@ export const getClass = createAsyncThunk(
     } catch (error) {
       console.log(error);
 
-      if (error.status === 404 || error.response?.data?.status === 404) {
-        return router.replace("/not_found");
-      }
+      let statusCode = error.status || error.response?.data?.status;
 
-      const message = getError(error);
-      notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+      if (statusCode === 422 || statusCode === 404) {
+        return router.replace("/not_found");
+      } else {
+        const message = getError(error);
+        notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+      }
     }
   }
 );
@@ -149,13 +151,17 @@ export const getClassPeople = createAsyncThunk(
     } catch (error) {
       console.log(error);
 
-      if (error.status === 404 || error.response?.data?.status === 404) {
-        return router.back();
-      }
+      let statusCode = error.status || error.response?.data?.status;
 
-      const message = getError(error);
-      notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+      if (statusCode === 422 || statusCode === 404) {
+        return router.replace("/not_found");
+      } else {
+        const message = getError(error);
+        notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+      }
     }
+
+    setIsLoading(false);
   }
 );
 
@@ -315,7 +321,7 @@ export const manageAnnouncementPin = createAsyncThunk(
 export const getClassAssignments = createAsyncThunk(
   "class/getClassAssignments",
   async (data, { dispatch }) => {
-    const { classId, router, setIsLoading } = data;
+    const { classId, router } = data;
 
     try {
       const res = await axios({
@@ -327,15 +333,15 @@ export const getClassAssignments = createAsyncThunk(
     } catch (error) {
       console.log(error);
 
-      if (error.status === 404 || error.response?.data?.status === 404) {
-        return router.back();
+      let statusCode = error.status || error.response?.data?.status;
+
+      if (statusCode === 422 || statusCode === 404) {
+        return router.replace("/not_found");
+      } else {
+        const message = getError(error);
+        notifyAndUpdate(ERROR_TOAST, "error", message, toast);
       }
-
-      const message = getError(error);
-      notifyAndUpdate(ERROR_TOAST, "error", message, toast);
     }
-
-    setIsLoading(false);
   }
 );
 

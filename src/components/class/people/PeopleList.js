@@ -5,10 +5,7 @@ import Search from "@/components/svg/Search";
 import classes from "./PeopleList.module.scss";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  getClass,
-  getClassPeople,
-} from "../../../../utils/store/reducers/class";
+import { getClassPeople } from "../../../../utils/store/reducers/class";
 import LoadingSpinner from "@/components/progress/LoadingSpinner";
 
 const PeopleList = () => {
@@ -18,7 +15,6 @@ const PeopleList = () => {
   const people = useSelector(
     (state) => state.class?.currentClassDetails?.people
   );
-
   const classDetails = useSelector((state) => state.class?.currentClassDetails);
   const { teacher } = classDetails;
   const [searchResults, setSearchResults] = useState(people || []);
@@ -27,12 +23,8 @@ const PeopleList = () => {
 
   useEffect(() => {
     if (classId) {
-      if (!classDetails.teacher) {
-        dispatch(getClass({ router, classId }));
-      }
-
       if (!people) {
-        dispatch(getClassPeople({ router, classId }));
+        dispatch(getClassPeople({ classId, router }));
       }
     }
   }, [classDetails, classId, dispatch, people, router]);
@@ -54,7 +46,11 @@ const PeopleList = () => {
   };
 
   if (!people) {
-    return <LoadingSpinner className={classes.spinner} />;
+    return (
+      <div className={classes["center"]}>
+        <LoadingSpinner className={classes.spinner} />
+      </div>
+    );
   }
 
   return (
@@ -97,10 +93,7 @@ const PeopleList = () => {
             )}
 
             {searchResults?.map((user) => (
-              <>
-                <UserCard user={user} />
-                <hr className={classes.HR} />
-              </>
+              <UserCard user={user} key={user._id} />
             ))}
           </div>
         </div>
@@ -109,4 +102,4 @@ const PeopleList = () => {
   );
 };
 
-export default PeopleList;
+export default React.memo(PeopleList);
