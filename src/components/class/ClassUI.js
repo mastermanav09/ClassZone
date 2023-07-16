@@ -1,9 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import classes from "./ClassUI.module.scss";
-import {
-  manageAnnouncement,
-  getClass,
-} from "../../../utils/store/reducers/class";
+import { manageAnnouncement } from "../../../utils/store/reducers/class";
 import { useDispatch, useSelector } from "react-redux";
 import EditorWrapper from "./EditorWrapper";
 import Announcement from "./Announcement";
@@ -103,12 +100,6 @@ const ClassUI = () => {
     },
   ];
 
-  useEffect(() => {
-    if (_id !== classId) {
-      dispatch(getClass({ classId, router }));
-    }
-  }, [_id, dispatch, classId, router]);
-
   if (_id !== classId) {
     return <PageLoader />;
   }
@@ -202,4 +193,4 @@ const ClassUI = () => {
   );
 };
 
-export default React.memo(ClassUI);
+export default ClassUI;

@@ -11,11 +11,15 @@ import { SessionProvider, useSession } from "next-auth/react";
 import PageLoader from "@/components/progress/PageLoader";
 import { Progress } from "@/components/progress";
 import { useProgressStore } from "../../utils/store/progress-store/useProgressStore";
+import { getClass } from "../../utils/store/reducers/class";
 
 export default function App({ Component, pageProps, session }) {
   const setIsAnimating = useProgressStore((state) => state.setIsAnimating);
   const isAnimating = useProgressStore((state) => state.isAnimating);
   const router = useRouter();
+  const { classId } = router.query;
+  const state = store.getState();
+  const currentClassId = state.class?.currentClassDetails?._id;
 
   useEffect(() => {
     const handleStart = () => {
@@ -36,6 +40,14 @@ export default function App({ Component, pageProps, session }) {
       router.events.off("routeChangeError", handleStop);
     };
   }, [router, setIsAnimating]);
+
+  if (router.pathname.startsWith("/classes/[classId]")) {
+    if (classId) {
+      if (!currentClassId) {
+        store.dispatch(getClass({ router, classId }));
+      }
+    }
+  }
 
   return (
     <SessionProvider session={session}>

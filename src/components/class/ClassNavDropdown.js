@@ -49,10 +49,9 @@ const ClassNavDropdown = ({ _id, backgroundColor }) => {
             </NavLink>
 
             <NavLink
-              href={{
-                pathname: `/classes/${_id}/classwork`,
-                query: { bc: backgroundColor },
-              }}
+              href={`/classes/${_id}/classwork?bc=${encodeURIComponent(
+                backgroundColor
+              )}`}
               className={classes.navlink}
               activeClass={classes.active}
               inactiveClass={classes.in}
@@ -64,10 +63,9 @@ const ClassNavDropdown = ({ _id, backgroundColor }) => {
             </NavLink>
 
             <NavLink
-              href={{
-                pathname: `/classes/${_id}/people`,
-                query: { bc: backgroundColor },
-              }}
+              href={`/classes/${_id}/people?bc=${encodeURIComponent(
+                backgroundColor
+              )}`}
               className={classes.navlink}
               activeClass={classes.active}
               inactiveClass={classes.in}

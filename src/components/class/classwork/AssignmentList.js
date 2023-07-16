@@ -9,29 +9,21 @@ import {
 import LoadingSpinner from "@/components/progress/LoadingSpinner";
 
 const AssignmentList = (props) => {
-  const [isLoading, setIsLoading] = useState(true);
   const { classId, router } = props;
   const dispatch = useDispatch();
-  const classDetails = useSelector((state) => state.class?.currentClassDetails);
   const classAssignments = useSelector(
     (state) => state.class?.currentClassDetails?.assignments
   );
 
   useEffect(() => {
     if (classId) {
-      if (!classDetails.teacher) {
-        dispatch(getClass({ router, classId }));
-      }
-
       if (!classAssignments) {
-        dispatch(getClassAssignments({ router, classId, setIsLoading }));
-      } else {
-        setIsLoading(false);
+        dispatch(getClassAssignments({ router, classId }));
       }
     }
-  }, [classDetails, classId, dispatch, classAssignments, router]);
+  }, [classId, dispatch, classAssignments, router]);
 
-  if (isLoading) {
+  if (!classAssignments) {
     return (
       <div className={classes["center"]}>
         <LoadingSpinner className={classes.spinner} />
@@ -54,4 +46,4 @@ const AssignmentList = (props) => {
   );
 };
 
-export default AssignmentList;
+export default React.memo(AssignmentList);

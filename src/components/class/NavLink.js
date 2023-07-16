@@ -14,7 +14,6 @@ NavLink.defaultProps = {
 
 function NavLink({ href, exact, children, ...props }) {
   const { asPath } = useRouter();
-
   let updatedHref = href;
   if (typeof href !== "string") {
     updatedHref = href.pathname;

@@ -251,4 +251,4 @@ const Classwork = () => {
   );
 };
 
-export default Classwork;
+export default React.memo(Classwork);
