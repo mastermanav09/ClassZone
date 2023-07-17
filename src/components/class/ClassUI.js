@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import classes from "./ClassUI.module.scss";
-import { manageAnnouncement } from "../../../utils/store/reducers/class";
+import {
+  getClass,
+  manageAnnouncement,
+} from "../../../utils/store/reducers/class";
 import { useDispatch, useSelector } from "react-redux";
 import EditorWrapper from "./EditorWrapper";
 import Announcement from "./Announcement";
@@ -15,6 +18,7 @@ import Link from "next/link";
 import { notifyAndUpdate } from "@/helper/toastNotifyAndUpdate";
 import { INFO } from "../../../utils/constants";
 import ClassNavDropdown from "./ClassNavDropdown";
+import { useEffect } from "react";
 
 const ClassUI = () => {
   const dispatch = useDispatch();
@@ -38,6 +42,14 @@ const ClassUI = () => {
     teacher,
     batch,
   } = useSelector((state) => state.class.currentClassDetails);
+
+  useEffect(() => {
+    if (classId) {
+      if (_id !== classId) {
+        dispatch(getClass({ router, classId }));
+      }
+    }
+  }, [_id, classId, dispatch, router]);
 
   const manageAnnouncementHandler = (classId, content) => {
     if (!validateAnnouncement(content)) {
@@ -83,6 +95,7 @@ const ClassUI = () => {
     navigator.clipboard.writeText(joinLink);
     notifyAndUpdate(INFO + "3", "info", "Class invite link copied", toast);
   };
+
   const copyCodeHandler = () => {
     navigator.clipboard.writeText(_id);
     notifyAndUpdate(INFO + "2", "info", "Class code copied", toast);

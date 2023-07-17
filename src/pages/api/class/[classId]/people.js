@@ -39,7 +39,16 @@ const handler = async (req, res) => {
     await db.connect();
 
     const data = await Class.findById(classId)
-      .select("students -_id")
+      .select("students teacher -_id")
+      .populate({
+        path: "teacher",
+        select: {
+          "credentials.email": 1,
+          "credentials.userImage": 1,
+          "credentials.name": 1,
+          _id: 1,
+        },
+      })
       .populate({
         path: "students",
         select: {
@@ -58,6 +67,7 @@ const handler = async (req, res) => {
 
     return res.status(200).json({
       people: data.students,
+      teacher: data.teacher,
     });
   } catch (error) {
     console.log(error);
