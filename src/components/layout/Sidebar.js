@@ -20,33 +20,39 @@ const Sidebar = (props) => {
       ].join(" ")}
     >
       <div className={classes.header}>
-        <Link href="/">
+        <Link href="/" onClick={() => toggleSidebar(false)}>
           <Image src="/logo.png" width={60} height={60} alt="logo" />
         </Link>
         <Image src="/logo_text.png" width={130} height={40} alt="logo" />
       </div>
       <div className={classes["list-section"]}>
         <ul className={classes["list"]}>
-          <Link href={`/`}>
+          <Link href={`/`} onClick={() => toggleSidebar(false)}>
             <li className={classes["list-item"]}>
               <div>Home</div>
             </li>
           </Link>
 
-          <Link href={`/about`}>
+          <Link href={`/about`} onClick={() => toggleSidebar(false)}>
             <li className={classes["list-item"]}>
               <div>About</div>
             </li>
           </Link>
 
-          <Link href={`/contactus`}>
+          <Link href={`/contactus`} onClick={() => toggleSidebar(false)}>
             <li className={classes["list-item"]}>
               <div>Contact Us</div>
             </li>
           </Link>
         </ul>
 
-        <div className={classes["logout"]} onClick={logoutHandler}>
+        <div
+          className={classes["logout"]}
+          onClick={() => {
+            toggleSidebar(false);
+            logoutHandler();
+          }}
+        >
           <li className={classes["list-item"]}>
             <div>Logout</div>
           </li>
@@ -55,7 +61,7 @@ const Sidebar = (props) => {
       <label
         htmlFor="menu-control"
         className={classes["sidebar__close"]}
-        onClick={toggleSidebar}
+        onClick={() => toggleSidebar(false)}
       >
         <Cross />
       </label>
