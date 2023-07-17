@@ -353,7 +353,7 @@ export const createAssignment = createAsyncThunk(
       description,
       classId,
       file,
-      selectedDate: dueDate,
+      startDate: dueDate,
       setIsLoading,
       setOpenAssignmentModal,
       reset,

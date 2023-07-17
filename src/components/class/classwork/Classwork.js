@@ -31,9 +31,7 @@ const Classwork = () => {
   } = form;
   const [isNewFileSelected, setIsNewFileSelected] = useState(false);
   const [file, setFile] = useState(null);
-  const validDate = new Date();
-  validDate.setDate(validDate.getDate() + 1);
-  const [selectedDate, setSelectedDate] = useState(validDate);
+  const [startDate, setStartDate] = useState(new Date());
   const { data: session } = useSession();
   const { user } = session || {};
   const { teacher } = useSelector((state) => state.class.currentClassDetails);
@@ -68,17 +66,12 @@ const Classwork = () => {
       return;
     }
 
-    if (selectedDate < new Date()) {
-      notifyAndUpdate(ERROR_TOAST, "error", "Please enter valid date", toast);
-      return;
-    }
-
     dispatch(
       createAssignment({
         title,
         description,
         classId,
-        selectedDate,
+        startDate,
         file,
         setIsLoading,
         setOpenAssignmentModal,
@@ -87,7 +80,7 @@ const Classwork = () => {
       })
     );
 
-    setSelectedDate(validDate);
+    setStartDate(new Date());
   };
 
   return (
@@ -207,9 +200,10 @@ const Classwork = () => {
               <div className={classes["due-date-pick"]}>
                 <label htmlFor="description">Due Date</label>
                 <DatePicker
-                  selected={selectedDate}
-                  onChange={(date) => setSelectedDate(date)}
-                  minDate={validDate}
+                  dateFormat="dd/MM/yyyy"
+                  selected={startDate}
+                  onChange={(date) => setStartDate(date)}
+                  minDate={new Date()}
                 />
               </div>
             </form>

@@ -25,12 +25,8 @@ const MainNavigation = () => {
   registerForUIToggle(setShowSideBar);
   registerForUIToggle(setShowNavbarDropdown);
 
-  const toggleSidebar = (value) => {
-    if (value) {
-      setShowSideBar(value);
-    } else {
-      setShowSideBar((prev) => !prev);
-    }
+  const toggleSidebar = () => {
+    setShowSideBar((prev) => !prev);
   };
 
   const handleAddClassClick = () => {
