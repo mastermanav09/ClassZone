@@ -147,7 +147,12 @@ export const getClassPeople = createAsyncThunk(
         url: `/api/class/${classId}/people`,
       });
 
-      dispatch(classSlice.actions.setClassPeople(res.data.people));
+      dispatch(
+        classSlice.actions.setClassPeople({
+          people: res.data.people,
+          teacher: res.data.teacher,
+        })
+      );
     } catch (error) {
       console.log(error);
 
@@ -438,7 +443,8 @@ const classSlice = createSlice({
     // people
     setClassPeople(state, action) {
       state.currentClassDetails = {
-        people: action.payload,
+        people: action.payload.people,
+        teacher: action.payload.teacher,
         ...state.currentClassDetails,
       };
     },
