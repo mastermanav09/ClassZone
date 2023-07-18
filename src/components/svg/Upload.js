@@ -2,14 +2,7 @@ import React from "react";
 
 const Upload = () => {
   return (
-    <svg
-      fill="#000"
-      height="20px"
-      width="20px"
-      version="1.1"
-      id="Capa_1"
-      viewBox="0 0 490.955 490.955"
-    >
+    <svg fill="#000" version="1.1" id="Capa_1" viewBox="0 0 490.955 490.955">
       <path
         id="XMLID_448_"
         d="M445.767,308.42l-53.374-76.49v-20.656v-11.366V97.241c0-6.669-2.604-12.94-7.318-17.645L312.787,7.301

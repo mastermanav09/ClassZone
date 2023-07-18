@@ -1,5 +1,5 @@
 import "react-datepicker/dist/react-datepicker.css";
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import ClassNavDropdown from "../ClassNavDropdown";
 import classes from "./Classwork.module.scss";
@@ -10,7 +10,10 @@ import { notifyAndUpdate } from "@/helper/toastNotifyAndUpdate";
 import { ERROR_TOAST } from "../../../../utils/constants";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { createAssignment } from "../../../../utils/store/reducers/class";
+import {
+  createAssignment,
+  getClassAssignments,
+} from "../../../../utils/store/reducers/class";
 import LoadingSpinner from "@/components/progress/LoadingSpinner";
 import DatePicker from "react-datepicker";
 import AssignmentList from "./AssignmentList";
@@ -37,6 +40,17 @@ const Classwork = () => {
   const { data: session } = useSession();
   const { user } = session || {};
   const { teacher } = useSelector((state) => state.class.currentClassDetails);
+  const { assignments } = useSelector(
+    (state) => state.class?.currentClassDetails
+  );
+
+  useEffect(() => {
+    if (classId) {
+      if (!assignments) {
+        dispatch(getClassAssignments({ router, classId }));
+      }
+    }
+  }, [classId, dispatch, assignments, router]);
 
   const fileHandler = (event) => {
     if (event.target?.files.length > 0) {
@@ -251,7 +265,11 @@ const Classwork = () => {
             ))}
         </div>
         <hr style={{ marginBottom: "1rem" }} />
-        <AssignmentList classId={classId} router={router} />
+        <AssignmentList
+          classId={classId}
+          router={router}
+          assignments={assignments}
+        />
       </div>
     </>
   );

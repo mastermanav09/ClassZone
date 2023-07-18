@@ -1,3 +1,22 @@
+@mixin button {
+  padding: 0.6rem 0.8rem;
+  border-radius: 5px;
+  color: white;
+
+  @content;
+}
+
+@mixin spinner_mixin($border-width, $color) {
+  content: " ";
+  display: block;
+  border-radius: 50%;
+  border: $border-width solid $color;
+  border-color: $color transparent $color transparent;
+  animation: spinner 1s linear infinite;
+
+  @content;
+}
+
 .no-assignments-found-text {
   font-size: 1rem;
   text-align: center;
@@ -11,11 +30,78 @@
   justify-content: center;
 }
 
-.spinner {
-  display: inline-block;
+.modal-content {
+  padding: 20px;
+  border-radius: 5px;
+  border: none;
+  text-align: center;
+  font-size: 14px;
+}
+
+.modal-title {
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+.modal-body {
+  margin: 1rem auto 2rem;
+  font-size: 0.9rem;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: space-between;
+
+  & button {
+    font-size: 0.9rem;
+  }
+}
+
+.cancel-button {
+  @include button() {
+    background-color: rgb(102, 104, 113);
+    cursor: pointer;
+
+    &:hover {
+      background-color: rgb(126, 128, 138);
+    }
+  }
+}
+
+.delete-button {
+  @include button() {
+    background-color: rgb(229, 6, 6);
+
+    &:enabled {
+      &:hover {
+        background-color: rgb(251, 73, 73);
+        cursor: pointer;
+      }
+    }
+
+    &:disabled {
+      background-color: rgb(248, 156, 156);
+      cursor: default !important;
+    }
+  }
+}
+
+.spinner_one {
   width: 90px;
   height: 90px;
   margin-top: 15rem;
+
+  &::after {
+    width: 80px;
+    height: 80px;
+
+    @include spinner_mixin(6px, rgb(55, 104, 197));
+
+    @media screen and (max-width: 768px) {
+      width: 45px;
+      height: 45px;
+    }
+  }
 
   @media screen and (max-width: 768px) {
     width: 45px;
@@ -23,19 +109,17 @@
   }
 }
 
-.spinner:after {
-  content: " ";
-  display: block;
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  border: 6px solid rgb(55, 104, 197);
-  border-color: rgb(55, 104, 197) transparent rgb(55, 104, 197) transparent;
-  animation: spinner 1s linear infinite;
+.spinner_two {
+  width: 41px;
+  height: 15px;
+  margin: auto;
 
-  @media screen and (max-width: 768px) {
-    width: 45px;
-    height: 45px;
+  &::after {
+    margin: auto;
+    width: 10px;
+    height: 10px;
+
+    @include spinner_mixin(3px, white);
   }
 }
 

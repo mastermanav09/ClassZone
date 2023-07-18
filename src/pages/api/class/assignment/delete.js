@@ -1,4 +1,5 @@
 import Class from "../../../../../models/Class";
+import Assignment from "../../../../../models/Assignment";
 import manageResponses from "../../../../../utils/responses/manageResponses";
 import { authOptions } from "../../auth/[...nextauth]";
 import mongoose from "mongoose";
@@ -27,11 +28,10 @@ const handler = async (req, res) => {
     }
 
     const { user } = session;
-    const { announcementId, classId } = req.query;
+    const { deleteAssignmentId: assignmentId, classId } = req.query;
 
     var ObjectId = mongoose.Types.ObjectId;
-
-    if (!ObjectId.isValid(announcementId) || !ObjectId.isValid(classId)) {
+    if (!ObjectId.isValid(assignmentId) || !ObjectId.isValid(classId)) {
       const error = new Error("Invalid Id!");
       error.statusCode = 422;
       throw error;
@@ -59,20 +59,30 @@ const handler = async (req, res) => {
       }
     }
 
+    const delRes = await Assignment.deleteOne({
+      _id: assignmentId,
+    });
+
+    if (!delRes.deletedCount) {
+      const error = new Error("Assignment not found!");
+      error.statusCode = 404;
+      throw error;
+    }
+
     await Class.updateOne(
       { _id: classId },
-      { $pull: { announcements: { _id: announcementId } } },
+      { $pull: { assignments: assignmentId } },
       { multi: true }
     );
 
     return res.status(200).json({
-      message: "Announcement deleted successfully!",
+      _id: assignmentId,
+      message: "Assignment deleted successfully!",
     });
   } catch (error) {
     console.log(error);
     if (!error.statusCode) {
       error.statusCode = 500;
-      error.message = "Couldn't delete the announcement!";
     }
 
     return res

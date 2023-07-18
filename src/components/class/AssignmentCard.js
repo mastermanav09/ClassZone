@@ -3,10 +3,13 @@ import React, { useState } from "react";
 import classes from "./AssignmentCard.module.scss";
 import Upload from "../svg/Upload";
 import { Modal } from "react-responsive-modal";
+import Edit from "../svg/Edit";
+import Delete from "../svg/Delete";
 
 const AssignmentCard = (props) => {
-  const { assignment } = props;
+  const { assignment, confirmDeleteHandler } = props;
   const [openContentModal, setOpenContentModal] = useState(false);
+  const { _id } = assignment;
 
   return (
     <>
@@ -92,8 +95,16 @@ const AssignmentCard = (props) => {
           <div>{assignment.title}</div>
         </div>
         {/* <div className={classes.vl}></div> */}
-        <div className={classes.upload}>
-          <Upload />
+        <div className={classes.actions}>
+          <span>
+            <Edit />
+          </span>
+          <span onClick={() => confirmDeleteHandler(_id)}>
+            <Delete />
+          </span>
+          <span>
+            <Upload />
+          </span>
         </div>
       </div>
     </>
