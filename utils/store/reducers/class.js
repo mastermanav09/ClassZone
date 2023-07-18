@@ -235,7 +235,7 @@ export const deleteAnnouncement = createAsyncThunk(
   "class/deleteAnnouncement",
   async (data, { _, dispatch }) => {
     const {
-      _id: announcementId,
+      announcementId,
       classId,
       isPinned,
       setIsLoading,
@@ -250,12 +250,6 @@ export const deleteAnnouncement = createAsyncThunk(
           classId,
         },
       });
-
-      if (res.status !== 200) {
-        const error = new Error("Couldn't delete the announcement!");
-        error.statusCode = 400;
-        throw error;
-      }
 
       dispatch(
         classSlice.actions.deleteAnnouncement({
@@ -281,7 +275,7 @@ export const deleteAnnouncement = createAsyncThunk(
 export const manageAnnouncementPin = createAsyncThunk(
   "class/manageAnnouncementPin",
   async (data, { dispatch }) => {
-    const { _id: announcementId, classId, isPinned } = data;
+    const { announcementId, classId, isPinned } = data;
 
     try {
       dispatch(
@@ -334,7 +328,12 @@ export const getClassAssignments = createAsyncThunk(
         url: `/api/class/${classId}/assignments`,
       });
 
-      dispatch(classSlice.actions.setClassAssignments(res.data.assignments));
+      dispatch(
+        classSlice.actions.setClassAssignments({
+          assignments: res.data.assignments,
+          teacher: res.data.teacher,
+        })
+      );
     } catch (error) {
       console.log(error);
 
@@ -358,7 +357,7 @@ export const createAssignment = createAsyncThunk(
       description,
       classId,
       file,
-      selectedDate: dueDate,
+      selectedDate,
       setIsLoading,
       setOpenAssignmentModal,
       reset,
@@ -371,7 +370,7 @@ export const createAssignment = createAsyncThunk(
       formData.append("title", title);
       formData.append("description", description);
       formData.append("classId", classId);
-      formData.append("dueDate", dueDate);
+      formData.append("dueDate", selectedDate);
       formData.append("file", file);
 
       const res = await axios({
@@ -390,6 +389,39 @@ export const createAssignment = createAsyncThunk(
       setFile(null);
       let { message } = res.data;
       notifyAndUpdate(SUCCESS_TOAST, "success", message, toast);
+    } catch (error) {
+      console.log(error);
+      const message = getError(error);
+      notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+    }
+
+    setIsLoading(false);
+  }
+);
+
+export const deleteAssignment = createAsyncThunk(
+  "assignment/deleteAssignment",
+  async (data, { dispatch }) => {
+    const {
+      deleteAssignmentId,
+      classId,
+      setIsLoading,
+      closeConfirmDeleteAssignmentHandler,
+    } = data;
+
+    try {
+      setIsLoading(true);
+      const res = await axios.delete(`/api/class/assignment/delete`, {
+        params: {
+          deleteAssignmentId,
+          classId,
+        },
+      });
+
+      dispatch(classActions.deleteAssignment(res.data._id));
+      let { message } = res.data;
+      notifyAndUpdate(SUCCESS_TOAST, "success", message, toast);
+      closeConfirmDeleteAssignmentHandler();
     } catch (error) {
       console.log(error);
       const message = getError(error);
@@ -531,8 +563,24 @@ const classSlice = createSlice({
       state.currentClassDetails.assignments.unshift(action.payload);
     },
 
+    deleteAssignment(state, action) {
+      const assignmentId = action.payload;
+      const updatedAssignments = state.currentClassDetails.assignments;
+
+      const ind = updatedAssignments.findIndex(
+        (item) => item._id === assignmentId
+      );
+
+      updatedAssignments.splice(ind, 1);
+      state.currentClassDetails.assignments = updatedAssignments;
+    },
+
     setClassAssignments(state, action) {
-      state.currentClassDetails.assignments = action.payload;
+      state.currentClassDetails = {
+        assignments: action.payload.assignments,
+        teacher: action.payload.teacher,
+        ...state.currentClassDetails,
+      };
     },
   },
 });

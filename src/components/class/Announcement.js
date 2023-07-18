@@ -20,12 +20,18 @@ const Announcement = ({
   editAnnouncementHandler,
   backgroundColor,
 }) => {
-  const { _id, text, createdAt, isEdited, isPinned } = announcement;
+  const {
+    announcementId: announcementId,
+    text,
+    createdAt,
+    isEdited,
+    isPinned,
+  } = announcement;
   const [confirmDelete, setConfirmDelete] = useState(false);
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const manageAnnouncementPinHandler = (isPinned) => {
-    dispatch(manageAnnouncementPin({ classId, _id, isPinned }));
+    dispatch(manageAnnouncementPin({ classId, announcementId, isPinned }));
   };
 
   const openConfirmDeleteAnnouncementHandler = () => {
@@ -41,7 +47,7 @@ const Announcement = ({
       deleteAnnouncement({
         setIsLoading,
         classId,
-        _id,
+        announcementId,
         isPinned,
         closeConfirmDeleteAnnouncementHandler,
       })
@@ -58,7 +64,7 @@ const Announcement = ({
 
     {
       text: "Edit",
-      action: () => editAnnouncementHandler(text, _id, isPinned),
+      action: () => editAnnouncementHandler(text, announcementId, isPinned),
     },
 
     {

@@ -28,7 +28,7 @@ const ClassUI = () => {
   const [isEditAnnouncement, setIsEditAnnouncement] = useState(null);
 
   const { data: session } = useSession();
-  const { user } = session;
+  const { user } = session || {};
 
   const router = useRouter();
   const { classId } = router.query;
@@ -49,7 +49,7 @@ const ClassUI = () => {
         dispatch(getClass({ router, classId }));
       }
     }
-  }, [_id, classId, dispatch, router]);
+  }, [_id, classId, dispatch, router, user]);
 
   const manageAnnouncementHandler = (classId, content) => {
     if (!validateAnnouncement(content)) {
