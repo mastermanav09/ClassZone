@@ -8,7 +8,7 @@ import { closeUIComponents } from "@/helper/closeOpenUIComponents";
 
 const Layout = (props) => {
   return (
-    <>
+    <div onClick={() => closeUIComponents()}>
       <ToastContainer
         position="top-right"
         limit={2}
@@ -17,10 +17,8 @@ const Layout = (props) => {
         className={classes["toast-container"]}
       />
       <MainNavigation />
-      <main className={classes.main} onClick={() => closeUIComponents()}>
-        {props.children}
-      </main>
-    </>
+      <main className={classes.main}>{props.children}</main>
+    </div>
   );
 };
 

@@ -1,11 +1,11 @@
-@mixin spinner($type) {
+@mixin spinner($border-width, $type) {
   display: block;
 
   &::after {
     content: " ";
     display: block;
     border-radius: 50%;
-    border: 5px solid #008d7d;
+    border: $border-width solid #008d7d;
     border-color: #008d7d transparent #008d7d transparent;
     animation: spinner 1s linear infinite;
   }
@@ -115,7 +115,8 @@
 }
 
 .spinner_one {
-  @include spinner("one") {
+  @include spinner(5px, "one") {
+    margin-top: 2rem;
     &::after {
       width: 50px;
       height: 50px;
@@ -129,7 +130,7 @@
 }
 
 .spinner_two {
-  @include spinner("two") {
+  @include spinner(3px, "two") {
     &::after {
       margin: auto;
       width: 11px;

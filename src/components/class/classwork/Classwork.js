@@ -60,7 +60,11 @@ const Classwork = () => {
   };
 
   const submitHandler = ({ title, description }) => {
-    if (title.trim().length < 3 || description.trim().length < 5) {
+    if (
+      title.trim().length < 3 ||
+      title.trim().length > 50 ||
+      description.trim().length < 10
+    ) {
       notifyAndUpdate(
         ERROR_TOAST,
         "error",
@@ -154,6 +158,11 @@ const Classwork = () => {
                       value: 3,
                       message: "Title must be of at least 3 characters.",
                     },
+
+                    maxLength: {
+                      value: 50,
+                      message: "Title can be at most 50 characters.",
+                    },
                   })}
                 />
 
@@ -171,8 +180,8 @@ const Classwork = () => {
                   {...register("description", {
                     required: "Please enter valid description",
                     minLength: {
-                      value: 5,
-                      message: "Description must be of at least 5 characters.",
+                      value: 10,
+                      message: "Description must be of at least 10 characters.",
                     },
                   })}
                 />
@@ -269,6 +278,8 @@ const Classwork = () => {
           classId={classId}
           router={router}
           assignments={assignments}
+          teacher={teacher}
+          user={user}
         />
       </div>
     </>

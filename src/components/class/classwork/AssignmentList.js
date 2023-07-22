@@ -7,7 +7,7 @@ import LoadingSpinner from "@/components/progress/LoadingSpinner";
 import Modal from "react-responsive-modal";
 
 const AssignmentList = (props) => {
-  const { classId, assignments } = props;
+  const { classId, assignments, teacher, user } = props;
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -104,12 +104,14 @@ const AssignmentList = (props) => {
           <AssignmentCard
             key={assignment._id}
             assignment={assignment}
+            teacher={teacher}
+            user={user}
             confirmDeleteHandler={openConfirmDeleteAssignmentHandler}
           />
         ))
       ) : (
         <div className={classes["no-assignments-found-text"]}>
-          <h4>No Assignments found!</h4>
+          <h3>No Assignments found!</h3>
         </div>
       )}
     </>

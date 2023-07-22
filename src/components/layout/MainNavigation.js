@@ -64,7 +64,13 @@ const MainNavigation = () => {
       <div className={classes.wrapper}>
         <div className={classes.navbar}>
           <div className={classes["container_one"]}>
-            <div className={classes.sidebarBtn} onClick={toggleSidebar}>
+            <div
+              className={classes.sidebarBtn}
+              onClick={(event) => {
+                event.stopPropagation();
+                toggleSidebar();
+              }}
+            >
               <Hamburger />
             </div>
             <div className={classes.logo}>
