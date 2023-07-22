@@ -18,6 +18,7 @@ const Sidebar = (props) => {
         classes.sidebar,
         showSideBar ? classes.open : classes.close,
       ].join(" ")}
+      onClick={(event) => event.stopPropagation()}
     >
       <div className={classes.header}>
         <Link href="/" onClick={() => toggleSidebar(false)}>

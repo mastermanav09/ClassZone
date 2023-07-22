@@ -21,7 +21,7 @@ const Announcement = ({
   backgroundColor,
 }) => {
   const {
-    announcementId: announcementId,
+    _id: announcementId,
     text,
     createdAt,
     isEdited,

@@ -41,7 +41,7 @@ const handler = async (req, res) => {
 
     var ObjectId = mongoose.Types.ObjectId;
     if (!ObjectId.isValid(classId)) {
-      const error = new Error("Invalid Id!");
+      const error = new Error("Invalid Class Id!");
       error.statusCode = 422;
       throw error;
     }

@@ -83,13 +83,13 @@ const PeopleList = () => {
             </div>
             <hr className={classes.blueHR} />
             {searchTerm.length !== 0 && searchResults?.length === 0 && (
-              <h3 className={classes["no_found_text"]}>No match found!!</h3>
+              <h3 className={classes["no_found_text"]}>No match found!</h3>
             )}
 
             {searchTerm.length === 0 && searchResults?.length === 0 && (
-              <h4 className={classes["no_found_text"]}>
+              <h3 className={classes["no_found_text"]}>
                 There are no students in the classroom.
-              </h4>
+              </h3>
             )}
 
             {searchResults?.map((user) => (
