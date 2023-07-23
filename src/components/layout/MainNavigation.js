@@ -48,14 +48,14 @@ const MainNavigation = () => {
       )}
       {addClass === "true" && session?.user && (
         <AddClassForm
-          toggleAddClassModal={() => router.back()}
+          toggleAddClassModal={() => router.replace("/")}
           showAddClassModal={addClass}
           pathname={pathname}
         />
       )}
       {joinClass === "true" && session?.user && (
         <JoinClassForm
-          toggleJoinClassModal={() => router.back()}
+          toggleJoinClassModal={() => router.replace("/")}
           showJoinClassModal={joinClass}
           pathname={pathname}
           classId={classId}
