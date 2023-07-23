@@ -65,20 +65,22 @@ const PeopleList = () => {
           </div>
 
           <div>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <p>People</p>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              <p>People {`(${searchResults?.length})`}</p>
               <div className={classes["search-box"]}>
                 <input
                   ref={inputEl}
                   type="text"
                   className={classes.searchText}
-                  placeholder="Search Student"
+                  placeholder="Search student"
                   value={searchTerm}
                   onChange={getSearchTerm}
                 />
-                <div className={classes.searchBtn}>
-                  <Search />
-                </div>
               </div>
             </div>
             <hr className={classes.blueHR} />

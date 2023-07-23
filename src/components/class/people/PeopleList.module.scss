@@ -19,7 +19,7 @@
   gap: 1.5rem;
 
   p {
-    font-size: 2rem;
+    font-size: clamp(1.4rem, 3.5vw, 2rem);
     color: blueviolet;
   }
 
@@ -29,36 +29,20 @@
   }
 
   .search-box {
-    position: relative;
     display: flex;
-    align-items: center;
+    align-items: end;
 
     .searchText {
-      width: 0rem;
+      padding: 0.4rem 0.6rem;
       border-radius: 1.5rem;
-      border: none;
+      border: 1px solid blueviolet;
       outline: none;
-      transition: all 0.2s linear;
-    }
+      font-size: clamp(13px, 2vw, 15px);
 
-    .searchText:focus {
-      outline: none;
+      @media screen and (max-width: 480px) {
+        width: 10rem;
+      }
     }
-
-    .searchBtn {
-      width: 2rem;
-      height: 2rem;
-      position: absolute;
-      display: grid;
-      place-items: center;
-      right: 0.5rem;
-    }
-  }
-  .search-box:hover > .searchText {
-    width: 12rem;
-    padding: 0.5rem;
-    border: 1px solid blue;
-    box-shadow: 0 2rem 2rem -1.5rem rgba(0, 0, 0, 0.5);
   }
 }
 
