@@ -19,7 +19,9 @@ const MainNavigation = () => {
   const [showNavbarDropdown, setShowNavbarDropdown] = useState(false);
   const router = useRouter();
   const { pathname, query } = router;
-  const { addClass, jc: joinClass, id: classId } = query;
+  const { ac, jc, id: classId } = query;
+  const [joinClass, setJoinClass] = useState(jc === "true");
+  const [addClass, setAddClass] = useState(ac === "true");
   const { data: session } = useSession();
 
   registerForUIToggle(setShowSideBar);
@@ -33,12 +35,22 @@ const MainNavigation = () => {
     }
   };
 
-  const handleAddClassClick = () => {
+  const handleAddClassClick = (value) => {
+    setAddClass(value);
     setShowNavbarDropdown(false);
+
+    if (ac && classId) {
+      router.replace("/", undefined, { shallow: true });
+    }
   };
 
-  const handleJoinClassClick = () => {
+  const handleJoinClassClick = (value) => {
+    setJoinClass(value);
     setShowNavbarDropdown(false);
+
+    if (jc && classId) {
+      router.replace("/", undefined, { shallow: true });
+    }
   };
 
   return (
@@ -46,16 +58,17 @@ const MainNavigation = () => {
       {showSideBar && (
         <Sidebar toggleSidebar={toggleSidebar} showSideBar={showSideBar} />
       )}
-      {addClass === "true" && session?.user && (
+
+      {addClass && session?.user && (
         <AddClassForm
-          toggleAddClassModal={() => router.replace("/")}
+          toggleAddClassModal={() => handleAddClassClick(false)}
           showAddClassModal={addClass}
           pathname={pathname}
         />
       )}
-      {joinClass === "true" && session?.user && (
+      {joinClass && session?.user && (
         <JoinClassForm
-          toggleJoinClassModal={() => router.replace("/")}
+          toggleJoinClassModal={() => handleJoinClassClick(false)}
           showJoinClassModal={joinClass}
           pathname={pathname}
           classId={classId}
@@ -104,12 +117,17 @@ const MainNavigation = () => {
                     onClick={(event) => event.stopPropagation()}
                   >
                     <ul>
-                      <Link href={`/?jc=true`}>
-                        <li onClick={handleJoinClassClick}>Join class</li>
-                      </Link>
-                      <Link href={`/?addClass=true`}>
-                        <li onClick={handleAddClassClick}>Create class</li>
-                      </Link>
+                      <li onClick={() => handleJoinClassClick(true)}>
+                        Join class
+                      </li>
+
+                      {/* <Link href={`/?jc=true`}></Link> */}
+
+                      <li onClick={() => handleAddClassClick(true)}>
+                        Create class
+                      </li>
+
+                      {/* <Link href={`/?ac=true`}></Link> */}
                     </ul>
                   </div>
                 ) : null}
