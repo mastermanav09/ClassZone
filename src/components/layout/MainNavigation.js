@@ -39,8 +39,10 @@ const MainNavigation = () => {
     setAddClass(value);
     setShowNavbarDropdown(false);
 
-    if (ac && classId) {
-      router.replace("/", undefined, { shallow: true });
+    if (!value) {
+      if (ac && classId) {
+        router.replace("/", undefined, { shallow: true });
+      }
     }
   };
 
@@ -48,8 +50,10 @@ const MainNavigation = () => {
     setJoinClass(value);
     setShowNavbarDropdown(false);
 
-    if (jc && classId) {
-      router.replace("/", undefined, { shallow: true });
+    if (!value) {
+      if (jc && classId) {
+        router.replace("/", undefined, { shallow: true });
+      }
     }
   };
 
@@ -120,14 +124,9 @@ const MainNavigation = () => {
                       <li onClick={() => handleJoinClassClick(true)}>
                         Join class
                       </li>
-
-                      {/* <Link href={`/?jc=true`}></Link> */}
-
                       <li onClick={() => handleAddClassClick(true)}>
                         Create class
                       </li>
-
-                      {/* <Link href={`/?ac=true`}></Link> */}
                     </ul>
                   </div>
                 ) : null}

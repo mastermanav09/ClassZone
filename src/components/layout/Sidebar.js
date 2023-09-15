@@ -8,8 +8,8 @@ import Image from "next/image";
 const Sidebar = (props) => {
   const { toggleSidebar, showSideBar } = props;
 
-  const logoutHandler = () => {
-    signOut();
+  const logoutHandler = async () => {
+    await signOut({ callbackUrl: "/login" });
   };
 
   return (
