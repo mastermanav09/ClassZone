@@ -1,13 +1,13 @@
-import ClassUI from "@/components/class/ClassUI";
-import { authOptions } from "../../api/auth/[...nextauth]";
+import React from "react";
 import { getServerSession } from "next-auth/next";
+import { authOptions } from "../../../api/auth/[...nextauth]";
+import Classwork from "@/components/class/classwork/Classwork";
 
-const ClassPage = () => {
-  return <ClassUI />;
+const ClassworkPage = () => {
+  return <Classwork />;
 };
 
-ClassPage.auth = true;
-export default ClassPage;
+export default ClassworkPage;
 
 export async function getServerSideProps(context) {
   const session = await getServerSession(context.req, context.res, authOptions);
