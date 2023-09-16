@@ -1,5 +1,34 @@
+@mixin submit-action-btn() {
+  width: 100%;
+  text-align: right;
+  margin-top: 0.5rem;
+
+  button {
+    width: 6rem;
+    font-size: 14px;
+    padding: 0.5rem 0.8rem;
+    border-radius: 5px;
+    border: 2px double #0a9689;
+    letter-spacing: 0.5px;
+
+    @content;
+  }
+}
+
+@mixin scrollbar() {
+  &::-webkit-scrollbar-thumb {
+    border-radius: 15px;
+    background: #0a9689;
+  }
+
+  &::-webkit-scrollbar {
+    background-color: #bee0dc;
+    border-radius: 10px;
+    width: 5px;
+  }
+}
+
 .container {
-  margin-bottom: 2rem;
   display: flex;
   width: 100%;
   border-radius: 0.5rem;
@@ -32,11 +61,6 @@
     }
   }
 
-  .vl {
-    border-left: 1px solid #bdbdbd;
-    height: 4rem;
-  }
-
   .actions {
     border-radius: 0 0.5rem 0.5rem 0;
     height: 100%;
@@ -52,7 +76,7 @@
       cursor: pointer;
 
       @media screen and (max-width: 768px) {
-        width: 20px;
+        width: 22px;
       }
     }
   }
@@ -91,24 +115,23 @@
 
 .assignment-actions {
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
   align-items: center;
   background-color: white;
-  height: 3.5rem;
+  height: 3.6rem;
   position: sticky;
   bottom: 0;
   width: 100%;
   border-top: 1px solid rgba(128, 128, 128, 0.273);
-  gap: 0.5rem;
 
   .modal-upload-btn {
     padding: 0.6rem 0.8rem;
     border-radius: 5px;
-    background-color: rgb(8, 133, 91);
+    background-color: #4682a9;
     color: white;
 
     &:hover {
-      background-color: rgba(8, 133, 91, 0.8);
+      background-color: rgb(100, 144, 176);
     }
   }
 }
@@ -122,16 +145,41 @@
   .upload-assignment-info {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.5rem;
 
-    .info-title {
-      font-weight: 600;
-      font-size: clamp(16px, 3vw, 18px);
-      margin-bottom: 0.5rem;
+    div {
+      align-items: center;
     }
 
-    .info-description {
-      font-size: clamp(14px, 2.5vw, 16px);
+    .assignment-title,
+    .assignment-submittedTo {
+      font-weight: 600;
+      font-size: clamp(16px, 3vw, 18px);
+      // margin-bottom: 0.5rem;
+    }
+
+    .assignment-submission {
+      position: relative;
+      display: flex;
+      align-items: baseline;
+
+      .submittedTo-image {
+        img {
+          border-radius: 50%;
+        }
+      }
+
+      .assignment-submittedTo-info {
+        position: absolute;
+        margin: 0 0.5rem;
+        bottom: 0.5rem;
+        left: 2.5rem;
+      }
+    }
+
+    .assignment-title-info,
+    .assignment-submittedTo-info {
+      font-size: clamp(15px, 2.5vw, 16px);
     }
 
     & > div {
@@ -148,41 +196,85 @@
     display: flex;
     flex-direction: column;
     gap: 0.2rem;
+    margin-top: 1.5rem;
+  }
+}
 
-    .remove-file-text {
-      font-size: 14px;
-      padding: 4px 8px;
-      background-color: #0a9689;
-      color: white;
-      width: max-content;
-      border-radius: 5px;
-      margin-top: 0.3rem;
-      cursor: pointer;
-    }
+.comment {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 
-    .upload-assignment-btn {
+  .comment-title {
+    font-size: 0.85rem;
+    letter-spacing: 0.2px;
+    color: #0cab9b;
+  }
+
+  .comment-textarea {
+    width: 100%;
+
+    textarea {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
       width: 100%;
-      text-align: right;
-      margin-top: 1rem;
+      resize: none;
+      border-color: #0cab9b;
+      border-radius: 5px;
+      outline: none;
+      padding: 0.5rem;
+      font-size: 0.8rem;
 
-      button {
-        font-size: 14px;
-        padding: 0.6rem 0.8rem;
-        border-radius: 5px;
-        background-color: rgb(8, 133, 91);
-        color: white;
-
-        &:hover {
-          background-color: rgba(8, 133, 91, 0.8);
-        }
-      }
+      @include scrollbar();
     }
+
+    .submitted-comment {
+      max-height: 5rem;
+      word-break: break-all;
+      width: 100%;
+      overflow-y: auto;
+      border-radius: 5px;
+      font-size: 0.8rem;
+      padding-right: 0.5rem;
+
+      @include scrollbar();
+    }
+  }
+}
+
+.submit-assignment-btn {
+  @include submit-action-btn() {
+    background-color: #0a9689;
+    color: white;
+
+    &:hover {
+      border-color: #0cab9b;
+      background-color: #0cab9b;
+    }
+  }
+}
+
+.unsubmit-assignment-btn {
+  @include submit-action-btn() {
+    background-color: white;
+    color: #0a9689;
+
+    &:hover {
+      background-color: #eafffdab;
+    }
+  }
+}
+
+.submit-assignment-btn button,
+.unsubmit-assignment-btn button {
+  &:disabled {
+    cursor: default !important;
+    border-color: transparent;
+    background-color: rgba(128, 128, 128, 0.209);
   }
 }
 
 .uploadedFile-name {
   max-width: 10rem;
-  margin: 0 1rem;
   font-size: 0.8rem;
 }
 
@@ -196,7 +288,7 @@
   background-color: white;
   border-radius: 5px;
   cursor: pointer;
-  padding: 0.6rem;
+  padding: 0.5rem;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   letter-spacing: 1px;
 
@@ -219,19 +311,44 @@
 
 .hidden {
   display: none;
-  &:disabled {
-    cursor: default !important;
+}
+
+.spinner {
+  display: inline-block;
+  width: auto;
+  height: 13px;
+}
+
+.spinner:after {
+  margin: auto;
+  content: " ";
+  display: block;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  border: 3px solid #0a9689;
+  border-color: #0a9689 transparent #0a9689 transparent;
+  animation: spinner 1s linear infinite;
+}
+
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
   }
 }
 
 @media screen and (max-width: 480px) {
-  // .uploadedFile-name {
-  //   font-size: 0.8rem;
-
-  // }
-
   .upload-assignment-modal-body {
     margin: 1rem 0 0;
+
+    .assignment-submission,
+    .assignment-title-info {
+      margin-left: 0 !important;
+      margin-top: 0.25rem;
+    }
   }
 
   .upload-assignment-main {
@@ -253,5 +370,12 @@
     font-size: 0.8rem;
     padding: 0.4rem;
     box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  }
+}
+
+@media screen and (max-width: 540px) {
+  .assignment-submission,
+  .assignment-title-info {
+    margin-left: 2rem;
   }
 }

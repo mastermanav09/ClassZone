@@ -153,7 +153,7 @@ const Classwork = () => {
                   id="title"
                   placeholder="Title"
                   {...register("title", {
-                    required: "Please enter valid title for assignment",
+                    required: "Please enter valid title",
                     minLength: {
                       value: 3,
                       message: "Title must be of at least 3 characters.",
@@ -230,6 +230,7 @@ const Classwork = () => {
               <div className={classes["due-date-pick"]}>
                 <label htmlFor="description">Due Date</label>
                 <DatePicker
+                  dateFormat="dd/MM/yyyy"
                   selected={selectedDate}
                   onChange={(date) => setSelectedDate(date)}
                   minDate={validDate}
@@ -261,11 +262,11 @@ const Classwork = () => {
           </div>
         </Modal>
       )}
+
+      <ClassNavDropdown classId={classId} backgroundColor={backgroundColor} />
       <div className={classes.assignment}>
-        <ClassNavDropdown _id={classId} backgroundColor={backgroundColor} />
         <div className={classes.container}>
           <h2>Classwork</h2>
-
           {(user?._id && user?._id === teacher?.credentials._id) ||
             (user?.email && user?.email === teacher?.credentials.email && (
               <button onClick={() => setOpenAssignmentModal(true)}>
@@ -279,6 +280,7 @@ const Classwork = () => {
           router={router}
           assignments={assignments}
           teacher={teacher}
+          backgroundColor={backgroundColor}
           user={user}
         />
       </div>

@@ -123,10 +123,8 @@ export const getClass = createAsyncThunk(
       dispatch(classSlice.actions.cacheTheClass(res.data.class));
     } catch (error) {
       console.log(error);
-
-      let statusCode = error.status || error.response?.data?.status;
-
-      if (statusCode === 422 || statusCode === 404) {
+      let errorStatusCode = error.status || error.response?.data?.status;
+      if (errorStatusCode === 422 || errorStatusCode === 404) {
         return router.replace("/not_found");
       } else {
         const message = getError(error);
@@ -155,10 +153,8 @@ export const getClassPeople = createAsyncThunk(
       );
     } catch (error) {
       console.log(error);
-
-      let statusCode = error.status || error.response?.data?.status;
-
-      if (statusCode === 422 || statusCode === 404) {
+      let errorStatusCode = error.status || error.response?.data?.status;
+      if (errorStatusCode === 422 || errorStatusCode === 404) {
         return router.replace("/not_found");
       } else {
         const message = getError(error);
@@ -195,12 +191,6 @@ export const manageAnnouncement = createAsyncThunk(
           ...(announcementId && { announcementId }),
         },
       });
-
-      if (res.status !== 201 && res.status !== 200) {
-        const error = new Error("Couldn't update the announcement!");
-        error.statusCode = 400;
-        throw error;
-      }
 
       if (announcementId) {
         dispatch(
@@ -294,14 +284,6 @@ export const manageAnnouncementPin = createAsyncThunk(
           isPinned,
         },
       });
-
-      let type = isPinned ? "unpin" : "pin";
-
-      if (res.status !== 200) {
-        const error = new Error(`Couldn't ${type} the announcement!`);
-        error.statusCode = 400;
-        throw error;
-      }
     } catch (error) {
       dispatch(
         classSlice.actions.manageAnnouncementPin({
@@ -336,10 +318,8 @@ export const getClassAssignments = createAsyncThunk(
       );
     } catch (error) {
       console.log(error);
-
-      let statusCode = error.status || error.response?.data?.status;
-
-      if (statusCode === 422 || statusCode === 404) {
+      let errorStatusCode = error.status || error.response?.data?.status;
+      if (errorStatusCode === 422 || errorStatusCode === 404) {
         return router.replace("/not_found");
       } else {
         const message = getError(error);
@@ -399,6 +379,96 @@ export const createAssignment = createAsyncThunk(
   }
 );
 
+export const createSubmission = createAsyncThunk(
+  "assignment/createSubmission",
+  async (data, { dispatch }) => {
+    const {
+      file,
+      setFile,
+      _id,
+      setAssignmentLoader: setIsLoading,
+      setIsNewFileSelected,
+      setIsFileSubmitted,
+      setOpenUploadFileModal,
+      setUserComment,
+      userCommentRef,
+    } = data;
+
+    try {
+      const comment =
+        userCommentRef?.current?.value.trim().length > 0
+          ? userCommentRef.current.value
+          : "";
+
+      setIsLoading(true);
+      const formData = new FormData();
+      formData.append("assignmentId", _id);
+      formData.append("comment", comment);
+      formData.append("file", file);
+
+      const res = await axios({
+        url: "/api/class/assignment/upload",
+        method: "POST",
+        data: formData,
+
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      setFile(null);
+      setIsNewFileSelected(false);
+      let { message } = res.data;
+      notifyAndUpdate(SUCCESS_TOAST, "success", message, toast);
+      setIsFileSubmitted(true);
+      setOpenUploadFileModal(false);
+      setUserComment(comment);
+      userCommentRef.current.value = "";
+    } catch (error) {
+      console.log(error);
+      const message = getError(error);
+      notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+    }
+
+    setIsLoading(false);
+  }
+);
+
+export const removeSubmission = createAsyncThunk(
+  "assignment/removeSubmission",
+  async (data, { dispatch }) => {
+    const {
+      setAssignmentLoader: setIsLoading,
+      _id,
+      setIsFileSubmitted,
+      setOpenUploadFileModal,
+    } = data;
+
+    try {
+      setIsLoading(true);
+
+      const res = await axios({
+        url: "/api/class/assignment/upload",
+        method: "DELETE",
+        params: {
+          assignmentId: _id,
+        },
+      });
+
+      let { message } = res.data;
+      notifyAndUpdate(SUCCESS_TOAST, "success", message, toast);
+      setIsFileSubmitted(false);
+      setOpenUploadFileModal(false);
+    } catch (error) {
+      console.log(error);
+      const message = getError(error);
+      notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+    }
+
+    setIsLoading(false);
+  }
+);
+
 export const deleteAssignment = createAsyncThunk(
   "assignment/deleteAssignment",
   async (data, { dispatch }) => {
@@ -429,6 +499,54 @@ export const deleteAssignment = createAsyncThunk(
     }
 
     setIsLoading(false);
+  }
+);
+
+export const getAssignmentDetails = createAsyncThunk(
+  "assignment/getAssignmentDetails",
+  async (data, { dispatch }) => {
+    const { assignmentId, classId, router, setClassAssignment } = data;
+
+    try {
+      const res = await axios.get(`/api/class/${classId}/${assignmentId}`);
+      setClassAssignment(res.data.assignment);
+    } catch (error) {
+      console.log(error);
+      let errorStatusCode = error.status || error.response?.data?.status;
+      if (errorStatusCode === 401) {
+        router.replace("/unauthorized");
+      } else if (errorStatusCode === 404 || errorStatusCode === 422) {
+        router.replace("/not_found");
+      } else {
+        const message = getError(error);
+        notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+      }
+    }
+  }
+);
+
+export const getAssignmentSubmissions = createAsyncThunk(
+  "assignment/getAssignmentSubmissions",
+  async (data, { dispatch }) => {
+    const { assignmentId, classId, router, setAssignmentSubmissions } = data;
+
+    try {
+      const res = await axios.get(
+        `/api/class/${classId}/${assignmentId}/submissions`
+      );
+      setAssignmentSubmissions(res.data.submissions);
+    } catch (error) {
+      console.log(error);
+      let errorStatusCode = error.status || error.response?.data?.status;
+      if (errorStatusCode === 401) {
+        router.replace("/unauthorized");
+      } else if (errorStatusCode === 404 || errorStatusCode === 422) {
+        router.replace("/not_found");
+      } else {
+        const message = getError(error);
+        notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+      }
+    }
   }
 );
 

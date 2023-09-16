@@ -1,10 +1,6 @@
 .people {
   width: 75%;
   margin: 2rem auto;
-
-  @media screen and (max-width: 1024px) {
-    width: 90%;
-  }
 }
 
 .container {
@@ -30,7 +26,7 @@
 
   .search-box {
     display: flex;
-    align-items: end;
+    align-items: flex-end;
 
     .searchText {
       padding: 0.4rem 0.6rem;
@@ -92,5 +88,17 @@
   }
   100% {
     transform: rotate(360deg);
+  }
+}
+
+@media screen and (max-width: 1024px) {
+  .people {
+    width: 90%;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .container {
+    padding: 1rem 0;
   }
 }

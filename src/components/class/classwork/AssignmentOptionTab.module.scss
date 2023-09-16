@@ -1,0 +1,18 @@
+.assignment-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.title,
+.description,
+.documents {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  span {
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+}

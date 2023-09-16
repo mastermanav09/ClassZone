@@ -14,18 +14,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
-
-    svg {
-      position: relative;
-      width: 25px;
-      height: 25px;
-    }
   }
 }
 
 .dropdown[open] {
   animation: fade-in 200ms ease-in-out forwards;
 }
+
 @keyframes fade-in {
   0% {
     opacity: 0;
@@ -39,13 +34,8 @@
   position: absolute;
   width: 75%;
   background-color: white;
-  align-items: center;
   overflow: hidden;
-
-  @media screen and (max-width: 1024px) {
-    width: 90%;
-  }
-
+  left: calc(25% / 2);
   top: 0;
   margin-top: 5px;
   border-radius: 10px;
@@ -53,6 +43,7 @@
   z-index: 101;
   box-shadow: rgba(0, 0, 0, 0.45) 0px 25px 20px -20px;
   font-weight: 600;
+  font-size: clamp(15px, 2vw, 1.1rem);
   color: rgb(86, 85, 85);
 
   ul {
@@ -73,14 +64,15 @@
     text-align: center;
 
     @media screen and (max-width: 540px) {
-      p {
-        font-size: 15px;
-      }
-
       svg {
         display: none;
       }
     }
+  }
+
+  @media screen and (max-width: 1024px) {
+    width: 90%;
+    left: calc(10% / 2);
   }
 }
 

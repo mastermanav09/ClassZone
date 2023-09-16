@@ -8,7 +8,7 @@ import { registerForUIToggle } from "@/helper/closeOpenUIComponents";
 import { NavLink } from "./NavLink";
 import ClassMenu from "../svg/ClassMenu";
 
-const ClassNavDropdown = ({ _id, backgroundColor }) => {
+const ClassNavDropdown = ({ classId, backgroundColor }) => {
   const [showNavbarDropdown, setShowNavbarDropdown] = useState(false);
   const router = useRouter();
   registerForUIToggle(setShowNavbarDropdown);
@@ -22,8 +22,6 @@ const ClassNavDropdown = ({ _id, backgroundColor }) => {
     <>
       <div className={classes.options}>
         <ClassMenu
-          tooltipId="class-menu"
-          tooltipContent="Menu"
           handleClick={handleClick}
           backgroundColor={backgroundColor}
         />
@@ -32,7 +30,7 @@ const ClassNavDropdown = ({ _id, backgroundColor }) => {
         <div className={classes.dropdown} open>
           <ul>
             <NavLink
-              href={`/classes/${_id}`}
+              href={`/classes/${classId}`}
               className={classes.navlink}
               activeClass={classes.active}
               inactiveClass={classes.in}
@@ -45,7 +43,7 @@ const ClassNavDropdown = ({ _id, backgroundColor }) => {
             </NavLink>
 
             <NavLink
-              href={`/classes/${_id}/classwork?bc=${encodeURIComponent(
+              href={`/classes/${classId}/classwork?bc=${encodeURIComponent(
                 backgroundColor
               )}`}
               className={classes.navlink}
@@ -59,7 +57,7 @@ const ClassNavDropdown = ({ _id, backgroundColor }) => {
             </NavLink>
 
             <NavLink
-              href={`/classes/${_id}/people?bc=${encodeURIComponent(
+              href={`/classes/${classId}/people?bc=${encodeURIComponent(
                 backgroundColor
               )}`}
               className={classes.navlink}

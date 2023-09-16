@@ -30,15 +30,11 @@ const PeopleList = () => {
   }, [classDetails, classId, dispatch, people, router]);
 
   useEffect(() => {
-    if (searchTerm !== null && people) {
-      const newList = people.filter((user) => {
-        return user.credentials.name.toLowerCase().includes(searchTerm);
-      });
+    const newList = people?.filter((user) => {
+      return user.credentials.name.toLowerCase().includes(searchTerm);
+    });
 
-      setSearchResults(newList);
-    } else {
-      setSearchResults(people);
-    }
+    setSearchResults(newList);
   }, [searchTerm, people]);
 
   const getSearchTerm = () => {
@@ -55,8 +51,8 @@ const PeopleList = () => {
 
   return (
     <>
+      <ClassNavDropdown classId={classId} backgroundColor={backgroundColor} />
       <div className={classes.people}>
-        <ClassNavDropdown _id={classId} backgroundColor={backgroundColor} />
         <div className={classes.container}>
           <div>
             <p>Teacher</p>

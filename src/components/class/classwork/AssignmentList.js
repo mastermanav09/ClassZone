@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import AssignmentCard from "../AssignmentCard";
+import AssignmentCard from "./AssignmentCard";
 import { useDispatch } from "react-redux";
 import classes from "./AssignmentList.module.scss";
 import { deleteAssignment } from "../../../../utils/store/reducers/class";
@@ -7,7 +7,7 @@ import LoadingSpinner from "@/components/progress/LoadingSpinner";
 import Modal from "react-responsive-modal";
 
 const AssignmentList = (props) => {
-  const { classId, assignments, teacher, user } = props;
+  const { classId, assignments, teacher, user, backgroundColor } = props;
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -99,21 +99,26 @@ const AssignmentList = (props) => {
           </div>
         </Modal>
       )}
-      {assignments?.length > 0 ? (
-        assignments.map((assignment) => (
-          <AssignmentCard
-            key={assignment._id}
-            assignment={assignment}
-            teacher={teacher}
-            user={user}
-            confirmDeleteHandler={openConfirmDeleteAssignmentHandler}
-          />
-        ))
-      ) : (
-        <div className={classes["no-assignments-found-text"]}>
-          <h3>No Assignments found!</h3>
-        </div>
-      )}
+
+      <div className={classes["assignment-list"]}>
+        {assignments?.length > 0 ? (
+          assignments.map((assignment) => (
+            <AssignmentCard
+              key={assignment._id}
+              assignment={assignment}
+              teacher={teacher}
+              classId={classId}
+              backgroundColor={backgroundColor}
+              user={user}
+              confirmDeleteHandler={openConfirmDeleteAssignmentHandler}
+            />
+          ))
+        ) : (
+          <div className={classes["no-assignments-found-text"]}>
+            <h3>No Assignments found!</h3>
+          </div>
+        )}
+      </div>
     </>
   );
 };

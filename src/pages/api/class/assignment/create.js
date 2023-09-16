@@ -41,11 +41,6 @@ const handler = async (req, res) => {
     }
 
     const { user } = session;
-    let filter = { _id: user._id };
-
-    if (!user._id) {
-      filter = { "credentials.email": user.email };
-    }
 
     const form = formidable({ keepExtensions: true });
     const [fields, files] = await form.parse(req);
@@ -109,14 +104,17 @@ const handler = async (req, res) => {
 
     const url = process.env.UPLOAD_CLOUDINARY_URL;
     let uploadedFileUrl = null;
+    const pathId = uuidv4();
+
     if (file && file[0]) {
-      const pathId = uuidv4();
-      await cloudinary.api.create_folder(`/assignments/${pathId}`);
-      await cloudinary.api.create_folder(`/assignments/${pathId}/students`);
+      const uploadPath = `/assignments/${pathId}`;
+
+      await cloudinary.api.create_folder(uploadPath);
+      await cloudinary.api.create_folder(`${uploadPath}/submissions`);
 
       const formData = new FormData();
       formData.append("file", fs.createReadStream(file[0].filepath));
-      formData.append("folder", `/assignments/${pathId}`);
+      formData.append("folder", uploadPath);
       formData.append("upload_preset", process.env.CLOUDINARY_UPLOAD_PRESET);
       const { data } = await axios.post(url, formData);
 
@@ -132,7 +130,8 @@ const handler = async (req, res) => {
     const newAssignment = new Assignment({
       title: title,
       description: description,
-      ...(uploadedFileUrl && { file: uploadedFileUrl }),
+      ...(uploadedFileUrl && { filePath: uploadedFileUrl }),
+      cloudinaryId: pathId,
       responses: [],
       dueDate: dueDate,
     });
@@ -148,7 +147,11 @@ const handler = async (req, res) => {
     );
 
     return res.status(201).json({
-      assignment: newAssignment._doc,
+      assignment: {
+        _id: newAssignment._doc._id,
+        title: newAssignment._doc.title,
+        dueDate: newAssignment._doc.dueDate,
+      },
       ...manageResponses(201, "Assignment created successfully!"),
     });
   } catch (error) {
