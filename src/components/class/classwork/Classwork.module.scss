@@ -2,13 +2,18 @@ $primary-color: #0a9689;
 
 .assignment {
   width: 75%;
-  margin: 1rem auto;
+  margin: auto;
+  margin-top: 4rem;
+
   @media screen and (max-width: 1024px) {
     width: 90%;
   }
-}
 
-.assignment {
+  hr {
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
   .container {
     display: flex;
     align-items: center;
@@ -18,7 +23,6 @@ $primary-color: #0a9689;
 
     h2 {
       text-align: center;
-      margin-top: 3rem;
       margin-bottom: 0.5rem;
     }
 
@@ -30,8 +34,7 @@ $primary-color: #0a9689;
       font-size: 0.85rem;
       font-weight: 600;
       padding: 1rem;
-      margin-top: 3rem;
-      margin-bottom: 2rem;
+      margin-bottom: 1rem;
       border-radius: 30px;
       background-color: white;
       border: 1px solid #bdbdbd;
@@ -204,7 +207,7 @@ $primary-color: #0a9689;
 .remove-file-text {
   font-size: 14px;
   padding: 4px 8px;
-  background-color: #0a9689;
+  background-color: #7d7463;
   color: white;
   width: max-content;
   border-radius: 5px;

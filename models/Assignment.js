@@ -13,7 +13,12 @@ const assignmentSchema = new Schema(
       required: true,
     },
 
-    file: {
+    cloudinaryId: {
+      type: String,
+      required: true,
+    },
+
+    filePath: {
       type: String,
     },
 
@@ -25,9 +30,18 @@ const assignmentSchema = new Schema(
           required: true,
         },
 
-        file: {
+        submittedFilePath: {
           type: String,
           required: true,
+        },
+
+        submittedOn: {
+          type: Date,
+          required: true,
+        },
+
+        comment: {
+          type: String,
         },
       },
     ],

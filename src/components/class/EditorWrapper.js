@@ -62,7 +62,7 @@ const EditorWrapper = ({
       {textEditor && (
         <div className={classes.editor}>
           <Editor contents={content} getValue={getValue} />
-          <div className={classes.container}>
+          <div className={classes["actions"]}>
             <button onClick={announcementHandler} disabled={isLoading}>
               {isLoading ? (
                 <LoadingSpinner className={classes.spinner_two} />

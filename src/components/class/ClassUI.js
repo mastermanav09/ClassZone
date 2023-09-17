@@ -12,7 +12,7 @@ import { toast } from "react-toastify";
 import { useRouter } from "next/router";
 import ThreeDots from "../svg/ThreeDots";
 import PageLoader from "../progress/PageLoader";
-import { validateAnnouncement } from "@/helper/validateAnnouncement";
+import { validateAnnouncement } from "../../../utils/validators/validateAnnouncement";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { notifyAndUpdate } from "@/helper/toastNotifyAndUpdate";
@@ -118,91 +118,94 @@ const ClassUI = () => {
   }
 
   return (
-    <div className={classes.class}>
-      <ClassNavDropdown _id={classId} backgroundColor={backgroundColor} />
-      <div
-        className={classes["class__nameBox"]}
-        style={{ backgroundColor: backgroundColor }}
-      >
-        <div className={classes["class__name"]}>{name}</div>
-        <div className={classes["class__batch"]}>{batch}</div>
-      </div>
-      <div className={classes.container}>
-        {(user?._id && user?._id === teacher?.credentials._id) ||
-        (user?.email && user?.email === teacher?.credentials.email) ? (
-          <div className={classes["copy_code_container"]}>
-            <div>
-              <h3>Class Code</h3>
-              <ThreeDots fields={classCodefields} />
-            </div>
-            <p className={classes["class_code"]}>{_id}</p>
-          </div>
-        ) : (
-          <div className={classes["classes__upcoming"]}>
-            <h4>Upcoming</h4>
-            <p>Woohoo, no work due soon!</p>
-            <div className={classes.viewAllContainer}>
-              <Link
-                href="/"
-                style={{ color: backgroundColor }}
-                className={classes.viewAll}
-              >
-                View all
-              </Link>
-            </div>
-          </div>
-        )}
-
-        <div className={classes.announcementContainer}>
+    <>
+      <ClassNavDropdown classId={classId} backgroundColor={backgroundColor} />
+      <div className={classes.class}>
+        <div
+          className={classes["class__nameBox"]}
+          style={{ backgroundColor: backgroundColor }}
+        >
+          <div className={classes["class__name"]}>{name}</div>
+          <div className={classes["class__batch"]}>{batch}</div>
+        </div>
+        <div className={classes.container}>
           {(user?._id && user?._id === teacher?.credentials._id) ||
-            (user?.email && user?.email === teacher?.credentials.email && (
-              <EditorWrapper
-                classId={_id}
-                textEditor={textEditor}
-                setTextEditor={setTextEditor}
-                isEditAnnouncement={isEditAnnouncement}
-                content={content}
-                setContent={setContent}
-                manageAnnouncementHandler={manageAnnouncementHandler}
-                teacher={teacher}
-                isLoading={isLoading}
-                backgroundColor={backgroundColor}
-              />
-            ))}
+          (user?.email && user?.email === teacher?.credentials.email) ? (
+            <div className={classes["copy_code_container"]}>
+              <div>
+                <h3>Class Code</h3>
+                <ThreeDots fields={classCodefields} />
+              </div>
+              <p className={classes["class_code"]}>{_id}</p>
+            </div>
+          ) : (
+            <div className={classes["classes__upcoming"]}>
+              <h4>Upcoming</h4>
+              <p>Woohoo, no work due soon!</p>
+              <div className={classes.viewAllContainer}>
+                <Link
+                  href="/"
+                  style={{ color: backgroundColor }}
+                  className={classes.viewAll}
+                >
+                  View all
+                </Link>
+              </div>
+            </div>
+          )}
 
-          {pinnedAnnouncements?.length !== 0 && (
-            <>
-              {pinnedAnnouncements.map((announcement) => (
+          <div className={classes.announcementContainer}>
+            {(user?._id && user?._id === teacher?.credentials._id) ||
+              (user?.email && user?.email === teacher?.credentials.email && (
+                <EditorWrapper
+                  classId={_id}
+                  textEditor={textEditor}
+                  setTextEditor={setTextEditor}
+                  isEditAnnouncement={isEditAnnouncement}
+                  content={content}
+                  setContent={setContent}
+                  manageAnnouncementHandler={manageAnnouncementHandler}
+                  teacher={teacher}
+                  isLoading={isLoading}
+                  backgroundColor={backgroundColor}
+                />
+              ))}
+
+            {pinnedAnnouncements?.length !== 0 && (
+              <>
+                {pinnedAnnouncements.map((announcement) => (
+                  <Announcement
+                    classId={_id}
+                    key={announcement._id}
+                    teacher={teacher}
+                    announcement={announcement}
+                    backgroundColor={backgroundColor}
+                    editAnnouncementHandler={editAnnouncementHandler}
+                  />
+                ))}
+              </>
+            )}
+            {announcements?.length !== 0 &&
+              announcements.map((announcement) => (
                 <Announcement
                   classId={_id}
                   key={announcement._id}
                   teacher={teacher}
                   announcement={announcement}
-                  backgroundColor={backgroundColor}
                   editAnnouncementHandler={editAnnouncementHandler}
                 />
               ))}
-            </>
-          )}
-          {announcements?.length !== 0 &&
-            announcements.map((announcement) => (
-              <Announcement
-                classId={_id}
-                key={announcement._id}
-                teacher={teacher}
-                announcement={announcement}
-                editAnnouncementHandler={editAnnouncementHandler}
-              />
-            ))}
-          {pinnedAnnouncements?.length === 0 && announcements?.length === 0 && (
-            <h3 className={classes["no_announcement_found_text"]}>
-              No Announcements found!
-            </h3>
-          )}
+            {pinnedAnnouncements?.length === 0 &&
+              announcements?.length === 0 && (
+                <h3 className={classes["no_announcement_found_text"]}>
+                  No Announcements found!
+                </h3>
+              )}
+          </div>
         </div>
+        <ScrollToTop backgroundColor={backgroundColor} />
       </div>
-      <ScrollToTop backgroundColor={backgroundColor} />
-    </div>
+    </>
   );
 };
 

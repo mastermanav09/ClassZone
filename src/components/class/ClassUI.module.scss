@@ -84,15 +84,15 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 0.7rem;
+    padding: 0.6rem;
 
     h4 {
-      font-size: 0.9rem;
+      font-size: 1rem;
     }
 
     p {
       margin: 0.2rem 0 0.4rem;
-      font-size: 0.8rem;
+      font-size: 0.9rem;
       text-align: left;
       color: #0a9689;
     }
@@ -105,7 +105,7 @@
         text-align: center;
         padding: 0.3rem;
         border-radius: 5px;
-        font-size: 0.85rem;
+        font-size: 0.9rem;
       }
 
       .viewAll:hover {

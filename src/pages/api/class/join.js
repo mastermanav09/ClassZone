@@ -73,11 +73,11 @@ const handler = async (req, res) => {
     }
 
     await User.findByIdAndUpdate(joiningUser._id, {
-      $push: { enrolled: new mongoose.Types.ObjectId(classId) },
+      $push: { enrolled: classId },
     });
 
     const updatedClass = await Class.findOneAndUpdate(joiningClass._id, {
-      $push: { students: new mongoose.Types.ObjectId(joiningUser._id) },
+      $push: { students: joiningUser._id },
     })
       .select("name backgroundColor _id teacher")
       .populate({

@@ -17,6 +17,13 @@
   @content;
 }
 
+.assignment-list {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 1rem;
+}
+
 .no-assignments-found-text {
   font-size: 1rem;
   text-align: center;
