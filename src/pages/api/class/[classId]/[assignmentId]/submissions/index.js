@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
-import manageResponses from "../../../../../../utils/responses/manageResponses";
-import { authOptions } from "../../../auth/[...nextauth]";
-import db from "../../../../../../utils/db";
-import Assignment from "../../../../../../models/Assignment";
+import manageResponses from "../../../../../../../utils/responses/manageResponses";
+import { authOptions } from "../../../../auth/[...nextauth]";
+import db from "../../../../../../../utils/db";
+import Assignment from "../../../../../../../models/Assignment";
 
 const { getServerSession } = require("next-auth");
 

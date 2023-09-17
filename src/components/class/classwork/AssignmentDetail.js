@@ -10,8 +10,10 @@ const AssignmentDetail = (props) => {
   const {
     classAssignment,
     assignmentSubmissions,
+    assignmentSubmissionsRemaining,
     setClassAssignment,
     setAssignmentSubmissions,
+    setAssignmentSubmissionsRemaining,
     currentTab,
     navigateTab,
   } = props;
@@ -65,7 +67,11 @@ const AssignmentDetail = (props) => {
               classId={classId}
               assignmentId={assignmentId}
               assignmentSubmissions={assignmentSubmissions}
+              assignmentSubmissionsRemaining={assignmentSubmissionsRemaining}
               setAssignmentSubmissions={setAssignmentSubmissions}
+              setAssignmentSubmissionsRemaining={
+                setAssignmentSubmissionsRemaining
+              }
               loader={<LoadingSpinner className={classes.spinner} />}
             />
           )}

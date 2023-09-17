@@ -15,11 +15,13 @@ const SubmissionCard = (props) => {
     submission?.submittedFilePath
   );
 
-  const submissionDate = moment(submission?.submittedOn).format("ll");
+  const submissionDate = submission?.submittedOn
+    ? moment(submission?.submittedOn).format("ll")
+    : null;
 
-  let title = user?.credentials?.name;
-  if (title?.length > 50) {
-    title = title.substring(0, 50) + "...";
+  let name = user?.credentials?.name;
+  if (name?.length > 50) {
+    name = name.substring(0, 50) + "...";
   }
 
   const handleCommentHover = () => {
@@ -58,11 +60,11 @@ const SubmissionCard = (props) => {
             alt="pen book"
           />
         </div>
-        <h1 className={classes.title}>{title}</h1>
+        <h1 className={classes.name}>{name}</h1>
       </div>
       <div className={classes.bottom}>
         <div className={classes["file-icon"]}>
-          {submittedFileExtension && (
+          {submission?.submittedFilePath && (
             <div
               className={classes["download-file"]}
               onClick={downloadFileHandler}
@@ -74,10 +76,11 @@ const SubmissionCard = (props) => {
             </div>
           )}
         </div>
-
-        <div className={classes["submittedOn-date"]}>
-          Submitted On <b>{submissionDate}</b>
-        </div>
+        {submission?.submittedOn && (
+          <div className={classes["submittedOn-date"]}>
+            Submitted On <b>{submissionDate}</b>
+          </div>
+        )}
       </div>
     </div>
   );

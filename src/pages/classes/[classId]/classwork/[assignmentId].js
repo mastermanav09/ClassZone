@@ -9,6 +9,8 @@ import mongoose from "mongoose";
 const AssignmentDetailPage = () => {
   const [classAssignment, setClassAssignment] = useState(null);
   const [assignmentSubmissions, setAssignmentSubmissions] = useState(null);
+  const [assignmentSubmissionsRemaining, setAssignmentSubmissionsRemaining] =
+    useState(null);
   const [currentTab, setCurrentTab] = useState("assignments");
 
   const navigateTab = (tab) => {
@@ -19,8 +21,10 @@ const AssignmentDetailPage = () => {
     <AssignmentDetail
       classAssignment={classAssignment}
       assignmentSubmissions={assignmentSubmissions}
+      assignmentSubmissionsRemaining={assignmentSubmissionsRemaining}
       setClassAssignment={setClassAssignment}
       setAssignmentSubmissions={setAssignmentSubmissions}
+      setAssignmentSubmissionsRemaining={setAssignmentSubmissionsRemaining}
       navigateTab={navigateTab}
       currentTab={currentTab}
     />

@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/router";
-import { getAssignmentSubmissions } from "../../../../utils/store/reducers/class";
+import {
+  getAssignmentSubmissions,
+  getAssignmentSubmissionsRemaining,
+} from "../../../../utils/store/reducers/class";
 import { useDispatch } from "react-redux";
 import SubmissionCard from "./SubmissionCard";
 import classes from "./SubmissionsOptionTab.module.scss";
@@ -10,13 +13,39 @@ const SubmissionsOptionTab = (props) => {
     classId,
     assignmentId,
     assignmentSubmissions,
+    assignmentSubmissionsRemaining,
     loader,
     setAssignmentSubmissions,
+    setAssignmentSubmissionsRemaining,
   } = props;
 
   const [isRemainingSelected, setIsRemainingSelected] = useState(false);
   const dispatch = useDispatch();
   const router = useRouter();
+
+  useEffect(() => {
+    if (isRemainingSelected) {
+      if (!assignmentSubmissionsRemaining) {
+        dispatch(
+          getAssignmentSubmissionsRemaining({
+            classId,
+            assignmentId,
+            router,
+            setAssignmentSubmissionsRemaining,
+          })
+        );
+      } else {
+      }
+    }
+  }, [
+    assignmentId,
+    assignmentSubmissionsRemaining,
+    classId,
+    dispatch,
+    isRemainingSelected,
+    router,
+    setAssignmentSubmissionsRemaining,
+  ]);
 
   useEffect(() => {
     if (!assignmentSubmissions) {
@@ -44,6 +73,10 @@ const SubmissionsOptionTab = (props) => {
     return loader;
   }
 
+  if (isRemainingSelected && !assignmentSubmissionsRemaining) {
+    return loader;
+  }
+
   return (
     <div className={classes.container}>
       <div className={classes.options}>
@@ -58,9 +91,19 @@ const SubmissionsOptionTab = (props) => {
         </button>
       </div>
       <div className={classes.list}>
-        {assignmentSubmissions?.responses.map((response) => (
-          <SubmissionCard key={response._id} submission={response} />
-        ))}
+        {isRemainingSelected ? (
+          <>
+            {assignmentSubmissionsRemaining?.map((response, index) => (
+              <SubmissionCard key={index} submission={response} />
+            ))}
+          </>
+        ) : (
+          <>
+            {assignmentSubmissions?.responses.map((response) => (
+              <SubmissionCard key={response._id} submission={response} />
+            ))}
+          </>
+        )}
       </div>
     </div>
   );

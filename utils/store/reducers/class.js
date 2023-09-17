@@ -550,6 +550,32 @@ export const getAssignmentSubmissions = createAsyncThunk(
   }
 );
 
+export const getAssignmentSubmissionsRemaining = createAsyncThunk(
+  "assignment/getAssignmentSubmissions",
+  async (data, { dispatch }) => {
+    const { assignmentId, classId, router, setAssignmentSubmissionsRemaining } =
+      data;
+
+    try {
+      const res = await axios.get(
+        `/api/class/${classId}/${assignmentId}/submissions/remaining`
+      );
+      setAssignmentSubmissionsRemaining(res.data.remainingSubmissions);
+    } catch (error) {
+      console.log(error);
+      let errorStatusCode = error.status || error.response?.data?.status;
+      if (errorStatusCode === 401) {
+        router.replace("/unauthorized");
+      } else if (errorStatusCode === 404 || errorStatusCode === 422) {
+        router.replace("/not_found");
+      } else {
+        const message = getError(error);
+        notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+      }
+    }
+  }
+);
+
 const classSlice = createSlice({
   name: "class",
   initialState: {
