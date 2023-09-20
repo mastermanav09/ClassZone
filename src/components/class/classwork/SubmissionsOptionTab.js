@@ -69,13 +69,6 @@ const SubmissionsOptionTab = (props) => {
     dispatch,
   ]);
 
-  if (
-    !assignmentSubmissions ||
-    (isRemainingSelected && !assignmentSubmissionsRemaining)
-  ) {
-    return loader;
-  }
-
   return (
     <div className={classes.container}>
       <div className={classes.options}>
@@ -89,21 +82,26 @@ const SubmissionsOptionTab = (props) => {
           Remaining
         </button>
       </div>
-      <div className={classes.list}>
-        {isRemainingSelected ? (
-          <>
-            {assignmentSubmissionsRemaining?.map((response, index) => (
-              <SubmissionCard key={index} submission={response} />
-            ))}
-          </>
-        ) : (
-          <>
-            {assignmentSubmissions?.responses.map((response) => (
-              <SubmissionCard key={response._id} submission={response} />
-            ))}
-          </>
-        )}
-      </div>
+      {!assignmentSubmissions ||
+      (isRemainingSelected && !assignmentSubmissionsRemaining) ? (
+        <div style={{ marginTop: "10rem" }}>{loader}</div>
+      ) : (
+        <div className={classes.list}>
+          {isRemainingSelected ? (
+            <>
+              {assignmentSubmissionsRemaining?.map((response, index) => (
+                <SubmissionCard key={index} submission={response} />
+              ))}
+            </>
+          ) : (
+            <>
+              {assignmentSubmissions?.responses.map((response) => (
+                <SubmissionCard key={response._id} submission={response} />
+              ))}
+            </>
+          )}
+        </div>
+      )}
     </div>
   );
 };
