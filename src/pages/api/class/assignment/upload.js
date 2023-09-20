@@ -56,9 +56,14 @@ const handler = async (req, res) => {
       const form = formidable({ keepExtensions: true });
       const [fields, files] = await form.parse(req);
 
-      const { assignmentId: assignmentIdArr, comment: commentArr } = fields;
+      const {
+        assignmentId: assignmentIdArr,
+        classId: classIdArr,
+        comment: commentArr,
+      } = fields;
       const { file } = files;
       const assignmentId = assignmentIdArr[0];
+      const classId = classIdArr[0];
       const userComment = commentArr[0];
 
       if (!file || !file[0]) {
@@ -70,7 +75,13 @@ const handler = async (req, res) => {
       let ObjectId = mongoose.Types.ObjectId;
 
       if (!ObjectId.isValid(assignmentId)) {
-        const error = new Error("Invalid Assignment Id!");
+        const error = new Error("Invalid AssignmentId Id!");
+        error.statusCode = 422;
+        throw error;
+      }
+
+      if (!ObjectId.isValid(classId)) {
+        const error = new Error("Invalid Class Id!");
         error.statusCode = 422;
         throw error;
       }
@@ -78,6 +89,8 @@ const handler = async (req, res) => {
       await db.connect();
 
       const classAssignment = await Assignment.findById(assignmentId);
+      const userClass = await Class.findById(classId);
+      const classUser = await User.findOne(filter);
 
       if (!classAssignment) {
         const error = new Error("Assignment do not exists!");
@@ -85,7 +98,33 @@ const handler = async (req, res) => {
         throw error;
       }
 
-      const classUser = await User.findOne(filter);
+      if (!userClass) {
+        const error = new Error("Class do not exists!");
+        error.statusCode = 404;
+        throw error;
+      }
+
+      if (userClass.teacher.toString() === classUser._id.toString()) {
+        const error = new Error("You cannot make submission!");
+        error.statusCode = 401;
+        throw error;
+      }
+
+      const assignmentDetail = await Assignment.findById(assignmentId).select(
+        "responses -_id"
+      );
+
+      const { responses } = assignmentDetail;
+      const isAlreadySubmitted = responses.some(
+        (response) => response.user.toString() === classUser._id.toString()
+      );
+
+      if (isAlreadySubmitted) {
+        const error = new Error("You've already made a submission!");
+        error.statusCode = 400;
+        throw error;
+      }
+
       cloudinary.config(cloudinaryConfig);
 
       uploadPath = `/assignments/${classAssignment.cloudinaryId}/submissions/${classUser._id}`;
@@ -115,6 +154,7 @@ const handler = async (req, res) => {
       }
 
       const uploadedFileUrl = data.secure_url;
+      const isValidComment = userComment.trim().length > 0;
 
       await Assignment.findByIdAndUpdate(assignmentId, {
         $push: {
@@ -122,16 +162,18 @@ const handler = async (req, res) => {
             user: classUser._id,
             submittedFilePath: uploadedFileUrl,
             submittedOn: new Date(),
-            ...(userComment.trim().length > 0 && { comment: userComment }),
+            ...(isValidComment && { comment: userComment }),
           },
         },
       });
 
-      return res
-        .status(200)
-        .json(manageResponses(200, "Assignment submitted successfully!"));
+      return res.status(200).json({
+        message: "Assignment submitted successfully!",
+        submittedFilePath: uploadedFileUrl,
+        submittedOn: new Date(),
+        ...(isValidComment && { comment: userComment }),
+      });
     } catch (error) {
-      await cloudinary.api.delete_folder(uploadPath);
       console.log(error);
       if (!error.statusCode) {
         error.statusCode = 500;
@@ -159,7 +201,7 @@ const handler = async (req, res) => {
         filter = { "credentials.email": user.email };
       }
 
-      const { assignmentId } = req.query;
+      const { assignmentId, classId } = req.query;
       await db.connect();
 
       let ObjectId = mongoose.Types.ObjectId;
@@ -169,12 +211,25 @@ const handler = async (req, res) => {
         throw error;
       }
 
-      const classUser = await User.findOne(filter);
       const classAssignment = await Assignment.findById(assignmentId);
+      const userClass = await Class.findById(classId);
+      const classUser = await User.findOne(filter);
 
       if (!classAssignment) {
         const error = new Error("Assignment do not exists!");
         error.statusCode = 404;
+        throw error;
+      }
+
+      if (!userClass) {
+        const error = new Error("Class do not exists!");
+        error.statusCode = 404;
+        throw error;
+      }
+
+      if (userClass.teacher.toString() === classUser._id.toString()) {
+        const error = new Error("You cannot remove submission!");
+        error.statusCode = 401;
         throw error;
       }
 

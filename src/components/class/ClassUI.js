@@ -3,6 +3,7 @@ import classes from "./ClassUI.module.scss";
 import {
   getClass,
   manageAnnouncement,
+  getStudentRemainingAssignmentsStatus,
 } from "../../../utils/store/reducers/class";
 import { useDispatch, useSelector } from "react-redux";
 import EditorWrapper from "./EditorWrapper";
@@ -19,6 +20,8 @@ import { notifyAndUpdate } from "@/helper/toastNotifyAndUpdate";
 import { INFO } from "../../../utils/constants";
 import ClassNavDropdown from "./ClassNavDropdown";
 import { useEffect } from "react";
+import Alert from "../svg/Alert";
+import SkeletonScream from "../ui/skeletons/SkeletonScream";
 
 const ClassUI = () => {
   const dispatch = useDispatch();
@@ -26,6 +29,12 @@ const ClassUI = () => {
   const [textEditor, setTextEditor] = useState(false);
   const [content, setContent] = useState("");
   const [isEditAnnouncement, setIsEditAnnouncement] = useState(null);
+  const [studentRemainingAssignmentCount, setStudentRemainingAssignmentCount] =
+    useState(null);
+  const [
+    studentRemainingAssignmentCountLoader,
+    setStudentRemainingAssignmentCountLoader,
+  ] = useState(false);
 
   const { data: session } = useSession();
   const { user } = session || {};
@@ -44,12 +53,21 @@ const ClassUI = () => {
   } = useSelector((state) => state.class.currentClassDetails);
 
   useEffect(() => {
+    dispatch(
+      getStudentRemainingAssignmentsStatus({
+        router,
+        classId,
+        setStudentRemainingAssignmentCount,
+        setStudentRemainingAssignmentCountLoader,
+      })
+    );
+  }, [classId, dispatch, router]);
+
+  useEffect(() => {
     if (classId) {
-      if (_id !== classId) {
-        dispatch(getClass({ router, classId }));
-      }
+      dispatch(getClass({ router, classId }));
     }
-  }, [_id, classId, dispatch, router, user]);
+  }, [_id, classId, dispatch, router]);
 
   const manageAnnouncementHandler = (classId, content) => {
     if (!validateAnnouncement(content)) {
@@ -139,19 +157,45 @@ const ClassUI = () => {
               <p className={classes["class_code"]}>{_id}</p>
             </div>
           ) : (
-            <div className={classes["classes__upcoming"]}>
-              <h4>Upcoming</h4>
-              <p>Woohoo, no work due soon!</p>
-              <div className={classes.viewAllContainer}>
-                <Link
-                  href="/"
-                  style={{ color: backgroundColor }}
-                  className={classes.viewAll}
-                >
-                  View all
-                </Link>
+            <>
+              <div className={classes["classes__upcoming"]}>
+                <h4>Upcoming</h4>
+
+                {studentRemainingAssignmentCountLoader ? (
+                  <SkeletonScream />
+                ) : (
+                  <>
+                    {studentRemainingAssignmentCount === 0 ? (
+                      <p className={classes["completed"]}>
+                        Woohoo, no work due soon!
+                      </p>
+                    ) : (
+                      <>
+                        <p className={classes["remaining"]}>
+                          {studentRemainingAssignmentCount} Assignments
+                          remaining
+                          <div className={classes["assignments_alert"]}>
+                            <Alert />
+                          </div>
+                        </p>
+                        <div className={classes.viewAllContainer}>
+                          <Link
+                            href={{
+                              pathname: `/classes/${classId}/classwork`,
+                              query: { bc: backgroundColor },
+                            }}
+                            style={{ color: backgroundColor }}
+                            className={classes.viewAll}
+                          >
+                            View all
+                          </Link>
+                        </div>
+                      </>
+                    )}
+                  </>
+                )}
               </div>
-            </div>
+            </>
           )}
 
           <div className={classes.announcementContainer}>

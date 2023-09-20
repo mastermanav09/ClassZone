@@ -110,8 +110,9 @@ export const getClass = createAsyncThunk(
         (item) => item._id === classId
       );
 
-      if (requestedClass) {
-        return dispatch(classActions.setCurrentClass(requestedClass));
+      if (requestedClass?.announcements) {
+        dispatch(classActions.setCurrentClass(requestedClass));
+        return;
       }
 
       const res = await axios({
@@ -120,7 +121,6 @@ export const getClass = createAsyncThunk(
       });
 
       dispatch(classSlice.actions.setCurrentClass(res.data.class));
-      dispatch(classSlice.actions.cacheTheClass(res.data.class));
     } catch (error) {
       console.log(error);
       let errorStatusCode = error.status || error.response?.data?.status;
@@ -147,6 +147,7 @@ export const getClassPeople = createAsyncThunk(
 
       dispatch(
         classSlice.actions.setClassPeople({
+          classId: classId,
           people: res.data.people,
           teacher: res.data.teacher,
         })
@@ -312,6 +313,7 @@ export const getClassAssignments = createAsyncThunk(
 
       dispatch(
         classSlice.actions.setClassAssignments({
+          classId: classId,
           assignments: res.data.assignments,
           teacher: res.data.teacher,
         })
@@ -364,9 +366,9 @@ export const createAssignment = createAsyncThunk(
       });
 
       dispatch(classActions.addNewAssignment(res.data.assignment));
+      setFile(null);
       setOpenAssignmentModal(false);
       reset();
-      setFile(null);
       let { message } = res.data;
       notifyAndUpdate(SUCCESS_TOAST, "success", message, toast);
     } catch (error) {
@@ -385,7 +387,8 @@ export const createSubmission = createAsyncThunk(
     const {
       file,
       setFile,
-      _id,
+      assignmentId,
+      classId,
       setAssignmentLoader: setIsLoading,
       setIsNewFileSelected,
       setIsFileSubmitted,
@@ -402,7 +405,8 @@ export const createSubmission = createAsyncThunk(
 
       setIsLoading(true);
       const formData = new FormData();
-      formData.append("assignmentId", _id);
+      formData.append("assignmentId", assignmentId);
+      formData.append("classId", classId);
       formData.append("comment", comment);
       formData.append("file", file);
 
@@ -416,13 +420,21 @@ export const createSubmission = createAsyncThunk(
         },
       });
 
+      const { message, ...submissionDetail } = res.data;
+      notifyAndUpdate(SUCCESS_TOAST, "success", message, toast);
+
+      dispatch(
+        classActions.addAssignmentSubmission({
+          classId,
+          assignmentId,
+          ...submissionDetail,
+        })
+      );
+
       setFile(null);
       setIsNewFileSelected(false);
-      let { message } = res.data;
-      notifyAndUpdate(SUCCESS_TOAST, "success", message, toast);
       setIsFileSubmitted(true);
       setOpenUploadFileModal(false);
-      setUserComment(comment);
       userCommentRef.current.value = "";
     } catch (error) {
       console.log(error);
@@ -439,7 +451,8 @@ export const removeSubmission = createAsyncThunk(
   async (data, { dispatch }) => {
     const {
       setAssignmentLoader: setIsLoading,
-      _id,
+      classId,
+      assignmentId,
       setIsFileSubmitted,
       setOpenUploadFileModal,
     } = data;
@@ -451,14 +464,23 @@ export const removeSubmission = createAsyncThunk(
         url: "/api/class/assignment/upload",
         method: "DELETE",
         params: {
-          assignmentId: _id,
+          classId: classId,
+          assignmentId: assignmentId,
         },
       });
 
       let { message } = res.data;
       notifyAndUpdate(SUCCESS_TOAST, "success", message, toast);
-      setIsFileSubmitted(false);
+
+      dispatch(
+        classActions.removeAssignmentSubmission({
+          classId,
+          assignmentId,
+        })
+      );
+
       setOpenUploadFileModal(false);
+      setIsFileSubmitted(false);
     } catch (error) {
       console.log(error);
       const message = getError(error);
@@ -551,7 +573,7 @@ export const getAssignmentSubmissions = createAsyncThunk(
 );
 
 export const getAssignmentSubmissionsRemaining = createAsyncThunk(
-  "assignment/getAssignmentSubmissions",
+  "assignment/getAssignmentSubmissionsRemaining",
   async (data, { dispatch }) => {
     const { assignmentId, classId, router, setAssignmentSubmissionsRemaining } =
       data;
@@ -576,6 +598,33 @@ export const getAssignmentSubmissionsRemaining = createAsyncThunk(
   }
 );
 
+export const getStudentRemainingAssignmentsStatus = createAsyncThunk(
+  "assignment/getStudentRemainingAssignmentsStatus",
+  async (data, { getState, dispatch }) => {
+    const {
+      classId,
+      setStudentRemainingAssignmentCount,
+      setStudentRemainingAssignmentCountLoader,
+    } = data;
+
+    try {
+      setStudentRemainingAssignmentCountLoader(true);
+      const res = await axios({
+        method: "GET",
+        url: `/api/class/${classId}/remainingAssignmentCount`,
+      });
+
+      setStudentRemainingAssignmentCount(res.data.assignmentsRemaining);
+    } catch (error) {
+      console.log(error);
+      const message = getError(error);
+      notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+    }
+
+    setStudentRemainingAssignmentCountLoader(false);
+  }
+);
+
 const classSlice = createSlice({
   name: "class",
   initialState: {
@@ -593,11 +642,72 @@ const classSlice = createSlice({
     },
 
     setCurrentClass(state, action) {
-      state.currentClassDetails = action.payload;
+      state.currentClassDetails = {
+        ...action.payload,
+      };
+
+      const ind = state.classesCache.findIndex(
+        (item) => item._id === action.payload._id
+      );
+
+      if (ind === -1) {
+        state.classesCache.push(action.payload);
+      } else {
+        state.classesCache[ind] = {
+          ...state.classesCache[ind],
+          ...action.payload,
+        };
+      }
     },
 
-    cacheTheClass(state, action) {
-      state.classesCache.push(action.payload);
+    addAssignmentSubmission(state, action) {
+      const { classId, assignmentId, ...details } = action.payload;
+      const classInd = state.classesCache.findIndex(
+        (item) => item._id === classId
+      );
+
+      const assignmentInd = state.classesCache[classInd].assignments.findIndex(
+        (assignment) => assignment._id === assignmentId
+      );
+
+      state.classesCache[classInd].assignments[assignmentInd] = {
+        ...state.classesCache[classInd].assignments[assignmentInd],
+        responses: [{ ...details }],
+      };
+
+      const assignmentInd2 = state.currentClassDetails.assignments.findIndex(
+        (assignment) => assignment._id === assignmentId
+      );
+
+      state.currentClassDetails.assignments[assignmentInd2] = {
+        ...state.currentClassDetails.assignments[assignmentInd2],
+        responses: [{ ...details }],
+      };
+    },
+
+    removeAssignmentSubmission(state, action) {
+      const { classId, assignmentId } = action.payload;
+      const classInd = state.classesCache.findIndex(
+        (item) => item._id === classId
+      );
+
+      const assignmentInd = state.classesCache[classInd].assignments.findIndex(
+        (assignment) => assignment._id === assignmentId
+      );
+
+      state.classesCache[classInd].assignments[assignmentInd] = {
+        ...state.classesCache[classInd].assignments[assignmentInd],
+        responses: [],
+      };
+
+      const assignmentInd2 = state.currentClassDetails.assignments.findIndex(
+        (assignment) => assignment._id === assignmentId
+      );
+
+      state.currentClassDetails.assignments[assignmentInd2] = {
+        ...state.currentClassDetails.assignments[assignmentInd2],
+        responses: [],
+      };
     },
 
     addUserTeachingClasses(state, action) {
@@ -618,11 +728,27 @@ const classSlice = createSlice({
 
     // people
     setClassPeople(state, action) {
+      const { classId, ...details } = action.payload;
+
       state.currentClassDetails = {
-        people: action.payload.people,
-        teacher: action.payload.teacher,
+        _id: classId,
         ...state.currentClassDetails,
+        ...details,
       };
+
+      const ind = state.classesCache.findIndex((item) => item._id === classId);
+
+      if (ind == -1) {
+        state.classesCache.push({
+          _id: classId,
+          ...details,
+        });
+      } else {
+        state.classesCache[ind] = {
+          ...state.classesCache[ind],
+          ...details,
+        };
+      }
     },
 
     // announcement
@@ -720,11 +846,27 @@ const classSlice = createSlice({
     },
 
     setClassAssignments(state, action) {
+      const { classId, ...details } = action.payload;
+
       state.currentClassDetails = {
-        assignments: action.payload.assignments,
-        teacher: action.payload.teacher,
+        _id: classId,
         ...state.currentClassDetails,
+        ...details,
       };
+
+      const ind = state.classesCache.findIndex((item) => item._id === classId);
+
+      if (ind == -1) {
+        state.classesCache.push({
+          _id: classId,
+          ...details,
+        });
+      } else {
+        state.classesCache[ind] = {
+          ...state.classesCache[ind],
+          ...details,
+        };
+      }
     },
   },
 });

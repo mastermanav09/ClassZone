@@ -155,7 +155,6 @@
     .assignment-submittedTo {
       font-weight: 600;
       font-size: clamp(16px, 3vw, 18px);
-      // margin-bottom: 0.5rem;
     }
 
     .assignment-submission {
@@ -171,7 +170,7 @@
 
       .assignment-submittedTo-info {
         position: absolute;
-        margin: 0 0.5rem;
+        margin: 0 1.2rem;
         bottom: 0.5rem;
         left: 2.5rem;
       }
@@ -206,7 +205,7 @@
   gap: 2px;
 
   .comment-title {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     letter-spacing: 0.2px;
     color: #0cab9b;
   }
@@ -222,7 +221,7 @@
       border-radius: 5px;
       outline: none;
       padding: 0.5rem;
-      font-size: 0.8rem;
+      font-size: 0.85rem;
 
       @include scrollbar();
     }

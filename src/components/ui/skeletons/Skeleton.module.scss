@@ -1,0 +1,144 @@
+.skeleton {
+  background-color: #ddd;
+  border-radius: 4px;
+}
+
+.skeleton.text {
+  width: 100%;
+  height: 11px;
+  margin: 8px;
+}
+
+.skeleton.title {
+  width: 50%;
+  height: 18px;
+  margin-bottom: 10px;
+}
+
+.skeleton-wrapper {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+  border-radius: 5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.skeleton-scream {
+  height: 100%;
+  max-height: 170px;
+  display: flex;
+  gap: 1rem;
+  width: 100%;
+}
+
+.sub-skeleton-scream {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  justify-content: center;
+  padding-right: 1rem;
+}
+
+.skeleton-profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem;
+  max-width: 100%;
+}
+
+/* themes */
+.skeleton-wrapper.light {
+  background: #f2f2f2;
+}
+
+.skeleton-wrapper.dark {
+  background: #444;
+}
+
+.skeleton-wrapper.skeleton-wrapper.dark .skeleton {
+  background: #777;
+}
+
+/* animation effects */
+.shimmer-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  animation: skeleton_loading 1.3s infinite;
+}
+
+.shimmer {
+  width: 50%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.439);
+  transform: skewX(-20deg);
+  box-shadow: 0 0 30px 30px rgba(255, 255, 255, 0.25);
+}
+
+.dark .shimmer {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+@keyframes skeleton_loading {
+  0% {
+    transform: translateX(-150%) skewX(-20deg);
+  }
+
+  50% {
+    transform: translateX(-60%) skewX(-20deg);
+  }
+
+  100% {
+    transform: translateX(120%) skewX(-20deg);
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .skeleton.title {
+    height: 16px;
+  }
+
+  .skeleton.box {
+    width: 100%;
+    height: 8rem;
+    max-width: initial;
+  }
+
+  .skeleton-wrapper {
+    height: 20rem;
+  }
+
+  .skeleton-scream {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sub-skeleton-scream {
+    padding: 0.5rem;
+  }
+
+  @keyframes skeleton_loading {
+    0% {
+      transform: translateX(-200%) skewX(-20deg);
+    }
+
+    50% {
+      transform: translateX(180%) skewX(-20deg);
+    }
+
+    100% {
+      transform: translateX(200%) skewX(-20deg);
+    }
+  }
+}
+
+@media screen and (max-width: 460px) {
+  .skeleton-wrapper {
+    width: 80%;
+    margin: auto;
+  }
+}

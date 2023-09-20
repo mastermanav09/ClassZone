@@ -11,7 +11,7 @@ import {
   createSubmission,
   removeSubmission,
 } from "../../../../utils/store/reducers/class";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import LoadingSpinner from "../../progress/LoadingSpinner";
 import { ERROR_TOAST } from "../../../../utils/constants";
 import { useRouter } from "next/router";
@@ -32,20 +32,22 @@ const AssignmentCard = (props) => {
   const [isNewFileSelected, setIsNewFileSelected] = useState(false);
   const [file, setFile] = useState(null);
   const userCommentRef = useRef(null);
-  const [userComment, setUserComment] = useState("");
+  const userComment = useSelector(
+    (state) => state.class.currentClassDetails.comment
+  );
   const [assignmentLoader, setAssignmentLoader] = useState(false);
   const router = useRouter();
   const { responses } = assignment;
   const [isFileSubmitted, setIsFileSubmitted] = useState(
     responses && responses[0] ? true : false
   );
-  const { _id } = assignment;
+  const { _id: assignmentId } = assignment;
 
-  useEffect(() => {
-    if (responses?.length > 0) {
-      setUserComment(responses[0].comment);
-    }
-  }, [responses]);
+  // useEffect(() => {
+  //   if (responses?.length > 0) {
+  //     setUserComment(responses[0].comment);
+  //   }
+  // }, [responses]);
 
   const userNavigateHandler = () => {
     if (
@@ -53,7 +55,7 @@ const AssignmentCard = (props) => {
       (user?.email && user?.email === teacher?.credentials.email)
     ) {
       router.push(
-        `/classes/${classId}/classwork/${_id}?bc=${encodeURIComponent(
+        `/classes/${classId}/classwork/${assignmentId}?bc=${encodeURIComponent(
           backgroundColor
         )}`
       );
@@ -93,13 +95,14 @@ const AssignmentCard = (props) => {
     dispatch(
       createSubmission({
         setAssignmentLoader,
-        _id,
+        classId,
+        assignmentId,
         file,
         setFile,
         setIsNewFileSelected,
         setIsFileSubmitted,
         setOpenUploadFileModal,
-        setUserComment,
+        // setUserComment,
         userCommentRef,
       })
     );
@@ -109,7 +112,8 @@ const AssignmentCard = (props) => {
     dispatch(
       removeSubmission({
         setAssignmentLoader,
-        _id,
+        classId,
+        assignmentId,
         setIsFileSubmitted,
         setOpenUploadFileModal,
       })
@@ -338,7 +342,7 @@ const AssignmentCard = (props) => {
                 <span>
                   <Edit tooltipContent="Edit" tooltipId="edit-assignment" />
                 </span>
-                <span onClick={() => confirmDeleteHandler(_id)}>
+                <span onClick={() => confirmDeleteHandler(assignmentId)}>
                   <Delete
                     tooltipContent="Delete"
                     tooltipId="delete-assignment"

@@ -86,7 +86,11 @@ const handler = async (req, res) => {
         let updatedResponses = [];
         for (let userResponse of assignment.responses) {
           if (userResponse?.user?.toString() === classUser._id.toString()) {
-            updatedResponses.push(userResponse);
+            updatedResponses.push({
+              submittedFilePath: userResponse.submittedFilePath,
+              submittedOn: userResponse.submittedOn,
+              ...(userResponse.comment && { comment: userResponse.comment }),
+            });
             break;
           }
         }
