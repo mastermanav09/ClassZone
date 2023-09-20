@@ -69,11 +69,10 @@ const SubmissionsOptionTab = (props) => {
     dispatch,
   ]);
 
-  if (!assignmentSubmissions) {
-    return loader;
-  }
-
-  if (isRemainingSelected && !assignmentSubmissionsRemaining) {
+  if (
+    !assignmentSubmissions ||
+    (isRemainingSelected && !assignmentSubmissionsRemaining)
+  ) {
     return loader;
   }
 

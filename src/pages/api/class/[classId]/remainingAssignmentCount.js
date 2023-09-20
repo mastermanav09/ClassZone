@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
-import Class from "../../../../../models/Class";
-import manageResponses from "../../../../../utils/responses/manageResponses";
 import { authOptions } from "../../auth/[...nextauth]";
+import manageResponses from "../../../../../utils/responses/manageResponses";
 import db from "../../../../../utils/db";
+import Class from "../../../../../models/Class";
+import User from "../../../../../models/User";
 
 const { getServerSession } = require("next-auth");
 
@@ -28,6 +29,14 @@ const handler = async (req, res) => {
     }
 
     const { classId } = req.query;
+    const { user } = session;
+
+    let filter = { _id: user._id };
+
+    if (!user._id) {
+      filter = { "credentials.email": user.email };
+    }
+
     var ObjectId = mongoose.Types.ObjectId;
 
     if (!ObjectId.isValid(classId)) {
@@ -37,36 +46,33 @@ const handler = async (req, res) => {
     }
 
     await db.connect();
+    const userDetails = await User.findOne(filter).select("_id");
+    const { _id: userId } = userDetails;
 
-    const data = await Class.findById(classId)
-      .select("students teacher -_id")
+    const assignmentsResponses = await Class.findById(classId)
+      .select("-_id assignments")
       .populate({
-        path: "teacher",
+        path: "assignments",
         select: {
-          "credentials.email": 1,
-          "credentials.userImage": 1,
-          "credentials.name": 1,
-          _id: 1,
-        },
-      })
-      .populate({
-        path: "students",
-        select: {
-          "credentials.userImage": 1,
-          "credentials.name": 1,
-          _id: 1,
+          _id: 0,
+          responses: 1,
         },
       });
 
-    if (!data) {
-      const error = new Error("No people found!");
-      error.statusCode = 404;
-      throw error;
-    }
+    console.log(assignmentsResponses);
+    const { assignments: assignmentsResponsesArr } = assignmentsResponses;
+    const assignmentsRemaining = assignmentsResponsesArr.filter((obj) => {
+      for (let response of obj.responses) {
+        if (response.user.toString() === userId.toString()) {
+          return false;
+        }
+      }
+
+      return true;
+    });
 
     return res.status(200).json({
-      people: data.students,
-      teacher: data.teacher,
+      assignmentsRemaining: assignmentsRemaining.length,
     });
   } catch (error) {
     console.log(error);

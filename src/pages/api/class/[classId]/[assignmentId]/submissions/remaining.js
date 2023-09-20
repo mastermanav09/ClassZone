@@ -32,7 +32,7 @@ const handler = async (req, res) => {
     const { assignmentId, classId } = req.query;
     var ObjectId = mongoose.Types.ObjectId;
 
-    if (!ObjectId.isValid(assignmentId)) {
+    if (!ObjectId.isValid(assignmentId) || !ObjectId.isValid(classId)) {
       const error = new Error("Invalid Id!");
       error.statusCode = 422;
       throw error;
