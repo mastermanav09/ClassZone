@@ -15,6 +15,7 @@ import LoadingSpinner from "../progress/LoadingSpinner";
 
 const Announcement = ({
   teacher,
+  user,
   announcement,
   classId,
   editAnnouncementHandler,
@@ -155,7 +156,10 @@ const Announcement = ({
           <Pin style={{ fill: backgroundColor }} className={classes.pin} />
         )}
         {isEdited && <p className={classes["isEdited_text"]}>Edited</p>}
-        <ThreeDots fields={fields} />
+        {((user?._id && user?._id === teacher?.credentials._id) ||
+          (user?.email && user?.email === teacher?.credentials.email)) && (
+          <ThreeDots fields={fields} />
+        )}
       </div>
     </>
   );

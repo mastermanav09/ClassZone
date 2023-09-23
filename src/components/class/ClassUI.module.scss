@@ -41,18 +41,17 @@
 
 .container {
   display: grid;
-  grid-template-columns: minmax(200px, 0.2fr) 1fr;
-  grid-template-rows: repeat(5, 1fr);
+  grid-template-columns: minmax(260px, 0.2fr) 1fr;
 
   .copy_code_container {
-    height: max-content;
-    width: 18.5rem;
+    grid-row-start: 1;
+    grid-row-end: 1;
     border: 1px solid lightgray;
     border-radius: 0.5rem;
     margin-right: 1rem;
     display: flex;
     flex-direction: column;
-    padding: 0.7rem;
+    padding: 0.6rem;
 
     & > div {
       display: flex;
@@ -99,6 +98,11 @@
         color: #e6312e;
         align-items: center;
         gap: 0.4rem;
+        word-wrap: break-word;
+
+        span {
+          word-break: break-all;
+        }
 
         .assignments_alert {
           animation: fadeIn 0.5s infinite alternate;

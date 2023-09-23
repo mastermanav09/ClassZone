@@ -16,6 +16,10 @@ import LoadingSpinner from "../../progress/LoadingSpinner";
 import { ERROR_TOAST } from "../../../../utils/constants";
 import { useRouter } from "next/router";
 import Image from "next/image";
+import {
+  getFileExtension,
+  removeFileExtension,
+} from "@/helper/fileExtensionHelper";
 
 const AssignmentCard = (props) => {
   const {
@@ -119,6 +123,20 @@ const AssignmentCard = (props) => {
       })
     );
   };
+
+  let uploadingFileName = "";
+
+  if (file) {
+    let fileNameWithoutExt = removeFileExtension(file.name);
+    if (fileNameWithoutExt.length < 15) {
+      uploadingFileName = file.name;
+    } else {
+      uploadingFileName =
+        fileNameWithoutExt.substring(0, 15) +
+        ".... ." +
+        getFileExtension(file.name);
+    }
+  }
 
   return (
     <>
@@ -240,16 +258,11 @@ const AssignmentCard = (props) => {
 
             {!isFileSubmitted && (
               <div className={classes["upload-assignment-main"]}>
-                <div style={{ display: "flex", alignItems: "baseline" }}>
+                <div>
                   {file && (
-                    <span className={classes["uploadedFile-name"]}>
-                      {file.name
-                        .substring(0, 15)
-                        .replaceAll(file.type.split("/")[1], "") +
-                        "..." +
-                        " ." +
-                        file.type.split("/")[1]}
-                    </span>
+                    <div className={classes["uploadedFile-name"]}>
+                      {uploadingFileName}
+                    </div>
                   )}
                 </div>
 

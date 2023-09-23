@@ -10,6 +10,7 @@ import FormData from "form-data";
 import fs from "fs";
 import axios from "axios";
 import User from "../../../../../models/User";
+import { removeFileExtension } from "@/helper/fileExtensionHelper";
 const cloudinary = require("cloudinary").v2;
 
 export const config = {
@@ -152,7 +153,7 @@ const handler = async (req, res) => {
         error.statusCode = 500;
         throw error;
       }
-
+      console.log(data);
       const uploadedFileUrl = data.secure_url;
       const isValidComment = userComment.trim().length > 0;
 
@@ -242,14 +243,37 @@ const handler = async (req, res) => {
       }
 
       let publicId = userResponse.submittedFilePath.split("assignments")[1];
-      publicId = "assignments" + publicId.replace(/\.[^.\/]+$/, "");
+      const publicId1 = "assignments" + publicId.replace(/\.[^.\/]+$/, "");
+      const publicId2 = "assignments" + publicId;
 
-      await cloudinary.api
-        .delete_resources([publicId], {
+      try {
+        const result = await cloudinary.api.delete_resources([publicId1], {
           invalidate: true,
           type: "authenticated",
-        })
-        .then((result) => console.log(result));
+        });
+        console.log("result1", result);
+        if (
+          result.deleted[publicId1] === "not_found" ||
+          result.deleted_counts[publicId1].original === 0
+        ) {
+          console.log("aa aaa gya");
+          throw new Error("Something went wrong. Please try again later");
+        }
+      } catch (error) {
+        const result = await cloudinary.api.delete_resources([publicId2], {
+          invalidate: true,
+          type: "authenticated",
+          resource_type: "raw",
+        });
+
+        console.log("result2", result);
+        if (
+          result.deleted[publicId2] === "not_found" ||
+          result.deleted_counts[publicId2].original === 0
+        ) {
+          throw new Error("Something went wrong. Please try again later");
+        }
+      }
 
       await cloudinary.api.delete_folder(
         `/assignments/${classAssignment.cloudinaryId}/submissions/${classUser._id}`
