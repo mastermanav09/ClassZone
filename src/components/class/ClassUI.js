@@ -172,8 +172,8 @@ const ClassUI = () => {
                     ) : (
                       <>
                         <p className={classes["remaining"]}>
-                          {studentRemainingAssignmentCount} Assignments
-                          remaining
+                          <span>{studentRemainingAssignmentCount}</span>
+                          Assignments remaining
                           <div className={classes["assignments_alert"]}>
                             <Alert />
                           </div>
@@ -222,6 +222,7 @@ const ClassUI = () => {
                     classId={_id}
                     key={announcement._id}
                     teacher={teacher}
+                    user={user}
                     announcement={announcement}
                     backgroundColor={backgroundColor}
                     editAnnouncementHandler={editAnnouncementHandler}
@@ -233,6 +234,7 @@ const ClassUI = () => {
               announcements.map((announcement) => (
                 <Announcement
                   classId={_id}
+                  user={user}
                   key={announcement._id}
                   teacher={teacher}
                   announcement={announcement}

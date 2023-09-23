@@ -33,7 +33,7 @@ const AssignmentOptionTab = (props) => {
   ]);
 
   if (!classAssignment) {
-    return loader;
+    return <div style={{ marginTop: "13rem" }}>{loader}</div>;
   }
 
   return (

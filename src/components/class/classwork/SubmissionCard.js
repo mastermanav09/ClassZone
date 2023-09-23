@@ -3,7 +3,7 @@ import classes from "./SubmissionCard.module.scss";
 import { FileIcon, defaultStyles } from "react-file-icon";
 import PrivateComment from "@/components/svg/PrivateComment";
 import Image from "next/image";
-import { getFileExtension } from "@/helper/getFileExtension";
+import { getFileExtension } from "@/helper/fileExtensionHelper";
 import moment from "moment";
 
 const SubmissionCard = (props) => {
