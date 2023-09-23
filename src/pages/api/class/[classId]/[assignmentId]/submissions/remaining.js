@@ -47,15 +47,16 @@ const handler = async (req, res) => {
       "-_id responses.user"
     );
 
-    const remainingUsers = students.filter((student) =>
-      submissions.responses.some(
-        (submission) => submission.user.toString() !== student.toString()
-      )
-    );
+    const remainingUsers = students.filter((student) => {
+      if (!submissions.responses.includes(student)) {
+        return true;
+      }
+
+      return false;
+    });
 
     let remainingSubmissions = remainingUsers.map(async (user) => {
       try {
-        console.log(user);
         const detail = await User.findOne(user).select(
           "-_id credentials.name credentials.userImage"
         );
