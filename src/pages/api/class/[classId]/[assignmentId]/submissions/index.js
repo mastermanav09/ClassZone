@@ -17,11 +17,7 @@ const handler = async (req, res) => {
   try {
     const session = await getServerSession(req, res, authOptions);
 
-    if (
-      !session ||
-      !session.user ||
-      (!session.user.email && !session.user._id)
-    ) {
+    if (!session || !session.user || !session.user._id) {
       const error = new Error("Sign in required!");
       error.statusCode = 401;
       throw error;
@@ -48,12 +44,6 @@ const handler = async (req, res) => {
           "credentials.userImage": 1,
         },
       });
-
-    if (!submissions) {
-      const error = new Error("Submissions Not found!");
-      error.statusCode = 404;
-      throw error;
-    }
 
     return res.status(200).json({
       submissions: submissions,

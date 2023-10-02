@@ -18,22 +18,13 @@ const handler = async (req, res) => {
   try {
     const session = await getServerSession(req, res, authOptions);
 
-    if (
-      !session ||
-      !session.user ||
-      (!session.user.email && !session.user._id)
-    ) {
+    if (!session || !session.user || !session.user._id) {
       const error = new Error("Sign in required!");
       error.statusCode = 401;
       throw error;
     }
 
-    const { user } = session;
-    let filter = { _id: user._id };
-
-    if (!user._id) {
-      filter = { "credentials.email": user.email };
-    }
+    const { _id: userId } = session.user;
 
     const { classId, classMemberId } = req.query;
     var ObjectId = mongoose.Types.ObjectId;
@@ -43,9 +34,6 @@ const handler = async (req, res) => {
       error.statusCode = 422;
       throw error;
     }
-
-    const currentUser = await User.findOne(filter);
-    const { _id: userId } = currentUser;
 
     if (userId.toString() === classMemberId.toString()) {
       const error = new Error("You cannot remove yourself!");

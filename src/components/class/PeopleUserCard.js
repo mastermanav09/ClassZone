@@ -90,8 +90,7 @@ const PeopleUserCard = ({
           />
           <span>{classMember?.credentials?.name}</span>
         </div>
-        {((user?._id && user?._id === teacher?.credentials._id) ||
-          (user?.email && user?.email === teacher?.credentials.email)) && (
+        {user?._id === teacher?._id && (
           <div className={classes.threeDots}>
             <ThreeDots fields={fields} obj={classMember} />
           </div>

@@ -15,21 +15,13 @@ const handler = async (req, res) => {
 
   try {
     const session = await getServerSession(req, res, authOptions);
-    if (
-      !session ||
-      !session.user ||
-      (!session.user.email && !session.user._id)
-    ) {
+    if (!session || !session.user || !session.user._id) {
       const error = new Error("Sign in required!");
       error.statusCode = 401;
       throw error;
     }
 
-    const { user } = session;
-    let filter = { _id: user._id };
-    if (!user._id) {
-      filter = { "credentials.email": user.email };
-    }
+    const { _id: userId } = session.user;
 
     const { classId, pathname } = req.body;
 
@@ -46,8 +38,16 @@ const handler = async (req, res) => {
       throw error;
     }
 
-    let joiningUser = await User.findOne({
-      ...filter,
+    const joiningClass = await Class.findById(classId);
+
+    if (!joiningClass) {
+      const error = new Error("Class do not exists!");
+      error.statusCode = 404;
+      throw error;
+    }
+
+    const joiningUser = await User.findOne({
+      _id: userId,
       enrolled: { $in: [classId] },
     });
 
@@ -57,27 +57,18 @@ const handler = async (req, res) => {
       throw error;
     }
 
-    joiningUser = await User.findOne(filter);
-    const joiningClass = await Class.findById(classId);
-
-    if (!joiningClass) {
-      const error = new Error("Class do not exists!");
-      error.statusCode = 404;
-      throw error;
-    }
-
-    if (joiningUser._id.toString() === joiningClass.teacher.toString()) {
+    if (userId.toString() === joiningClass.teacher.toString()) {
       const error = new Error("You are already a teacher of this class!");
       error.statusCode = 400;
       throw error;
     }
 
-    await User.findByIdAndUpdate(joiningUser._id, {
+    await User.findByIdAndUpdate(userId, {
       $push: { enrolled: classId },
     });
 
     const updatedClass = await Class.findOneAndUpdate(joiningClass._id, {
-      $push: { students: joiningUser._id },
+      $push: { students: userId },
     })
       .select("name backgroundColor _id teacher")
       .populate({

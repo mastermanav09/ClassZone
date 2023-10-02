@@ -17,11 +17,7 @@ const handler = async (req, res) => {
   try {
     const session = await getServerSession(req, res, authOptions);
 
-    if (
-      !session ||
-      !session.user ||
-      (!session.user.email && !session.user._id)
-    ) {
+    if (!session || !session.user || !session.user._id) {
       const error = new Error("Sign in required!");
       error.statusCode = 401;
       throw error;
@@ -43,9 +39,8 @@ const handler = async (req, res) => {
         path: "teacher",
         select: {
           "credentials.name": 1,
-          "credentials.email": 1,
           "credentials.userImage": 1,
-          _id: 0,
+          _id: 1,
         },
       })
       .select("-students -assignments")

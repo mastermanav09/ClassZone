@@ -42,35 +42,36 @@ export const authOptions = {
       return session;
     },
 
-    async signIn({ account, profile }) {
+    async signIn({ account, profile, user }) {
       if (account.provider === "google") {
         const { name, email, picture } = profile;
 
         try {
           await db.connect();
 
-          const user = await User.findOne({
+          const existingUser = await User.findOne({
             "credentials.email": email,
           });
 
-          if (user) {
-            return profile.email_verified;
+          if (!existingUser) {
+            const newUser = new User({
+              credentials: {
+                name: name,
+                email: email,
+                userImage: picture,
+                password: "xxxxxxxx",
+              },
+
+              provider: "google",
+              enrolled: [],
+              teaching: [],
+            });
+
+            await newUser.save();
+            user._id = newUser._id.toString();
+          } else {
+            user._id = existingUser._id.toString();
           }
-
-          const newUser = new User({
-            credentials: {
-              name: name,
-              email: email,
-              userImage: picture,
-              password: "xxxxxxxx",
-            },
-
-            provider: "google",
-            enrolled: [],
-            teaching: [],
-          });
-
-          await newUser.save();
 
           return profile.email_verified && profile.email.endsWith("@gmail.com");
         } catch (error) {

@@ -43,13 +43,6 @@ const AssignmentDetail = (props) => {
           >
             Submissions
           </div>
-
-          {/* {(user?._id && user?._id === teacher?.credentials._id) ||
-            (user?.email && user?.email === teacher?.credentials.email && (
-              <button onClick={() => setOpenAssignmentModal(true)}>
-                Create Assignment
-              </button>
-            ))} */}
         </div>
         <hr />
 

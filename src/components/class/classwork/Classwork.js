@@ -267,12 +267,11 @@ const Classwork = () => {
       <div className={classes.assignment}>
         <div className={classes.container}>
           <h2>Classwork</h2>
-          {(user?._id && user?._id === teacher?.credentials._id) ||
-            (user?.email && user?.email === teacher?.credentials.email && (
-              <button onClick={() => setOpenAssignmentModal(true)}>
-                Create Assignment
-              </button>
-            ))}
+          {user?._id === teacher?._id && (
+            <button onClick={() => setOpenAssignmentModal(true)}>
+              Create Assignment
+            </button>
+          )}
         </div>
         <hr style={{ marginBottom: "1rem" }} />
         <AssignmentList

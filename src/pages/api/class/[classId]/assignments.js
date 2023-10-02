@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import User from "../../../../../models/User";
 import Class from "../../../../../models/Class";
 import manageResponses from "../../../../../utils/responses/manageResponses";
 import { authOptions } from "../../auth/[...nextauth]";
@@ -18,25 +17,15 @@ const handler = async (req, res) => {
   try {
     const session = await getServerSession(req, res, authOptions);
 
-    if (
-      !session ||
-      !session.user ||
-      (!session.user.email && !session.user._id)
-    ) {
+    if (!session || !session.user || !session.user._id) {
       const error = new Error("Sign in required!");
       error.statusCode = 401;
       throw error;
     }
 
-    const { user } = session;
-
-    let filter = { _id: user._id };
-
-    if (!user._id) {
-      filter = { "credentials.email": user.email };
-    }
-
+    const { _id: userId } = session.user;
     const { classId } = req.query;
+
     var ObjectId = mongoose.Types.ObjectId;
 
     if (!ObjectId.isValid(classId)) {
@@ -46,8 +35,6 @@ const handler = async (req, res) => {
     }
 
     await db.connect();
-
-    const classUser = await User.findOne(filter);
 
     const data = await Class.findById(classId)
       .select("assignments teacher -_id")
@@ -72,7 +59,7 @@ const handler = async (req, res) => {
       throw error;
     }
 
-    const isTeacher = classUser._id.toString() === data.teacher._id.toString();
+    const isTeacher = userId.toString() === data.teacher._id.toString();
     let updatedAssignments = [];
 
     for (let assignment of data.assignments) {
@@ -85,7 +72,7 @@ const handler = async (req, res) => {
       } else {
         let updatedResponses = [];
         for (let userResponse of assignment.responses) {
-          if (userResponse?.user?.toString() === classUser._id.toString()) {
+          if (userResponse?.user?.toString() === userId.toString()) {
             updatedResponses.push({
               submittedFilePath: userResponse.submittedFilePath,
               submittedOn: userResponse.submittedOn,

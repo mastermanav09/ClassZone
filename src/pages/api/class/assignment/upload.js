@@ -9,8 +9,7 @@ import formidable from "formidable";
 import FormData from "form-data";
 import fs from "fs";
 import axios from "axios";
-import User from "../../../../../models/User";
-import { removeFileExtension } from "@/helper/fileExtensionHelper";
+
 const cloudinary = require("cloudinary").v2;
 
 export const config = {
@@ -28,7 +27,7 @@ const cloudinaryConfig = {
 const checkAuthorization = async (req, res) => {
   const session = await getServerSession(req, res, authOptions);
 
-  if (!session || !session.user || (!session.user.email && !session.user._id)) {
+  if (!session || !session.user || !session.user._id) {
     return null;
   }
 
@@ -38,6 +37,7 @@ const checkAuthorization = async (req, res) => {
 const handler = async (req, res) => {
   if (req.method === "POST") {
     const authObj = await checkAuthorization(req, res);
+
     if (!authObj) {
       const error = new Error("Sign in required!");
       error.statusCode = 401;
@@ -47,12 +47,7 @@ const handler = async (req, res) => {
     let uploadPath;
     try {
       const { user } = authObj;
-
-      let filter = { _id: user._id };
-
-      if (!user._id) {
-        filter = { "credentials.email": user.email };
-      }
+      const { _id: userId } = user;
 
       const form = formidable({ keepExtensions: true });
       const [fields, files] = await form.parse(req);
@@ -91,7 +86,6 @@ const handler = async (req, res) => {
 
       const classAssignment = await Assignment.findById(assignmentId);
       const userClass = await Class.findById(classId);
-      const classUser = await User.findOne(filter);
 
       if (!classAssignment) {
         const error = new Error("Assignment do not exists!");
@@ -105,7 +99,7 @@ const handler = async (req, res) => {
         throw error;
       }
 
-      if (userClass.teacher.toString() === classUser._id.toString()) {
+      if (userClass.teacher.toString() === userId.toString()) {
         const error = new Error("You cannot make submission!");
         error.statusCode = 401;
         throw error;
@@ -117,7 +111,7 @@ const handler = async (req, res) => {
 
       const { responses } = assignmentDetail;
       const isAlreadySubmitted = responses.some(
-        (response) => response.user.toString() === classUser._id.toString()
+        (response) => response.user.toString() === userId.toString()
       );
 
       if (isAlreadySubmitted) {
@@ -128,7 +122,7 @@ const handler = async (req, res) => {
 
       cloudinary.config(cloudinaryConfig);
 
-      uploadPath = `/assignments/${classAssignment.cloudinaryId}/submissions/${classUser._id}`;
+      uploadPath = `/assignments/${classAssignment.cloudinaryId}/submissions/${userId}`;
 
       await cloudinary.api.create_folder(uploadPath);
       const formData = new FormData();
@@ -153,14 +147,14 @@ const handler = async (req, res) => {
         error.statusCode = 500;
         throw error;
       }
-      console.log(data);
+
       const uploadedFileUrl = data.secure_url;
       const isValidComment = userComment.trim().length > 0;
 
       await Assignment.findByIdAndUpdate(assignmentId, {
         $push: {
           responses: {
-            user: classUser._id,
+            user: userId,
             submittedFilePath: uploadedFileUrl,
             submittedOn: new Date(),
             ...(isValidComment && { comment: userComment }),
@@ -196,11 +190,7 @@ const handler = async (req, res) => {
 
     try {
       const { user } = authObj;
-      let filter = { _id: user._id };
-
-      if (!user._id) {
-        filter = { "credentials.email": user.email };
-      }
+      const { _id: userId } = user;
 
       const { assignmentId, classId } = req.query;
       await db.connect();
@@ -214,7 +204,6 @@ const handler = async (req, res) => {
 
       const classAssignment = await Assignment.findById(assignmentId);
       const userClass = await Class.findById(classId);
-      const classUser = await User.findOne(filter);
 
       if (!classAssignment) {
         const error = new Error("Assignment do not exists!");
@@ -228,7 +217,7 @@ const handler = async (req, res) => {
         throw error;
       }
 
-      if (userClass.teacher.toString() === classUser._id.toString()) {
+      if (userClass.teacher.toString() === userId.toString()) {
         const error = new Error("You cannot remove submission!");
         error.statusCode = 401;
         throw error;
@@ -251,12 +240,11 @@ const handler = async (req, res) => {
           invalidate: true,
           type: "authenticated",
         });
-        console.log("result1", result);
+
         if (
           result.deleted[publicId1] === "not_found" ||
           result.deleted_counts[publicId1].original === 0
         ) {
-          console.log("aa aaa gya");
           throw new Error("Something went wrong. Please try again later");
         }
       } catch (error) {
@@ -266,7 +254,6 @@ const handler = async (req, res) => {
           resource_type: "raw",
         });
 
-        console.log("result2", result);
         if (
           result.deleted[publicId2] === "not_found" ||
           result.deleted_counts[publicId2].original === 0
@@ -276,18 +263,18 @@ const handler = async (req, res) => {
       }
 
       await cloudinary.api.delete_folder(
-        `/assignments/${classAssignment.cloudinaryId}/submissions/${classUser._id}`
+        `/assignments/${classAssignment.cloudinaryId}/submissions/${userId}`
       );
 
       const projection = {
         _id: 0,
         cloudinaryId: 1,
-        responses: { $elemMatch: { user: classUser._id } },
+        responses: { $elemMatch: { user: userId } },
       };
 
       await Assignment.findOneAndUpdate(
         { _id: assignmentId },
-        { $pull: { responses: { user: classUser._id } } },
+        { $pull: { responses: { user: userId } } },
         {
           returnOriginal: true,
           projection,
