@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
-import Class from "../../../../../models/Class";
-import manageResponses from "../../../../../utils/responses/manageResponses";
-import { authOptions } from "../../auth/[...nextauth]";
-import db from "../../../../../utils/db";
+import Class from "../../../../../../models/Class";
+import manageResponses from "../../../../../../utils/responses/manageResponses";
+import { authOptions } from "../../../auth/[...nextauth]";
+import db from "../../../../../../utils/db";
 
 const { getServerSession } = require("next-auth");
 
@@ -53,6 +53,7 @@ const handler = async (req, res) => {
         path: "students",
         select: {
           "credentials.userImage": 1,
+          "credentials.email": 1,
           "credentials.name": 1,
           _id: 1,
         },

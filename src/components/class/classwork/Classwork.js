@@ -1,3 +1,4 @@
+import "react-responsive-modal/styles.css";
 import "react-datepicker/dist/react-datepicker.css";
 import React, { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
@@ -5,7 +6,6 @@ import ClassNavDropdown from "../ClassNavDropdown";
 import classes from "./Classwork.module.scss";
 import { Modal } from "react-responsive-modal";
 import { useForm } from "react-hook-form";
-import "react-responsive-modal/styles.css";
 import { notifyAndUpdate } from "@/helper/toastNotifyAndUpdate";
 import { ERROR_TOAST } from "../../../../utils/constants";
 import { toast } from "react-toastify";
