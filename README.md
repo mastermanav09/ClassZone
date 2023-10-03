@@ -1,8 +1,11 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
-
 ## Getting Started
 
-First, run the development server:
+To get started, just clone the repository and run `npm install`:
+
+    git clone https://github.com/mastermanav09/ClassZone.git
+    npm install or npm i
+
+## Running locally in development mode
 
 ```bash
 npm run dev
