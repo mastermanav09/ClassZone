@@ -3,7 +3,7 @@
 To get started, just clone the repository and run `npm install`:
 
     git clone https://github.com/mastermanav09/ClassZone.git
-    npm install or npm i
+    npm install
 
 ## Running locally in development mode
 
