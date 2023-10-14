@@ -93,7 +93,7 @@ const Dashboard = ({ userEnrolledClasses, userTeachingClasses }) => {
           </div>
           <hr />
 
-          <DndProvider backend={HTML5Backend}>
+          <DndProvider backend={TouchBackend}>
             <div
               className={classes["dashboard__classContainer"]}
               // ref={dropEnrolled}
@@ -122,7 +122,7 @@ const Dashboard = ({ userEnrolledClasses, userTeachingClasses }) => {
           </div>
           <hr />
 
-          <DndProvider backend={HTML5Backend}>
+          <DndProvider backend={TouchBackend}>
             <div
               className={classes["dashboard__classContainer"]}
               // ref={dropTeaching}
