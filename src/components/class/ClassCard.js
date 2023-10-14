@@ -1,23 +1,75 @@
-import React from "react";
+import React, { useState } from "react";
 import classes from "./ClassCard.module.scss";
 import { useRouter } from "next/router";
 import Image from "next/image";
+import { useDrag, useDrop } from "react-dnd";
+import { usePreview } from "react-dnd-preview";
 
-const ClassCard = ({ classDetails }) => {
+const ClassCard = ({ classDetails, index, moveClassCard }) => {
   const router = useRouter();
   const { _id, name: className, teacher, backgroundColor } = classDetails;
+
+  const preview = usePreview();
+
+  const [{ isDragging }, drag] = useDrag({
+    type: "CLASS_CARD",
+    item: { _id, index },
+    collect: (monitor) => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+  });
+
+  const [, drop] = useDrop({
+    accept: "CLASS_CARD",
+    hover: (draggedItem) => {
+      if (draggedItem.index !== index) {
+        moveClassCard(draggedItem.index, index);
+        draggedItem.index = index;
+      }
+    },
+
+    collect: (monitor) => ({
+      isOver: !!monitor.isOver(),
+      canDrop: !!monitor.canDrop(),
+    }),
+  });
+
+  const { itemType, item, style } = preview;
+  console.log(style, itemType, item);
 
   return (
     <div
       className={classes.classCard}
-      style={{ marginRight: 30, marginBottom: 30 }}
+      style={{
+        cursor: "pointer",
+        position: "relative",
+        opacity: 1,
+      }}
       onClick={() =>
         router.push({
           pathname: "/classes/[classId]",
           query: { classId: _id },
         })
       }
+      ref={(node) => {
+        drag(drop(node));
+      }}
     >
+      {isDragging && (
+        <div
+          className={classes.div}
+          style={{
+            // cursor: "grab",
+            width: "100%",
+            height: "100%",
+            borderRadius: "10px",
+            overflow: "hidden",
+            background: "#f1f3f4",
+            zIndex: 100,
+          }}
+        />
+      )}
+
       <div
         className={classes["classCard__upper"]}
         style={{ backgroundColor: backgroundColor }}
