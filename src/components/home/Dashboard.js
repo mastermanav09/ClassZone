@@ -3,12 +3,20 @@ import classes from "./Dashboard.module.scss";
 import { Grid, AutoSizer } from "react-virtualized";
 import ClassCard from "../class/ClassCard";
 import LoadingSpinner from "../progress/LoadingSpinner";
-import { DndProvider } from "react-dnd";
+// import { DndProvider } from "react-dnd";
 import { TouchBackend } from "react-dnd-touch-backend";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import {
+  MultiBackend,
+  DndProvider,
+  TouchTransition,
+  MouseTransition,
+} from "react-dnd-multi-backend";
+
 import { useDrop } from "react-dnd";
 import { useDispatch } from "react-redux";
 import { classActions } from "../../../utils/store/reducers/class";
+import { HTML5toTouch } from "rdndmb-html5-to-touch";
 import { usePreview } from "react-dnd-preview";
 import dynamic from "next/dynamic";
 const ITEM_WIDTH = 340;
@@ -17,6 +25,24 @@ let WIDTH = 50;
 
 const Dashboard = ({ userEnrolledClasses, userTeachingClasses }) => {
   const dispatch = useDispatch();
+
+  // const HTML5toTouch = {
+  //   backends: [
+  //     {
+  //       id: "html5",
+  //       backend: HTML5Backend,
+  //       transition: MouseTransition,
+  //     },
+  //     {
+  //       id: "touch",
+  //       backend: TouchBackend,
+  //       options: { enableMouseEvents: true },
+  //       preview: true,
+  //       transition: TouchTransition,
+  //     },
+  //   ],
+  // };
+
   // const [{ isOverEnrolled }, dropEnrolled] = useDrop(() => ({
   //   accept: "CLASS_CARD",
   //   drop: moveClassCardEnrolled,
@@ -93,17 +119,15 @@ const Dashboard = ({ userEnrolledClasses, userTeachingClasses }) => {
           </div>
           <hr />
 
-          <DndProvider backend={TouchBackend}>
-            <div
-              className={classes["dashboard__classContainer"]}
-              // ref={dropEnrolled}
-            >
+          <DndProvider options={HTML5toTouch}>
+            <div className={classes["dashboard__classContainer"]}>
               {!userEnrolledClasses ? (
                 <LoadingSpinner className={classes.spinner} />
               ) : (
                 <>
                   {userEnrolledClasses.map((enrolledClass, index) => (
                     <ClassCard
+                      type="CLASS_CARD_ENROLLED"
                       key={enrolledClass._id}
                       index={index}
                       classDetails={enrolledClass}
@@ -122,17 +146,15 @@ const Dashboard = ({ userEnrolledClasses, userTeachingClasses }) => {
           </div>
           <hr />
 
-          <DndProvider backend={TouchBackend}>
-            <div
-              className={classes["dashboard__classContainer"]}
-              // ref={dropTeaching}
-            >
+          <DndProvider options={HTML5toTouch}>
+            <div className={classes["dashboard__classContainer"]}>
               {!userTeachingClasses ? (
                 <LoadingSpinner className={classes.spinner} />
               ) : (
                 <>
                   {userTeachingClasses.map((teachingClass, index) => (
                     <ClassCard
+                      type="CLASS_CARD_TEACHING"
                       index={index}
                       key={teachingClass._id}
                       classDetails={teachingClass}

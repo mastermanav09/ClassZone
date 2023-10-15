@@ -5,14 +5,14 @@ import Image from "next/image";
 import { useDrag, useDrop } from "react-dnd";
 import { usePreview } from "react-dnd-preview";
 
-const ClassCard = ({ classDetails, index, moveClassCard }) => {
+const ClassCard = ({ classDetails, index, moveClassCard, type }) => {
   const router = useRouter();
   const { _id, name: className, teacher, backgroundColor } = classDetails;
 
   const preview = usePreview();
 
   const [{ isDragging }, drag] = useDrag({
-    type: "CLASS_CARD",
+    type: type,
     item: { _id, index },
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
@@ -20,7 +20,7 @@ const ClassCard = ({ classDetails, index, moveClassCard }) => {
   });
 
   const [, drop] = useDrop({
-    accept: "CLASS_CARD",
+    accept: type,
     hover: (draggedItem) => {
       if (draggedItem.index !== index) {
         moveClassCard(draggedItem.index, index);
