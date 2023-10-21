@@ -1,19 +1,24 @@
-import React, { useState } from "react";
+import React from "react";
 import classes from "./ClassCard.module.scss";
 import { useRouter } from "next/router";
 import Image from "next/image";
 import { useDrag, useDrop } from "react-dnd";
-import { usePreview } from "react-dnd-preview";
 
-const ClassCard = ({ classDetails, index, moveClassCard, type }) => {
+const ClassCard = ({ classDetails, index, moveClassCard, type, dragStyle }) => {
   const router = useRouter();
   const { _id, name: className, teacher, backgroundColor } = classDetails;
 
-  const preview = usePreview();
-
   const [{ isDragging }, drag] = useDrag({
     type: type,
-    item: { _id, index },
+    item: {
+      _id,
+      index,
+      name: className,
+      teacher,
+      backgroundColor,
+      type,
+      moveClassCard,
+    },
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
@@ -34,9 +39,6 @@ const ClassCard = ({ classDetails, index, moveClassCard, type }) => {
     }),
   });
 
-  const { itemType, item, style } = preview;
-  console.log(style, itemType, item);
-
   return (
     <div
       className={classes.classCard}
@@ -44,6 +46,7 @@ const ClassCard = ({ classDetails, index, moveClassCard, type }) => {
         cursor: "pointer",
         position: "relative",
         opacity: 1,
+        ...(dragStyle && { dragStyle }),
       }}
       onClick={() =>
         router.push({
@@ -57,15 +60,12 @@ const ClassCard = ({ classDetails, index, moveClassCard, type }) => {
     >
       {isDragging && (
         <div
-          className={classes.div}
           style={{
-            // cursor: "grab",
             width: "100%",
             height: "100%",
             borderRadius: "10px",
             overflow: "hidden",
             background: "#f1f3f4",
-            zIndex: 100,
           }}
         />
       )}
