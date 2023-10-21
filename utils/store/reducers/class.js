@@ -667,6 +667,7 @@ const classSlice = createSlice({
     userTeachingClasses: null,
     classesCache: [],
     currentClassDetails: {},
+    dnd: false,
   },
 
   reducers: {
@@ -693,6 +694,44 @@ const classSlice = createSlice({
           ...action.payload,
         };
       }
+    },
+
+    addUserTeachingClasses(state, action) {
+      if (!state.userTeachingClasses) {
+        state.userTeachingClasses = [];
+      }
+
+      state.userTeachingClasses.unshift(action.payload);
+    },
+
+    addUserEnrolledClasses(state, action) {
+      if (!state.userEnrolledClasses) {
+        state.userEnrolledClasses = [];
+      }
+
+      state.userEnrolledClasses.unshift(action.payload);
+    },
+
+    dragAndDropEnrolledClasses(state, action) {
+      const { fromIndex, toIndex } = action.payload;
+      console.log(action.payload);
+      const updatedClasses = [...state.userEnrolledClasses];
+      const [movedCard] = updatedClasses.splice(fromIndex, 1);
+      updatedClasses.splice(toIndex, 0, movedCard);
+      state.userEnrolledClasses = updatedClasses;
+    },
+
+    dragAndDropTeachingClasses(state, action) {
+      const { fromIndex, toIndex } = action.payload;
+
+      const updatedClasses = [...state.userTeachingClasses];
+      const [movedCard] = updatedClasses.splice(fromIndex, 1);
+      updatedClasses.splice(toIndex, 0, movedCard);
+      state.userTeachingClasses = updatedClasses;
+    },
+
+    setDropCursor(state, action) {
+      state.dnd = action.payload.valye;
     },
 
     addAssignmentSubmission(state, action) {
@@ -743,22 +782,6 @@ const classSlice = createSlice({
         ...state.currentClassDetails.assignments[assignmentInd2],
         responses: [],
       };
-    },
-
-    addUserTeachingClasses(state, action) {
-      if (!state.userTeachingClasses) {
-        state.userTeachingClasses = [];
-      }
-
-      state.userTeachingClasses.unshift(action.payload);
-    },
-
-    addUserEnrolledClasses(state, action) {
-      if (!state.userEnrolledClasses) {
-        state.userEnrolledClasses = [];
-      }
-
-      state.userEnrolledClasses.unshift(action.payload);
     },
 
     // people
