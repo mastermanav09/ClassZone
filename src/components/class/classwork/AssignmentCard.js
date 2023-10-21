@@ -47,17 +47,8 @@ const AssignmentCard = (props) => {
   );
   const { _id: assignmentId } = assignment;
 
-  // useEffect(() => {
-  //   if (responses?.length > 0) {
-  //     setUserComment(responses[0].comment);
-  //   }
-  // }, [responses]);
-
   const userNavigateHandler = () => {
-    if (
-      (user?._id && user?._id === teacher?.credentials._id) ||
-      (user?.email && user?.email === teacher?.credentials.email)
-    ) {
+    if (user?._id === teacher?._id) {
       router.push(
         `/classes/${classId}/classwork/${assignmentId}?bc=${encodeURIComponent(
           backgroundColor
@@ -106,7 +97,6 @@ const AssignmentCard = (props) => {
         setIsNewFileSelected,
         setIsFileSubmitted,
         setOpenUploadFileModal,
-        // setUserComment,
         userCommentRef,
       })
     );
@@ -180,11 +170,6 @@ const AssignmentCard = (props) => {
             </div>
           </div>
           <div className={classes["assignment-actions"]}>
-            {/* {(user?._id && user?._id !== teacher?.credentials._id) ||
-              (user?.email && user?.email !== teacher?.credentials.email && (
-                <></>
-              ))} */}
-
             <button
               className={classes["modal-upload-btn"]}
               onClick={() => setOpenUploadFileModal(true)}
@@ -243,7 +228,7 @@ const AssignmentCard = (props) => {
                     {teacher?.credentials.userImage && (
                       <Image
                         alt="teacher-image"
-                        src={teacher.credentials.userImage}
+                        src={teacher?.credentials.userImage}
                         width={50}
                         height={50}
                       />
@@ -349,24 +334,20 @@ const AssignmentCard = (props) => {
         </div>
 
         <div className={classes.actions}>
-          {(user?._id && user?._id === teacher?.credentials._id) ||
-            (user?.email && user?.email === teacher?.credentials.email ? (
-              <>
-                <span>
-                  <Edit tooltipContent="Edit" tooltipId="edit-assignment" />
-                </span>
-                <span onClick={() => confirmDeleteHandler(assignmentId)}>
-                  <Delete
-                    tooltipContent="Delete"
-                    tooltipId="delete-assignment"
-                  />
-                </span>
-              </>
-            ) : (
-              <span onClick={() => setOpenUploadFileModal(true)}>
-                <Upload tooltipContent="Upload" tooltipId="upload-assignment" />
+          {user?._id === teacher?._id ? (
+            <>
+              <span>
+                <Edit tooltipContent="Edit" tooltipId="edit-assignment" />
               </span>
-            ))}
+              <span onClick={() => confirmDeleteHandler(assignmentId)}>
+                <Delete tooltipContent="Delete" tooltipId="delete-assignment" />
+              </span>
+            </>
+          ) : (
+            <span onClick={() => setOpenUploadFileModal(true)}>
+              <Upload tooltipContent="Upload" tooltipId="upload-assignment" />
+            </span>
+          )}
         </div>
       </div>
     </>

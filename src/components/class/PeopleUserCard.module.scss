@@ -1,0 +1,114 @@
+@mixin button {
+  padding: 0.6rem 0.8rem;
+  border-radius: 5px;
+  color: white;
+
+  @content;
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.2rem;
+  margin-bottom: 1.2rem;
+
+  .userinfo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: clamp(14px, 2vw, 16px);
+
+    .img {
+      border-radius: 50%;
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+.modal-content {
+  padding: 20px;
+  border-radius: 5px;
+  border: none;
+  text-align: center;
+  font-size: 14px;
+}
+
+.modal-title {
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+.modal-body {
+  margin: 1rem auto 2rem;
+  font-size: 0.9rem;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: space-between;
+
+  & button {
+    font-size: 0.9rem;
+  }
+}
+
+.cancel-button {
+  @include button() {
+    background-color: rgb(102, 104, 113);
+    cursor: pointer;
+
+    &:hover {
+      background-color: rgb(126, 128, 138);
+    }
+  }
+}
+
+.delete-button {
+  @include button() {
+    background-color: rgb(229, 6, 6);
+
+    &:enabled {
+      &:hover {
+        background-color: rgb(251, 73, 73);
+        cursor: pointer;
+      }
+    }
+
+    &:disabled {
+      background-color: rgb(248, 156, 156);
+      cursor: default !important;
+    }
+  }
+}
+
+.hr {
+  border-top: 1px;
+}
+
+.spinner {
+  display: block;
+  margin: auto;
+  width: 41px;
+  height: 15px;
+
+  &::after {
+    margin: auto;
+    width: 10px;
+    height: 10px;
+    content: " ";
+    display: block;
+    border-radius: 50%;
+    border: 3px solid white;
+    border-color: white transparent white transparent;
+    animation: spinner 1s linear infinite;
+  }
+}
+
+@keyframes spinner {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

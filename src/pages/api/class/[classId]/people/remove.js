@@ -1,13 +1,14 @@
 import mongoose from "mongoose";
+import Class from "../../../../../../models/Class";
 import manageResponses from "../../../../../../utils/responses/manageResponses";
 import { authOptions } from "../../../auth/[...nextauth]";
 import db from "../../../../../../utils/db";
-import Assignment from "../../../../../../models/Assignment";
+import User from "../../../../../../models/User";
 
 const { getServerSession } = require("next-auth");
 
 const handler = async (req, res) => {
-  if (req.method !== "GET") {
+  if (req.method !== "DELETE") {
     return res.status(400).json({
       status: 400,
       message: "Bad Request!",
@@ -23,29 +24,36 @@ const handler = async (req, res) => {
       throw error;
     }
 
-    const { assignmentId } = req.query;
+    const { _id: userId } = session.user;
+
+    const { classId, classMemberId } = req.query;
     var ObjectId = mongoose.Types.ObjectId;
 
-    if (!ObjectId.isValid(assignmentId)) {
+    if (!ObjectId.isValid(classId) || !ObjectId.isValid(classMemberId)) {
       const error = new Error("Invalid Id!");
       error.statusCode = 422;
       throw error;
     }
 
-    await db.connect();
-
-    const assignment = await Assignment.findById(assignmentId).select(
-      "-__v -cloudinaryId -responses"
-    );
-
-    if (!assignment) {
-      const error = new Error("Assignment Not found!");
-      error.statusCode = 404;
+    if (userId.toString() === classMemberId.toString()) {
+      const error = new Error("You cannot remove yourself!");
+      error.statusCode = 400;
       throw error;
     }
 
+    await db.connect();
+    await Class.findByIdAndUpdate(classId, {
+      $pull: { students: classMemberId },
+    });
+
+    await User.findByIdAndUpdate(classMemberId, {
+      $pull: { enrolled: classId },
+    });
+
+    // remove all responses of this user for this class.
+
     return res.status(200).json({
-      assignment: assignment,
+      message: "Member removed successfully",
     });
   } catch (error) {
     console.log(error);

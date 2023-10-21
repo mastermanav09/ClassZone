@@ -25,23 +25,13 @@ const handler = async (req, res) => {
   try {
     const session = await getServerSession(req, res, authOptions);
 
-    if (
-      !session ||
-      !session.user ||
-      (!session.user.email && !session.user._id)
-    ) {
+    if (!session || !session.user || !session.user._id) {
       const error = new Error("Sign in required!");
       error.statusCode = 401;
       throw error;
     }
 
-    const { user } = session;
-    let filter = { _id: user._id };
-
-    if (!user._id) {
-      filter = { "credentials.email": user.email };
-    }
-
+    const { _id: userId } = session.user;
     const { className, subject, batch, pathname } = req.body;
 
     if (pathname !== "/") {
@@ -62,7 +52,7 @@ const handler = async (req, res) => {
       throw error;
     }
 
-    const teacher = await User.findOne(filter).select(
+    const teacher = await User.findById(userId).select(
       "-credentials.password -credentials.isAdmin -enrolled -teaching -provider -createdAt -updatedAt -__v"
     );
 

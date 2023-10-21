@@ -39,7 +39,7 @@ export async function getServerSideProps(context) {
 
   const session = await getServerSession(req, res, authOptions);
 
-  if (!session || !session.user || (!session.user.email && !session.user._id)) {
+  if (!session || !session.user || !session.user._id) {
     return {
       props: {},
       redirect: {
@@ -49,7 +49,7 @@ export async function getServerSideProps(context) {
     };
   }
 
-  const { user } = session;
+  const { _id: userId } = session.user;
 
   let ObjectId = mongoose.Types.ObjectId;
   if (!ObjectId.isValid(classId)) {
@@ -87,10 +87,7 @@ export async function getServerSideProps(context) {
     };
   }
 
-  if (
-    (user._id && userClass.teacher._id.toString() !== user._id) ||
-    (user.email && userClass.teacher.credentials.email !== user.email)
-  ) {
+  if (userClass.teacher._id.toString() !== userId) {
     return {
       props: {},
       redirect: {

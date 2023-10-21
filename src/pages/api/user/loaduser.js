@@ -15,44 +15,31 @@ const handler = async (req, res) => {
 
   try {
     const session = await getServerSession(req, res, authOptions);
-    if (
-      !session ||
-      !session.user ||
-      (!session.user.email && !session.user._id)
-    ) {
+
+    if (!session || !session.user || !session.user._id) {
       const error = new Error("Sign in required!");
       error.statusCode = 401;
       throw error;
     }
 
-    const { user } = session;
-    let filter = { _id: user._id };
-    if (!user._id) {
-      filter = { "credentials.email": user.email };
-    }
+    const { _id: userId } = session.user;
 
     await db.connect();
-    const userResponse = await User.findOne(filter).select(
+    const userResponse = await User.findById(userId).select(
       "-credentials.password -__v -createdAt -updatedAt -provider"
     );
-
-    if (!userResponse) {
-      const error = new Error("User not found!");
-      error.statusCode = 404;
-      throw error;
-    }
 
     let enrolledClasses = [],
       teachingClasses = [];
 
     let user_doc;
-    user_doc = await User.findOne(filter)
+    user_doc = await User.findById(userId)
       .select("teaching")
       .populate("teaching", "name backgroundColor _id");
 
     teachingClasses = user_doc.teaching;
 
-    user_doc = await User.findOne(filter)
+    user_doc = await User.findById(userId)
       .select("enrolled")
       .populate({
         path: "enrolled",

@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
-import Class from "../../../../../models/Class";
-import manageResponses from "../../../../../utils/responses/manageResponses";
-import { authOptions } from "../../auth/[...nextauth]";
-import db from "../../../../../utils/db";
+import Class from "../../../../../../models/Class";
+import manageResponses from "../../../../../../utils/responses/manageResponses";
+import { authOptions } from "../../../auth/[...nextauth]";
+import db from "../../../../../../utils/db";
 
 const { getServerSession } = require("next-auth");
 
@@ -17,11 +17,7 @@ const handler = async (req, res) => {
   try {
     const session = await getServerSession(req, res, authOptions);
 
-    if (
-      !session ||
-      !session.user ||
-      (!session.user.email && !session.user._id)
-    ) {
+    if (!session || !session.user || !session.user._id) {
       const error = new Error("Sign in required!");
       error.statusCode = 401;
       throw error;
@@ -53,6 +49,7 @@ const handler = async (req, res) => {
         path: "students",
         select: {
           "credentials.userImage": 1,
+          "credentials.email": 1,
           "credentials.name": 1,
           _id: 1,
         },

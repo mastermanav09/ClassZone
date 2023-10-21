@@ -142,7 +142,7 @@ const Announcement = ({
           <Image
             width={60}
             height={60}
-            src={teacher.credentials.userImage}
+            src={teacher?.credentials.userImage}
             alt="User image"
           />
         </div>
@@ -156,10 +156,7 @@ const Announcement = ({
           <Pin style={{ fill: backgroundColor }} className={classes.pin} />
         )}
         {isEdited && <p className={classes["isEdited_text"]}>Edited</p>}
-        {((user?._id && user?._id === teacher?.credentials._id) ||
-          (user?.email && user?.email === teacher?.credentials.email)) && (
-          <ThreeDots fields={fields} />
-        )}
+        {user?._id === teacher?._id && <ThreeDots fields={fields} />}
       </div>
     </>
   );

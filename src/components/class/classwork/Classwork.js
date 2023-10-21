@@ -1,3 +1,4 @@
+import "react-responsive-modal/styles.css";
 import "react-datepicker/dist/react-datepicker.css";
 import React, { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
@@ -5,7 +6,6 @@ import ClassNavDropdown from "../ClassNavDropdown";
 import classes from "./Classwork.module.scss";
 import { Modal } from "react-responsive-modal";
 import { useForm } from "react-hook-form";
-import "react-responsive-modal/styles.css";
 import { notifyAndUpdate } from "@/helper/toastNotifyAndUpdate";
 import { ERROR_TOAST } from "../../../../utils/constants";
 import { toast } from "react-toastify";
@@ -267,12 +267,11 @@ const Classwork = () => {
       <div className={classes.assignment}>
         <div className={classes.container}>
           <h2>Classwork</h2>
-          {(user?._id && user?._id === teacher?.credentials._id) ||
-            (user?.email && user?.email === teacher?.credentials.email && (
-              <button onClick={() => setOpenAssignmentModal(true)}>
-                Create Assignment
-              </button>
-            ))}
+          {user?._id === teacher?._id && (
+            <button onClick={() => setOpenAssignmentModal(true)}>
+              Create Assignment
+            </button>
+          )}
         </div>
         <hr style={{ marginBottom: "1rem" }} />
         <AssignmentList

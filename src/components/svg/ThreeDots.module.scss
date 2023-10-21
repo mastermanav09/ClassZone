@@ -5,8 +5,9 @@
   .dropdown-content {
     position: absolute;
     background-color: white;
-    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-    border-radius: 10px;
+    box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+      rgba(60, 64, 67, 0.15) 0px 2px 6px 2px;
+    border-radius: 5px;
     min-width: 160px;
     width: max-content;
     max-width: 250px;
@@ -34,10 +35,11 @@
       padding: 10px 10px;
       cursor: pointer;
       color: black;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
 
       &:hover {
-        background-color: rgb(225, 222, 222);
+        color: white;
+        background-color: #5da7db;
       }
     }
   }

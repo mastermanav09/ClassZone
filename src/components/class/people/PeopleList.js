@@ -1,11 +1,14 @@
 import React, { useState, useRef, useEffect } from "react";
 import ClassNavDropdown from "../ClassNavDropdown";
-import UserCard from "../UserCard";
+import PeopleUserCard from "../PeopleUserCard";
 import Search from "@/components/svg/Search";
 import classes from "./PeopleList.module.scss";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
-import { getClassPeople } from "../../../../utils/store/reducers/class";
+import {
+  removeClassMember,
+  getClassPeople,
+} from "../../../../utils/store/reducers/class";
 import LoadingSpinner from "@/components/progress/LoadingSpinner";
 
 const PeopleList = () => {
@@ -19,6 +22,9 @@ const PeopleList = () => {
   const { teacher } = classDetails;
   const [searchResults, setSearchResults] = useState(people || []);
   const inputEl = useRef("");
+  const [confirmRemove, setConfirmRemove] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [removeMemberId, setRemoveMemberId] = useState(null);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -49,6 +55,30 @@ const PeopleList = () => {
     );
   }
 
+  const confirmRemoveHandler = (value, classMemberId) => {
+    setConfirmRemove(value);
+    setRemoveMemberId(classMemberId);
+  };
+
+  const removeMemberHandler = () => {
+    dispatch(
+      removeClassMember({
+        classId,
+        removeMemberId,
+        setIsLoading,
+        confirmRemoveHandler,
+      })
+    );
+  };
+
+  const fields = [
+    {
+      text: "Remove",
+      param: "_id",
+      action: (classMemberId) => confirmRemoveHandler(true, classMemberId),
+    },
+  ];
+
   return (
     <>
       <ClassNavDropdown classId={classId} backgroundColor={backgroundColor} />
@@ -57,7 +87,15 @@ const PeopleList = () => {
           <div>
             <p>Teacher</p>
             <hr className={classes.blueHR} />
-            <UserCard user={teacher} />
+            <PeopleUserCard
+              teacher={teacher}
+              confirmRemove={confirmRemove}
+              confirmRemoveHandler={confirmRemoveHandler}
+              removeMemberHandler={removeMemberHandler}
+              classMember={teacher}
+              fields={[]}
+              isLoading={isLoading}
+            />
           </div>
 
           <div>
@@ -90,8 +128,17 @@ const PeopleList = () => {
               </h3>
             )}
 
-            {searchResults?.map((user) => (
-              <UserCard user={user} key={user._id} />
+            {searchResults?.map((classMember) => (
+              <PeopleUserCard
+                teacher={teacher}
+                classMember={classMember}
+                confirmRemoveHandler={confirmRemoveHandler}
+                confirmRemove={confirmRemove}
+                removeMemberHandler={removeMemberHandler}
+                key={classMember._id}
+                fields={fields}
+                isLoading={isLoading}
+              />
             ))}
           </div>
         </div>

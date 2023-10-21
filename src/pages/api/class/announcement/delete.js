@@ -16,17 +16,13 @@ const handler = async (req, res) => {
   try {
     const session = await getServerSession(req, res, authOptions);
 
-    if (
-      !session ||
-      !session.user ||
-      (!session.user.email && !session.user._id)
-    ) {
+    if (!session || !session.user || !session.user._id) {
       const error = new Error("Sign in required!");
       error.statusCode = 401;
       throw error;
     }
 
-    const { user } = session;
+    const { _id: userId } = session.user;
     const { announcementId, classId } = req.query;
 
     var ObjectId = mongoose.Types.ObjectId;
@@ -45,18 +41,10 @@ const handler = async (req, res) => {
       throw error;
     }
 
-    if (user._id) {
-      if (userClass.teacher._id.toString() !== user._id) {
-        const error = new Error("Not authorized!");
-        error.statusCode = 401;
-        throw error;
-      }
-    } else {
-      if (userClass.teacher.credentials.email !== user.email) {
-        const error = new Error("Not authorized!");
-        error.statusCode = 401;
-        throw error;
-      }
+    if (userClass.teacher._id.toString() !== userId) {
+      const error = new Error("Not authorized!");
+      error.statusCode = 401;
+      throw error;
     }
 
     await Class.updateOne(

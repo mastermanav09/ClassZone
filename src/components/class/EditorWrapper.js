@@ -41,7 +41,7 @@ const EditorWrapper = ({
             <Image
               width={60}
               height={60}
-              src={teacher.credentials.userImage}
+              src={teacher?.credentials.userImage}
               alt="User image"
             />
           ) : (

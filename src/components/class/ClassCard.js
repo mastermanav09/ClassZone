@@ -24,17 +24,17 @@ const ClassCard = ({ classDetails }) => {
       >
         <div className={classes["classCard_desc"]}>
           <div className={classes["classCard__className"]}>{className}</div>
-          {teacher?.credentials?.name && (
+          {teacher?.credentials.name && (
             <div className={classes["classCard__creatorName"]}>
-              {teacher?.credentials?.name}
+              {teacher?.credentials.name}
             </div>
           )}
         </div>
-        {teacher?.credentials?.userImage && (
+        {teacher?.credentials.userImage && (
           <Image
             width={60}
             height={60}
-            src={teacher?.credentials?.userImage}
+            src={teacher?.credentials.userImage}
             alt="user_img"
             className={classes["classCard__creatorPhoto"]}
           />

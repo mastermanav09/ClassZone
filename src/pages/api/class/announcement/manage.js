@@ -20,17 +20,14 @@ const handler = async (req, res) => {
   try {
     const session = await getServerSession(req, res, authOptions);
 
-    if (
-      !session ||
-      !session.user ||
-      (!session.user.email && !session.user._id)
-    ) {
+    if (!session || !session.user || !session.user._id) {
       const error = new Error("Sign in required!");
       error.statusCode = 401;
       throw error;
     }
 
-    const { user } = session;
+    const { _id: userId } = session.user;
+
     const { classId, content } = req.body;
     const plainString = content.replace(/<[^>]+>/g, "");
     const updatedStr = plainString.split("&nbsp;").join("");
@@ -56,18 +53,10 @@ const handler = async (req, res) => {
       throw error;
     }
 
-    if (user._id) {
-      if (userClass.teacher._id.toString() !== user._id) {
-        const error = new Error("Not authorized!");
-        error.statusCode = 401;
-        throw error;
-      }
-    } else {
-      if (userClass.teacher.credentials.email !== user.email) {
-        const error = new Error("Not authorized!");
-        error.statusCode = 401;
-        throw error;
-      }
+    if (userClass.teacher._id.toString() !== userId) {
+      const error = new Error("Not authorized!");
+      error.statusCode = 401;
+      throw error;
     }
   } catch (error) {
     return sendErrorResponse(res, error);

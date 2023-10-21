@@ -167,6 +167,41 @@ export const getClassPeople = createAsyncThunk(
   }
 );
 
+export const removeClassMember = createAsyncThunk(
+  "class/removeClassMember",
+  async (data, { dispatch }) => {
+    const {
+      classId,
+      removeMemberId: classMemberId,
+      setIsLoading,
+      confirmRemoveHandler,
+    } = data;
+
+    try {
+      setIsLoading(true);
+      const res = await axios({
+        url: `/api/class/${classId}/people/remove`,
+        method: "DELETE",
+        params: { classMemberId, classId },
+      });
+
+      dispatch(
+        classSlice.actions.removeClassMember({ classMemberId, classId })
+      );
+      confirmRemoveHandler(false, null);
+
+      let { message } = res.data;
+      notifyAndUpdate(SUCCESS_DELETE_TOAST, "success", message, toast);
+    } catch (error) {
+      console.log(error);
+      const message = getError(error);
+      notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+    }
+
+    setIsLoading(false);
+  }
+);
+
 export const manageAnnouncement = createAsyncThunk(
   "class/manageAnnouncement",
   async (data, { _, dispatch }) => {
@@ -749,6 +784,30 @@ const classSlice = createSlice({
           ...details,
         };
       }
+    },
+
+    removeClassMember(state, action) {
+      const { classId, classMemberId } = action.payload;
+
+      let updatedPeopleList = state.currentClassDetails.people.filter(
+        (member) => member._id !== classMemberId
+      );
+
+      state.currentClassDetails = {
+        ...state.currentClassDetails,
+        people: updatedPeopleList,
+      };
+
+      const ind = state.classesCache.findIndex((item) => item._id === classId);
+
+      updatedPeopleList = state.classesCache[ind].people.filter(
+        (member) => member._id !== classMemberId
+      );
+
+      state.classesCache[ind] = {
+        ...state.classesCache[ind],
+        people: updatedPeopleList,
+      };
     },
 
     // announcement
