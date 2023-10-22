@@ -66,6 +66,7 @@ const Dashboard = ({ userEnrolledClasses, userTeachingClasses }) => {
     dispatch(classActions.dragAndDropTeachingClasses({ fromIndex, toIndex }));
   };
 
+  console.log(userTeachingClasses);
   return (
     <>
       <div className={classesDashboard.dashboard}>
