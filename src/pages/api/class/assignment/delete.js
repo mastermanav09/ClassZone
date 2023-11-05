@@ -1,10 +1,7 @@
 import Class from "../../../../../models/Class";
 import Assignment from "../../../../../models/Assignment";
 import manageResponses from "../../../../../utils/responses/manageResponses";
-import { authOptions } from "../../auth/[...nextauth]";
 import mongoose from "mongoose";
-
-const { getServerSession } = require("next-auth");
 
 const handler = async (req, res) => {
   if (req.method !== "DELETE") {
@@ -15,15 +12,7 @@ const handler = async (req, res) => {
   }
 
   try {
-    const session = await getServerSession(req, res, authOptions);
-
-    if (!session || !session.user || !session.user._id) {
-      const error = new Error("Sign in required!");
-      error.statusCode = 401;
-      throw error;
-    }
-
-    const { _id: userId } = session.user;
+    const userId = req.headers["x-user-id"];
     const { deleteAssignmentId: assignmentId, classId } = req.query;
 
     var ObjectId = mongoose.Types.ObjectId;

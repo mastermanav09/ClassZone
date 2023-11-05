@@ -1,12 +1,9 @@
 import mongoose from "mongoose";
 import manageResponses from "../../../../../../../utils/responses/manageResponses";
-import { authOptions } from "../../../../auth/[...nextauth]";
 import db from "../../../../../../../utils/db";
 import Assignment from "../../../../../../../models/Assignment";
 import Class from "../../../../../../../models/Class";
 import User from "../../../../../../../models/User";
-
-const { getServerSession } = require("next-auth");
 
 const handler = async (req, res) => {
   if (req.method !== "GET") {
@@ -17,15 +14,8 @@ const handler = async (req, res) => {
   }
 
   try {
-    const session = await getServerSession(req, res, authOptions);
-
-    if (!session || !session.user || !session.user._id) {
-      const error = new Error("Sign in required!");
-      error.statusCode = 401;
-      throw error;
-    }
-
     const { assignmentId, classId } = req.query;
+    const userId = req.headers["x-user-id"];
     var ObjectId = mongoose.Types.ObjectId;
 
     if (!ObjectId.isValid(assignmentId) || !ObjectId.isValid(classId)) {
@@ -36,14 +26,22 @@ const handler = async (req, res) => {
 
     await db.connect();
 
-    const classStudents = await Class.findById(classId).select("-_id students");
-    const { students } = classStudents;
+    const classData = await Class.findById(classId).select(
+      "-_id members teacher"
+    );
+    const { members, teacher } = classData;
+
+    if (teacher.toString() !== userId) {
+      const error = new Error("Unauthorized!");
+      error.statusCode = 401;
+      throw error;
+    }
 
     const submissions = await Assignment.findById(assignmentId).select(
       "-_id responses.user"
     );
 
-    const remainingUsers = students.filter((student) => {
+    const remainingUsers = members.filter((student) => {
       if (!submissions.responses.includes(student)) {
         return true;
       }

@@ -1,10 +1,7 @@
 import mongoose from "mongoose";
 import Class from "../../../../../../models/Class";
 import manageResponses from "../../../../../../utils/responses/manageResponses";
-import { authOptions } from "../../../auth/[...nextauth]";
 import db from "../../../../../../utils/db";
-
-const { getServerSession } = require("next-auth");
 
 const handler = async (req, res) => {
   if (req.method !== "GET") {
@@ -15,14 +12,6 @@ const handler = async (req, res) => {
   }
 
   try {
-    const session = await getServerSession(req, res, authOptions);
-
-    if (!session || !session.user || !session.user._id) {
-      const error = new Error("Sign in required!");
-      error.statusCode = 401;
-      throw error;
-    }
-
     const { classId } = req.query;
     var ObjectId = mongoose.Types.ObjectId;
 
@@ -35,7 +24,7 @@ const handler = async (req, res) => {
     await db.connect();
 
     const data = await Class.findById(classId)
-      .select("students teacher -_id")
+      .select("members teacher -_id")
       .populate({
         path: "teacher",
         select: {
@@ -46,7 +35,7 @@ const handler = async (req, res) => {
         },
       })
       .populate({
-        path: "students",
+        path: "members",
         select: {
           "credentials.userImage": 1,
           "credentials.email": 1,
@@ -55,14 +44,8 @@ const handler = async (req, res) => {
         },
       });
 
-    if (!data) {
-      const error = new Error("No people found!");
-      error.statusCode = 404;
-      throw error;
-    }
-
     return res.status(200).json({
-      people: data.students,
+      people: data.members,
       teacher: data.teacher,
     });
   } catch (error) {

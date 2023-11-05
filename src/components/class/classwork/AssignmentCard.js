@@ -1,5 +1,5 @@
 import "react-responsive-modal/styles.css";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import classes from "./AssignmentCard.module.scss";
 import Upload from "../../svg/Upload";
 import { Modal } from "react-responsive-modal";
@@ -72,7 +72,8 @@ const AssignmentCard = (props) => {
         ERROR_TOAST,
         "error",
         "Please select a file for submission.",
-        toast
+        toast,
+        null
       );
 
       return;
@@ -81,7 +82,8 @@ const AssignmentCard = (props) => {
         ERROR_TOAST,
         "error",
         "Maximum file size allowed is 10MB.",
-        toast
+        toast,
+        null
       );
 
       return;

@@ -10,7 +10,7 @@ export const authOptions = {
     strategy: "jwt",
   },
 
-  secret: process.env.SECRET,
+  secret: process.env.NEXTAUTH_SECRET,
   site: process.env.NEXTAUTH_URL,
 
   callbacks: {
@@ -93,6 +93,7 @@ export const authOptions = {
 
     CredentialsProvider({
       type: "credentials",
+
       async authorize(credentials, req) {
         await db.connect();
 

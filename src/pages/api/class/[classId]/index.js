@@ -1,10 +1,7 @@
 import mongoose from "mongoose";
 import Class from "../../../../../models/Class";
 import manageResponses from "../../../../../utils/responses/manageResponses";
-import { authOptions } from "../../auth/[...nextauth]";
 import db from "../../../../../utils/db";
-
-const { getServerSession } = require("next-auth");
 
 const handler = async (req, res) => {
   if (req.method !== "GET") {
@@ -15,14 +12,6 @@ const handler = async (req, res) => {
   }
 
   try {
-    const session = await getServerSession(req, res, authOptions);
-
-    if (!session || !session.user || !session.user._id) {
-      const error = new Error("Sign in required!");
-      error.statusCode = 401;
-      throw error;
-    }
-
     const { classId } = req.query;
     var ObjectId = mongoose.Types.ObjectId;
 
@@ -34,7 +23,7 @@ const handler = async (req, res) => {
 
     await db.connect();
 
-    const userClass = await Class.findById(classId)
+    const classData = await Class.findById(classId)
       .populate({
         path: "teacher",
         select: {
@@ -43,10 +32,10 @@ const handler = async (req, res) => {
           _id: 1,
         },
       })
-      .select("-students -assignments")
+      .select("-members -assignments")
       .lean();
 
-    if (!userClass) {
+    if (!classData) {
       const error = new Error("Class do not exists!");
       error.statusCode = 404;
       throw error;
@@ -55,7 +44,7 @@ const handler = async (req, res) => {
     let announcements = [],
       pinnedAnnouncements = [];
 
-    for (let item of userClass.announcements) {
+    for (let item of classData.announcements) {
       if (item.isPinned) {
         pinnedAnnouncements.push(item);
       } else {
@@ -67,7 +56,7 @@ const handler = async (req, res) => {
     pinnedAnnouncements.sort((a, b) => b.updatedAt - a.updatedAt);
 
     return res.status(200).json({
-      class: { ...userClass, announcements, pinnedAnnouncements },
+      class: { ...classData, announcements, pinnedAnnouncements },
     });
   } catch (error) {
     console.log(error);

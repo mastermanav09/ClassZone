@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
-import Assignment from "./Assignment";
+const mongoose = require("mongoose");
+const Assignment = require("./Assignment");
 const { colorValidator } = require("../utils/validators/colorValidator");
 const Schema = mongoose.Schema;
 
@@ -36,7 +36,7 @@ const classSchema = new Schema(
       required: true,
     },
 
-    students: [
+    members: [
       {
         type: Schema.Types.ObjectId,
         ref: "User",

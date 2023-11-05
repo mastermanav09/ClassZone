@@ -168,7 +168,7 @@ const AuthForm = (props) => {
               ].join("")}
             >
               {" "}
-              <span>Already have an account</span> <span>SignIn here</span>
+              <span>Already have an account</span> <span>Sign in here</span>
             </Link>
           )}
 

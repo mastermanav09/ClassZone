@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useLayoutEffect, useState } from "react";
 import classes from "./MainNavigation.module.scss";
 import Sidebar from "./Sidebar";
 import Plus from "@/components/svg/Plus";
@@ -21,8 +21,13 @@ const MainNavigation = () => {
   const { pathname, query } = router;
   const { ac, jc, id: classId } = query;
   const [joinClass, setJoinClass] = useState(jc === "true");
-  const [addClass, setAddClass] = useState(ac === "true");
+  const [addClass, setAddClass] = useState(ac == "true");
   const { data: session } = useSession();
+
+  useEffect(() => {
+    setJoinClass(jc === "true");
+    setAddClass(ac === "true");
+  }, [jc, ac]);
 
   registerForUIToggle(setShowSideBar);
   registerForUIToggle(setShowNavbarDropdown);

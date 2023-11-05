@@ -59,7 +59,7 @@ export const signup = createAsyncThunk(
     } catch (error) {
       console.log(error);
       const message = getError(error);
-      notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+      notifyAndUpdate(ERROR_TOAST, "error", message, toast, null);
     }
 
     setIsLoading(false);
@@ -109,10 +109,10 @@ export const login = createAsyncThunk("user/login", async (data) => {
   } catch (error) {
     const message = getError(error);
     if (error.statusCode === 500) {
-      return notifyAndUpdate(SERVER_ERROR_TOAST, "error", message, toast);
+      return notifyAndUpdate(SERVER_ERROR_TOAST, "error", message, toast, null);
     }
 
-    notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+    notifyAndUpdate(ERROR_TOAST, "error", message, toast, null);
   }
 
   setIsLoading(false);
@@ -128,7 +128,7 @@ export const loadUser = createAsyncThunk(
         method: "GET",
         url: `/api/user/loaduser`,
       });
-
+      console.log(res);
       const { enrolled: userEnrolledClasses, teaching: userTeachingClasses } =
         res.data.user;
 
@@ -141,7 +141,7 @@ export const loadUser = createAsyncThunk(
     } catch (error) {
       console.log(error);
       const message = getError(error);
-      notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+      notifyAndUpdate(ERROR_TOAST, "error", message, toast, null);
     }
   }
 );

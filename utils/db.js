@@ -20,7 +20,9 @@ async function connect() {
   try {
     const db = await mongoose.connect(process.env.MONGO_URI, {
       useNewUrlParser: true,
+      serverSelectionTimeoutMS: 5000,
     });
+
     if (!db) {
       throw new Error("Internal server error!");
     }
@@ -50,8 +52,8 @@ function convertDocToObj(doc) {
     doc.teacher.credentials.email = doc.teacher.credentials.email.toString();
   }
 
-  if (doc.students) {
-    doc.students.name = doc.teacher.credentials.name.toString();
+  if (doc.members) {
+    doc.members.name = doc.teacher.credentials.name.toString();
   }
 
   doc.createdAt = doc.createdAt.toString();

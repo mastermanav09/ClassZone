@@ -92,7 +92,7 @@ const PeopleUserCard = ({
         </div>
         {user?._id === teacher?._id && (
           <div className={classes.threeDots}>
-            <ThreeDots fields={fields} obj={classMember} />
+            <ThreeDots fields={fields} data={classMember} />
           </div>
         )}
       </div>

@@ -5,7 +5,7 @@ import ClassCard from "../class/ClassCard";
 import LoadingSpinner from "../progress/LoadingSpinner";
 import { DndProvider } from "react-dnd-multi-backend";
 import { useDispatch } from "react-redux";
-import { classActions } from "../../../utils/store/reducers/class";
+import { dragAndDropClasses } from "../../../utils/store/reducers/class";
 import { HTML5toTouch } from "rdndmb-html5-to-touch";
 import { usePreview } from "react-dnd-preview";
 import Image from "next/image";
@@ -17,7 +17,7 @@ const MyPreview = () => {
   }
   const { item, style } = preview;
   const { teacher, backgroundColor, name } = item;
-  console.log(item);
+
   return (
     <>
       <div
@@ -58,12 +58,26 @@ const MyPreview = () => {
 const Dashboard = ({ userEnrolledClasses, userTeachingClasses }) => {
   const dispatch = useDispatch();
 
-  const moveClassCardEnrolled = (fromIndex, toIndex) => {
-    dispatch(classActions.dragAndDropEnrolledClasses({ fromIndex, toIndex }));
+  const moveClassCardEnrolled = (fromIndex, toIndex, classId) => {
+    dispatch(
+      dragAndDropClasses({
+        fromIndex,
+        toIndex,
+        type: "CLASS_CARD_ENROLLED",
+        classId,
+      })
+    );
   };
 
   const moveClassCardTeaching = (fromIndex, toIndex) => {
-    dispatch(classActions.dragAndDropTeachingClasses({ fromIndex, toIndex }));
+    dispatch(
+      dragAndDropClasses({
+        fromIndex,
+        toIndex,
+        type: "CLASS_CARD_TEACHING",
+        classId,
+      })
+    );
   };
 
   return (
@@ -86,9 +100,9 @@ const Dashboard = ({ userEnrolledClasses, userTeachingClasses }) => {
                     {userEnrolledClasses.map((enrolledClass, index) => (
                       <ClassCard
                         type="CLASS_CARD_ENROLLED"
-                        key={enrolledClass._id}
+                        key={enrolledClass.classDetails._id}
                         index={index}
-                        classDetails={enrolledClass}
+                        classDetails={enrolledClass.classDetails}
                         moveClassCard={moveClassCardEnrolled}
                       />
                     ))}
@@ -117,8 +131,8 @@ const Dashboard = ({ userEnrolledClasses, userTeachingClasses }) => {
                       <ClassCard
                         type="CLASS_CARD_TEACHING"
                         index={index}
-                        key={teachingClass._id}
-                        classDetails={teachingClass}
+                        key={teachingClass.classDetails._id}
+                        classDetails={teachingClass.classDetails}
                         moveClassCard={moveClassCardTeaching}
                       />
                     ))}

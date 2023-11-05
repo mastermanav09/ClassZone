@@ -1,10 +1,8 @@
 import mongoose from "mongoose";
 import manageResponses from "../../../../../../../utils/responses/manageResponses";
-import { authOptions } from "../../../../auth/[...nextauth]";
 import db from "../../../../../../../utils/db";
 import Assignment from "../../../../../../../models/Assignment";
-
-const { getServerSession } = require("next-auth");
+import Class from "../../../../../../../models/Class";
 
 const handler = async (req, res) => {
   if (req.method !== "GET") {
@@ -15,15 +13,8 @@ const handler = async (req, res) => {
   }
 
   try {
-    const session = await getServerSession(req, res, authOptions);
-
-    if (!session || !session.user || !session.user._id) {
-      const error = new Error("Sign in required!");
-      error.statusCode = 401;
-      throw error;
-    }
-
-    const { assignmentId } = req.query;
+    const { assignmentId, classId } = req.query;
+    const userId = req.headers["x-user-id"];
     var ObjectId = mongoose.Types.ObjectId;
 
     if (!ObjectId.isValid(assignmentId)) {
@@ -33,6 +24,14 @@ const handler = async (req, res) => {
     }
 
     await db.connect();
+
+    const classData = await Class.findById(classId);
+
+    if (classData?.teacher.toString() !== userId) {
+      const error = new Error("Unauthorized!");
+      error.statusCode = 401;
+      throw error;
+    }
 
     const submissions = await Assignment.findById(assignmentId)
       .select("-_id responses")

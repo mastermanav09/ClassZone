@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import ClassNavDropdown from "../ClassNavDropdown";
 import PeopleUserCard from "../PeopleUserCard";
-import Search from "@/components/svg/Search";
 import classes from "./PeopleList.module.scss";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,8 +17,9 @@ const PeopleList = () => {
   const people = useSelector(
     (state) => state.class?.currentClassDetails?.people
   );
-  const classDetails = useSelector((state) => state.class?.currentClassDetails);
-  const { teacher } = classDetails;
+  const teacher = useSelector(
+    (state) => state.class.currentClassDetails?.teacher
+  );
   const [searchResults, setSearchResults] = useState(people || []);
   const inputEl = useRef("");
   const [confirmRemove, setConfirmRemove] = useState(false);
@@ -33,7 +33,7 @@ const PeopleList = () => {
         dispatch(getClassPeople({ classId, router }));
       }
     }
-  }, [classDetails, classId, dispatch, people, router]);
+  }, [people, classId, dispatch, router]);
 
   useEffect(() => {
     const newList = people?.filter((user) => {
@@ -124,7 +124,7 @@ const PeopleList = () => {
 
             {searchTerm.length === 0 && searchResults?.length === 0 && (
               <h3 className={classes["no_found_text"]}>
-                There are no students in the classroom.
+                There are no members in the classroom.
               </h3>
             )}
 

@@ -31,6 +31,7 @@ const Announcement = ({
   const [confirmDelete, setConfirmDelete] = useState(false);
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
+
   const manageAnnouncementPinHandler = (isPinned) => {
     dispatch(manageAnnouncementPin({ classId, announcementId, isPinned }));
   };

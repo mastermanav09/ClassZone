@@ -1,10 +1,7 @@
 import mongoose from "mongoose";
-import { authOptions } from "../../auth/[...nextauth]";
 import manageResponses from "../../../../../utils/responses/manageResponses";
 import db from "../../../../../utils/db";
 import Class from "../../../../../models/Class";
-
-const { getServerSession } = require("next-auth");
 
 const handler = async (req, res) => {
   if (req.method !== "GET") {
@@ -15,17 +12,9 @@ const handler = async (req, res) => {
   }
 
   try {
-    const session = await getServerSession(req, res, authOptions);
-
-    if (!session || !session.user || !session.user._id) {
-      const error = new Error("Sign in required!");
-      error.statusCode = 401;
-      throw error;
-    }
+    const userId = req.headers["x-user-id"];
 
     const { classId } = req.query;
-    const { _id: userId } = session.user;
-
     var ObjectId = mongoose.Types.ObjectId;
 
     if (!ObjectId.isValid(classId)) {
@@ -36,8 +25,8 @@ const handler = async (req, res) => {
 
     await db.connect();
 
-    const assignmentsResponses = await Class.findById(classId)
-      .select("-_id assignments")
+    const classData = await Class.findById(classId)
+      .select("-_id assignments teacher")
       .populate({
         path: "assignments",
         select: {
@@ -46,7 +35,13 @@ const handler = async (req, res) => {
         },
       });
 
-    const { assignments: assignmentsResponsesArr } = assignmentsResponses;
+    if (classData.teacher.toString() === userId) {
+      return res.status(200).json({
+        assignmentsRemaining: 0,
+      });
+    }
+
+    const { assignments: assignmentsResponsesArr } = classData;
     const assignmentsRemaining = assignmentsResponsesArr.filter((obj) => {
       for (let response of obj.responses) {
         if (response.user.toString() === userId.toString()) {

@@ -1,11 +1,8 @@
 import mongoose from "mongoose";
 import Class from "../../../../../../models/Class";
 import manageResponses from "../../../../../../utils/responses/manageResponses";
-import { authOptions } from "../../../auth/[...nextauth]";
 import db from "../../../../../../utils/db";
 import User from "../../../../../../models/User";
-
-const { getServerSession } = require("next-auth");
 
 const handler = async (req, res) => {
   if (req.method !== "DELETE") {
@@ -16,15 +13,7 @@ const handler = async (req, res) => {
   }
 
   try {
-    const session = await getServerSession(req, res, authOptions);
-
-    if (!session || !session.user || !session.user._id) {
-      const error = new Error("Sign in required!");
-      error.statusCode = 401;
-      throw error;
-    }
-
-    const { _id: userId } = session.user;
+    const userId = req.headers["x-user-id"];
 
     const { classId, classMemberId } = req.query;
     var ObjectId = mongoose.Types.ObjectId;
@@ -42,13 +31,44 @@ const handler = async (req, res) => {
     }
 
     await db.connect();
+
+    const classData = await Class.findById(classId);
+
+    if (classData?.teacher.toString() !== userId) {
+      const error = new Error("Unauthorized!");
+      error.statusCode = 401;
+      throw error;
+    }
+
     await Class.findByIdAndUpdate(classId, {
-      $pull: { students: classMemberId },
+      $pull: { members: classMemberId },
     });
 
-    await User.findByIdAndUpdate(classMemberId, {
-      $pull: { enrolled: classId },
-    });
+    const data = await User.findOneAndUpdate(
+      { _id: classMemberId },
+      {
+        $pull: { enrolled: { classDetails: classId } },
+      }
+    );
+
+    if (data) {
+      const enrolledClasses = data.enrolled;
+      const removedClass = enrolledClasses.filter(
+        (item) => item.classDetails.toString() === classId
+      );
+
+      const removedClassIndex = removedClass[0].index;
+
+      await User.updateOne(
+        {
+          _id: classMemberId,
+        },
+        { $inc: { "enrolled.$[element].index": -1 } },
+        {
+          arrayFilters: [{ "element.index": { $gt: removedClassIndex } }],
+        }
+      );
+    }
 
     // remove all responses of this user for this class.
 
