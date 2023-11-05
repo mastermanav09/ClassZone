@@ -85,7 +85,8 @@ export const login = createAsyncThunk("user/login", async (data) => {
   try {
     setIsLoading(true);
     const res = await signIn("credentials", {
-      redirect: false,
+      callbackUrl: "/",
+      redirect: true,
       email,
       password,
     });
