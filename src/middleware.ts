@@ -2,40 +2,18 @@ import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-const PUBLIC_FILE = /\.(.*)$/;
-const allowedOrigins =
-  process.env.NODE_ENV === "production"
-    ? ["https://classzone.vercel.app"]
-    : ["http://localhost:3000"];
-
 export async function middleware(request: NextRequest) {
-  const origin = request.headers.get("origin");
-
-  if (origin && !allowedOrigins.includes(origin)) {
-    return new NextResponse(null, {
-      status: 400,
-      statusText: "Bad Request",
-      headers: {
-        "Content-Type": "text/plain",
-      },
-    });
-  }
-
   const session: any = await getToken({ req: request });
+  const PUBLIC_FILE = /\.(.*)$/;
   const authRegex = /^\/api\/auth\//;
   const { pathname } = request.nextUrl;
 
   if (
     pathname.startsWith("/_next") ||
     pathname.startsWith("/static") ||
+    pathname.startsWith("/login") ||
+    pathname.startsWith("/register") ||
     PUBLIC_FILE.test(pathname)
-  ) {
-    return NextResponse.next();
-  }
-
-  if (
-    request.nextUrl.pathname === "/login" ||
-    request.nextUrl.pathname === "/register"
   ) {
     return NextResponse.next();
   }
@@ -55,9 +33,12 @@ export async function middleware(request: NextRequest) {
     });
   }
 
-  return NextResponse.redirect(new URL("/login", request.url));
+  const url = request.nextUrl.clone();
+  url.pathname = "/login";
+  return NextResponse.redirect(url);
 }
 
 export const config = {
-  matcher: ["/((?!/api/auth|!static|!_next).*)"],
+  // matcher: ["/((?!/api/auth|!_next).*)"],
+  matcher: ["/((?!_next/image|favicon.ico|/login).*)"],
 };

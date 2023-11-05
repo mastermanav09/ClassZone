@@ -51,7 +51,7 @@ export async function getServerSideProps(context) {
     return {
       redirect: {
         destination: "/?class_force_redirect=true",
-        permanent: true,
+        permanent: false,
       },
     };
   }
