@@ -1,6 +1,6 @@
 import "react-responsive-modal/styles.css";
 import "react-datepicker/dist/react-datepicker.css";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import ClassNavDropdown from "../ClassNavDropdown";
 import classes from "./Classwork.module.scss";
@@ -39,9 +39,11 @@ const Classwork = () => {
   const [selectedDate, setSelectedDate] = useState(validDate);
   const { data: session } = useSession();
   const { user } = session || {};
-  const { teacher } = useSelector((state) => state.class.currentClassDetails);
-  const { assignments } = useSelector(
-    (state) => state.class?.currentClassDetails
+  const teacher = useSelector(
+    (state) => state.class.currentClassDetails.teacher
+  );
+  const assignments = useSelector(
+    (state) => state.class.currentClassDetails.assignments
   );
 
   useEffect(() => {
@@ -69,7 +71,8 @@ const Classwork = () => {
         ERROR_TOAST,
         "error",
         "Please fill valid information!",
-        toast
+        toast,
+        null
       );
 
       return;
@@ -80,14 +83,21 @@ const Classwork = () => {
         ERROR_TOAST,
         "error",
         "Maximum file size allowed is 10MB.",
-        toast
+        toast,
+        null
       );
 
       return;
     }
 
     if (selectedDate < new Date()) {
-      notifyAndUpdate(ERROR_TOAST, "error", "Please enter valid date", toast);
+      notifyAndUpdate(
+        ERROR_TOAST,
+        "error",
+        "Please enter valid date",
+        toast,
+        null
+      );
       return;
     }
 

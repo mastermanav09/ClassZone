@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const Class = require("../models/Class");
+const Class = require("./Class");
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema(
@@ -38,15 +38,33 @@ const userSchema = new Schema(
 
     enrolled: [
       {
-        type: Schema.Types.ObjectId,
-        ref: "Class",
+        _id: false,
+
+        classDetails: {
+          type: Schema.Types.ObjectId,
+          ref: "Class",
+        },
+
+        index: {
+          type: Schema.Types.Number,
+          required: true,
+        },
       },
     ],
 
     teaching: [
       {
-        type: Schema.Types.ObjectId,
-        ref: "Class",
+        _id: false,
+
+        classDetails: {
+          type: Schema.Types.ObjectId,
+          ref: "Class",
+        },
+
+        index: {
+          type: Schema.Types.Number,
+          required: true,
+        },
       },
     ],
   },

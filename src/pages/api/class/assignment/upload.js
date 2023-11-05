@@ -1,7 +1,5 @@
 import Assignment from "../../../../../models/Assignment";
 import Class from "../../../../../models/Class";
-import { authOptions } from "../../auth/[...nextauth]";
-import { getServerSession } from "next-auth/next";
 import mongoose from "mongoose";
 import manageResponses from "../../../../../utils/responses/manageResponses";
 import db from "../../../../../utils/db";
@@ -24,30 +22,11 @@ const cloudinaryConfig = {
   api_secret: process.env.CLOUDINARY_SECRET,
 };
 
-const checkAuthorization = async (req, res) => {
-  const session = await getServerSession(req, res, authOptions);
-
-  if (!session || !session.user || !session.user._id) {
-    return null;
-  }
-
-  return session;
-};
-
 const handler = async (req, res) => {
   if (req.method === "POST") {
-    const authObj = await checkAuthorization(req, res);
-
-    if (!authObj) {
-      const error = new Error("Sign in required!");
-      error.statusCode = 401;
-      throw error;
-    }
-
     let uploadPath;
     try {
-      const { user } = authObj;
-      const { _id: userId } = user;
+      const userId = req.headers["x-user-id"];
 
       const form = formidable({ keepExtensions: true });
       const [fields, files] = await form.parse(req);
@@ -85,7 +64,7 @@ const handler = async (req, res) => {
       await db.connect();
 
       const classAssignment = await Assignment.findById(assignmentId);
-      const userClass = await Class.findById(classId);
+      const classData = await Class.findById(classId);
 
       if (!classAssignment) {
         const error = new Error("Assignment do not exists!");
@@ -93,16 +72,27 @@ const handler = async (req, res) => {
         throw error;
       }
 
-      if (!userClass) {
+      if (!classData) {
         const error = new Error("Class do not exists!");
         error.statusCode = 404;
         throw error;
       }
 
-      if (userClass.teacher.toString() === userId.toString()) {
+      if (classData.teacher.toString() === userId.toString()) {
         const error = new Error("You cannot make submission!");
         error.statusCode = 401;
         throw error;
+      } else {
+        const authMid = await import("../../class/authorize");
+        const authRes = await authMid.handler(userId, classId);
+
+        if (!authRes.isAuthorized) {
+          const error = new Error(
+            "Cannot upload File, you are no longer a member of this class"
+          );
+          error.statusCode = 400;
+          throw error;
+        }
       }
 
       const assignmentDetail = await Assignment.findById(assignmentId).select(
@@ -181,18 +171,10 @@ const handler = async (req, res) => {
   }
 
   if (req.method === "DELETE") {
-    const authObj = await checkAuthorization(req, res);
-    if (!authObj) {
-      const error = new Error("Sign in required!");
-      error.statusCode = 401;
-      throw error;
-    }
-
     try {
-      const { user } = authObj;
-      const { _id: userId } = user;
-
+      const { _id: userId } = req.user;
       const { assignmentId, classId } = req.query;
+
       await db.connect();
 
       let ObjectId = mongoose.Types.ObjectId;
@@ -203,7 +185,7 @@ const handler = async (req, res) => {
       }
 
       const classAssignment = await Assignment.findById(assignmentId);
-      const userClass = await Class.findById(classId);
+      const classData = await Class.findById(classId);
 
       if (!classAssignment) {
         const error = new Error("Assignment do not exists!");
@@ -211,13 +193,13 @@ const handler = async (req, res) => {
         throw error;
       }
 
-      if (!userClass) {
+      if (!classData) {
         const error = new Error("Class do not exists!");
         error.statusCode = 404;
         throw error;
       }
 
-      if (userClass.teacher.toString() === userId.toString()) {
+      if (classData.teacher.toString() === userId.toString()) {
         const error = new Error("You cannot remove submission!");
         error.statusCode = 401;
         throw error;

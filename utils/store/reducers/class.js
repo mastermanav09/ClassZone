@@ -10,7 +10,6 @@ import {
   SUCCESS_CREATE_EDIT_TOAST,
 } from "../../constants";
 import axios from "axios";
-import { getSession } from "next-auth/react";
 
 export const createClass = createAsyncThunk(
   "class/createClass",
@@ -32,28 +31,28 @@ export const createClass = createAsyncThunk(
       const newClass = res.data.class;
       const message = res.data.message;
 
-      const session = await getSession();
-      const { user } = session;
+      // const session = await getSession();
+      // const { user } = session;
 
-      newClass.teacher = {
-        credentials: {
-          email: user.email,
-          name: user.name,
-          userImage: user.image,
-        },
-      };
+      // newClass.classDetails.teacher = {
+      //   credentials: {
+      //     email: user.email,
+      //     name: user.name,
+      //     userImage: user.image,
+      //   },
+      // };
 
       dispatch(classActions.addUserTeachingClasses(newClass));
-      router.replace(`/classes/${newClass._id}`);
+      router.replace(`/classes/${newClass.classDetails._id}`);
 
       setTimeout(
-        () => notifyAndUpdate(SUCCESS_TOAST, "success", message, toast),
+        () => notifyAndUpdate(SUCCESS_TOAST, "success", message, toast, null),
         1000
       );
     } catch (error) {
       console.log(error);
       const message = getError(error);
-      notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+      notifyAndUpdate(ERROR_TOAST, "error", message, toast, null);
     }
 
     setIsLoading(false);
@@ -81,16 +80,16 @@ export const joinClass = createAsyncThunk(
       const message = res.data.message;
 
       dispatch(classActions.addUserEnrolledClasses(joindedClass));
-      router.replace(`/classes/${joindedClass._id}`);
+      router.replace(`/classes/${joindedClass.classDetails._id}`);
 
       setTimeout(
-        () => notifyAndUpdate(SUCCESS_TOAST, "success", message, toast),
+        () => notifyAndUpdate(SUCCESS_TOAST, "success", message, toast, null),
         1000
       );
     } catch (error) {
       console.log(error);
       const message = getError(error);
-      notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+      notifyAndUpdate(ERROR_TOAST, "error", message, toast, null);
     }
 
     setIsLoading(false);
@@ -128,8 +127,52 @@ export const getClass = createAsyncThunk(
         return router.replace("/not_found");
       } else {
         const message = getError(error);
-        notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+        notifyAndUpdate(ERROR_TOAST, "error", message, toast, null);
       }
+    }
+  }
+);
+
+export const dragAndDropClasses = createAsyncThunk(
+  "class/dragAndDrop",
+  async (data, { dispatch }) => {
+    try {
+      const { fromIndex, toIndex, type, classId } = data;
+
+      if (type !== "CLASS_CARD_ENROLLED" && type !== "CLASS_CARD_TEACHING") {
+        return notifyAndUpdate(
+          ERROR_TOAST,
+          "error",
+          "Invalid class type",
+          toast,
+          null
+        );
+      }
+
+      if (type === "CLASS_CARD_ENROLLED") {
+        dispatch(
+          classActions.dragAndDropEnrolledClasses({ fromIndex, toIndex })
+        );
+      } else {
+        dispatch(
+          classActions.dragAndDropTeachingClasses({ fromIndex, toIndex })
+        );
+      }
+
+      await axios({
+        method: "PATCH",
+        url: `/api/class/dragAndDrop`,
+        data: {
+          fromIndex,
+          toIndex,
+          type,
+          classId,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+      const message = getError(error);
+      notifyAndUpdate(ERROR_TOAST, "error", message, toast, null);
     }
   }
 );
@@ -159,7 +202,7 @@ export const getClassPeople = createAsyncThunk(
         return router.replace("/not_found");
       } else {
         const message = getError(error);
-        notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+        notifyAndUpdate(ERROR_TOAST, "error", message, toast, null);
       }
     }
 
@@ -191,11 +234,11 @@ export const removeClassMember = createAsyncThunk(
       confirmRemoveHandler(false, null);
 
       let { message } = res.data;
-      notifyAndUpdate(SUCCESS_DELETE_TOAST, "success", message, toast);
+      notifyAndUpdate(SUCCESS_DELETE_TOAST, "success", message, toast, null);
     } catch (error) {
       console.log(error);
       const message = getError(error);
-      notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+      notifyAndUpdate(ERROR_TOAST, "error", message, toast, null);
     }
 
     setIsLoading(false);
@@ -245,11 +288,17 @@ export const manageAnnouncement = createAsyncThunk(
       }
 
       let { message } = res.data;
-      notifyAndUpdate(SUCCESS_CREATE_EDIT_TOAST, "success", message, toast);
+      notifyAndUpdate(
+        SUCCESS_CREATE_EDIT_TOAST,
+        "success",
+        message,
+        toast,
+        null
+      );
     } catch (error) {
       console.log(error);
       const message = getError(error);
-      notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+      notifyAndUpdate(ERROR_TOAST, "error", message, toast, null);
     }
 
     setIsLoading(false);
@@ -286,11 +335,11 @@ export const deleteAnnouncement = createAsyncThunk(
 
       const { message } = res.data;
 
-      notifyAndUpdate(SUCCESS_DELETE_TOAST, "success", message, toast);
+      notifyAndUpdate(SUCCESS_DELETE_TOAST, "success", message, toast, null);
     } catch (error) {
       console.log(error);
       const message = getError(error);
-      notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+      notifyAndUpdate(ERROR_TOAST, "error", message, toast, null);
     }
 
     setIsLoading(false);
@@ -330,7 +379,7 @@ export const manageAnnouncementPin = createAsyncThunk(
 
       console.log(error);
       const message = getError(error);
-      notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+      notifyAndUpdate(ERROR_TOAST, "error", message, toast, null);
     }
   }
 );
@@ -360,7 +409,7 @@ export const getClassAssignments = createAsyncThunk(
         return router.replace("/not_found");
       } else {
         const message = getError(error);
-        notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+        notifyAndUpdate(ERROR_TOAST, "error", message, toast, null);
       }
     }
   }
@@ -405,11 +454,11 @@ export const createAssignment = createAsyncThunk(
       setOpenAssignmentModal(false);
       reset();
       let { message } = res.data;
-      notifyAndUpdate(SUCCESS_TOAST, "success", message, toast);
+      notifyAndUpdate(SUCCESS_TOAST, "success", message, toast, null);
     } catch (error) {
       console.log(error);
       const message = getError(error);
-      notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+      notifyAndUpdate(ERROR_TOAST, "error", message, toast, null);
     }
 
     setIsLoading(false);
@@ -428,7 +477,6 @@ export const createSubmission = createAsyncThunk(
       setIsNewFileSelected,
       setIsFileSubmitted,
       setOpenUploadFileModal,
-      setUserComment,
       userCommentRef,
     } = data;
 
@@ -456,7 +504,7 @@ export const createSubmission = createAsyncThunk(
       });
 
       const { message, ...submissionDetail } = res.data;
-      notifyAndUpdate(SUCCESS_TOAST, "success", message, toast);
+      notifyAndUpdate(SUCCESS_TOAST, "success", message, toast, null);
 
       dispatch(
         classActions.addAssignmentSubmission({
@@ -474,7 +522,7 @@ export const createSubmission = createAsyncThunk(
     } catch (error) {
       console.log(error);
       const message = getError(error);
-      notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+      notifyAndUpdate(ERROR_TOAST, "error", message, toast, null);
     }
 
     setIsLoading(false);
@@ -505,7 +553,7 @@ export const removeSubmission = createAsyncThunk(
       });
 
       let { message } = res.data;
-      notifyAndUpdate(SUCCESS_TOAST, "success", message, toast);
+      notifyAndUpdate(SUCCESS_TOAST, "success", message, toast, null);
 
       dispatch(
         classActions.removeAssignmentSubmission({
@@ -519,7 +567,7 @@ export const removeSubmission = createAsyncThunk(
     } catch (error) {
       console.log(error);
       const message = getError(error);
-      notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+      notifyAndUpdate(ERROR_TOAST, "error", message, toast, null);
     }
 
     setIsLoading(false);
@@ -547,12 +595,12 @@ export const deleteAssignment = createAsyncThunk(
 
       dispatch(classActions.deleteAssignment(res.data._id));
       let { message } = res.data;
-      notifyAndUpdate(SUCCESS_TOAST, "success", message, toast);
+      notifyAndUpdate(SUCCESS_TOAST, "success", message, toast, null);
       closeConfirmDeleteAssignmentHandler();
     } catch (error) {
       console.log(error);
       const message = getError(error);
-      notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+      notifyAndUpdate(ERROR_TOAST, "error", message, toast, null);
     }
 
     setIsLoading(false);
@@ -576,7 +624,7 @@ export const getAssignmentDetails = createAsyncThunk(
         router.replace("/not_found");
       } else {
         const message = getError(error);
-        notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+        notifyAndUpdate(ERROR_TOAST, "error", message, toast, null);
       }
     }
   }
@@ -601,7 +649,7 @@ export const getAssignmentSubmissions = createAsyncThunk(
         router.replace("/not_found");
       } else {
         const message = getError(error);
-        notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+        notifyAndUpdate(ERROR_TOAST, "error", message, toast, null);
       }
     }
   }
@@ -627,7 +675,7 @@ export const getAssignmentSubmissionsRemaining = createAsyncThunk(
         router.replace("/not_found");
       } else {
         const message = getError(error);
-        notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+        notifyAndUpdate(ERROR_TOAST, "error", message, toast, null);
       }
     }
   }
@@ -635,7 +683,7 @@ export const getAssignmentSubmissionsRemaining = createAsyncThunk(
 
 export const getStudentRemainingAssignmentsStatus = createAsyncThunk(
   "assignment/getStudentRemainingAssignmentsStatus",
-  async (data, { getState, dispatch }) => {
+  async (data) => {
     const {
       classId,
       setStudentRemainingAssignmentCount,
@@ -653,7 +701,7 @@ export const getStudentRemainingAssignmentsStatus = createAsyncThunk(
     } catch (error) {
       console.log(error);
       const message = getError(error);
-      notifyAndUpdate(ERROR_TOAST, "error", message, toast);
+      notifyAndUpdate(ERROR_TOAST, "error", message, toast, null);
     }
 
     setStudentRemainingAssignmentCountLoader(false);
@@ -667,7 +715,6 @@ const classSlice = createSlice({
     userTeachingClasses: null,
     classesCache: [],
     currentClassDetails: {},
-    dnd: false,
   },
 
   reducers: {
@@ -701,6 +748,11 @@ const classSlice = createSlice({
         state.userTeachingClasses = [];
       }
 
+      for (let i = 0; i < state.userTeachingClasses.length; i++) {
+        state.userTeachingClasses[i].index =
+          state.userTeachingClasses[i].index + 1;
+      }
+
       state.userTeachingClasses.unshift(action.payload);
     },
 
@@ -709,12 +761,16 @@ const classSlice = createSlice({
         state.userEnrolledClasses = [];
       }
 
+      for (let i = 0; i < state.userEnrolledClasses.length; i++) {
+        state.userEnrolledClasses[i].index =
+          state.userEnrolledClasses[i].index + 1;
+      }
+
       state.userEnrolledClasses.unshift(action.payload);
     },
 
     dragAndDropEnrolledClasses(state, action) {
       const { fromIndex, toIndex } = action.payload;
-      console.log(action.payload);
       const updatedClasses = [...state.userEnrolledClasses];
       const [movedCard] = updatedClasses.splice(fromIndex, 1);
       updatedClasses.splice(toIndex, 0, movedCard);
@@ -723,7 +779,6 @@ const classSlice = createSlice({
 
     dragAndDropTeachingClasses(state, action) {
       const { fromIndex, toIndex } = action.payload;
-
       const updatedClasses = [...state.userTeachingClasses];
       const [movedCard] = updatedClasses.splice(fromIndex, 1);
       updatedClasses.splice(toIndex, 0, movedCard);

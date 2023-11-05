@@ -1,7 +1,5 @@
 import Class from "../../../../models/Class";
 import User from "../../../../models/User";
-import { authOptions } from "../auth/[...nextauth]";
-import { getServerSession } from "next-auth/next";
 import manageResponses from "../../../../utils/responses/manageResponses";
 import { createClassValidation } from "../../../../utils/validators/createClassValidation";
 
@@ -23,17 +21,8 @@ const handler = async (req, res) => {
   }
 
   try {
-    const session = await getServerSession(req, res, authOptions);
-
-    if (!session || !session.user || !session.user._id) {
-      const error = new Error("Sign in required!");
-      error.statusCode = 401;
-      throw error;
-    }
-
-    const { _id: userId } = session.user;
     const { className, subject, batch, pathname } = req.body;
-
+    const teacherId = req.headers["x-user-id"];
     if (pathname !== "/") {
       const error = new Error("Invalid request");
       error.statusCode = 400;
@@ -52,16 +41,6 @@ const handler = async (req, res) => {
       throw error;
     }
 
-    const teacher = await User.findById(userId).select(
-      "-credentials.password -credentials.isAdmin -enrolled -teaching -provider -createdAt -updatedAt -__v"
-    );
-
-    if (!teacher) {
-      const error = new Error("User do not exists!");
-      error.statusCode = 404;
-      throw error;
-    }
-
     const backgroundColor = colors[Math.floor(Math.random() * colors.length)];
 
     const newClass = new Class({
@@ -70,22 +49,35 @@ const handler = async (req, res) => {
       batch: batch,
       announcements: [],
       assignments: [],
-      teacher: teacher._id,
-      students: [],
+      teacher: teacherId,
+      members: [],
       backgroundColor,
     });
 
     await newClass.save();
 
-    await User.findByIdAndUpdate(teacher._id, {
-      $push: { teaching: newClass._id },
+    await User.findByIdAndUpdate(teacherId, {
+      $inc: { "teaching.$[].index": 1 },
+    });
+
+    await User.findByIdAndUpdate(teacherId, {
+      $push: {
+        teaching: {
+          $each: [{ classDetails: newClass._id, index: 0 }],
+          $position: 0,
+        },
+      },
     });
 
     return res.status(201).json({
       class: {
-        _id: newClass._doc._id,
-        name: newClass._doc.name,
-        backgroundColor: newClass._doc.backgroundColor,
+        classDetails: {
+          _id: newClass._doc._id,
+          name: newClass._doc.name,
+          backgroundColor: newClass._doc.backgroundColor,
+        },
+
+        index: 0,
       },
       ...manageResponses(201, "Class created successfully!"),
     });

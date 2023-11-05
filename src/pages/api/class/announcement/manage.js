@@ -1,9 +1,6 @@
 import Class from "../../../../../models/Class";
 import manageResponses from "../../../../../utils/responses/manageResponses";
-import { authOptions } from "../../auth/[...nextauth]";
 import mongoose from "mongoose";
-
-const { getServerSession } = require("next-auth");
 
 const sendErrorResponse = (res, error) => {
   console.log(error);
@@ -18,16 +15,7 @@ const sendErrorResponse = (res, error) => {
 
 const handler = async (req, res) => {
   try {
-    const session = await getServerSession(req, res, authOptions);
-
-    if (!session || !session.user || !session.user._id) {
-      const error = new Error("Sign in required!");
-      error.statusCode = 401;
-      throw error;
-    }
-
-    const { _id: userId } = session.user;
-
+    const userId = req.headers["x-user-id"];
     const { classId, content } = req.body;
     const plainString = content.replace(/<[^>]+>/g, "");
     const updatedStr = plainString.split("&nbsp;").join("");

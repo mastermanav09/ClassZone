@@ -1,7 +1,5 @@
 import Assignment from "../../../../../models/Assignment";
 import Class from "../../../../../models/Class";
-import { authOptions } from "../../auth/[...nextauth]";
-import { getServerSession } from "next-auth/next";
 import mongoose from "mongoose";
 import manageResponses from "../../../../../utils/responses/manageResponses";
 import { createAssignmentValidation } from "../../../../../utils/validators/createAssignmentValidation";
@@ -28,15 +26,7 @@ const handler = async (req, res) => {
   }
 
   try {
-    const session = await getServerSession(req, res, authOptions);
-
-    if (!session || !session.user || !session.user._id) {
-      const error = new Error("Sign in required!");
-      error.statusCode = 401;
-      throw error;
-    }
-
-    const { _id: userId } = session.user;
+    const userId = req.headers["x-user-id"];
 
     const form = formidable({ keepExtensions: true });
     const [fields, files] = await form.parse(req);

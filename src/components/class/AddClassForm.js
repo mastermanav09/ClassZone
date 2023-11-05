@@ -1,3 +1,4 @@
+import "react-responsive-modal/styles.css";
 import { Modal } from "react-responsive-modal";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/router";
@@ -6,7 +7,6 @@ import { useDispatch } from "react-redux";
 import { createClass } from "../../../utils/store/reducers/class";
 import { useState } from "react";
 import LoadingSpinner from "../progress/LoadingSpinner";
-import "react-responsive-modal/styles.css";
 
 const AddClassForm = (props) => {
   const [isLoading, setIsLoading] = useState(false);

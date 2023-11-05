@@ -11,7 +11,7 @@ import {
   registerForUIToggle,
 } from "@/helper/closeOpenUIComponents";
 
-const ThreeDots = ({ fields, obj }) => {
+const ThreeDots = ({ fields, data }) => {
   const [toggleDropdown, setToggleDropdown] = useState(false);
   const [dropdownCurrPos, setDropdownCurrPos] = useState("bottom-right");
   const dropdownRef = useRef(null);
@@ -118,8 +118,12 @@ const ThreeDots = ({ fields, obj }) => {
                 <div
                   key={index}
                   onClick={() => {
-                    if (field.param) {
-                      return field.action(obj[field.param]);
+                    if (
+                      data &&
+                      data.constructor.name === "Object" &&
+                      field.param
+                    ) {
+                      return field.action(data[field.param]);
                     }
 
                     return field.action();

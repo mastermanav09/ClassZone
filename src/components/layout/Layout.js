@@ -3,7 +3,6 @@ import MainNavigation from "./MainNavigation";
 import classes from "./Layout.module.scss";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.min.css";
-import { useDispatch } from "react-redux";
 import { closeUIComponents } from "@/helper/closeOpenUIComponents";
 
 const Layout = (props) => {
@@ -22,4 +21,4 @@ const Layout = (props) => {
   );
 };
 
-export default Layout;
+export default React.memo(Layout);

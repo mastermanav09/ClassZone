@@ -1,9 +1,6 @@
-require("../../../../models/Class");
 import User from "../../../../models/User";
 import db from "../../../../utils/db";
-import { authOptions } from "../auth/[...nextauth]";
 import manageResponses from "../../../../utils/responses/manageResponses";
-import { getServerSession } from "next-auth/next";
 
 const handler = async (req, res) => {
   if (req.method !== "GET") {
@@ -14,15 +11,7 @@ const handler = async (req, res) => {
   }
 
   try {
-    const session = await getServerSession(req, res, authOptions);
-
-    if (!session || !session.user || !session.user._id) {
-      const error = new Error("Sign in required!");
-      error.statusCode = 401;
-      throw error;
-    }
-
-    const { _id: userId } = session.user;
+    const userId = req.headers["x-user-id"];
 
     await db.connect();
     const userResponse = await User.findById(userId).select(
@@ -35,14 +24,22 @@ const handler = async (req, res) => {
     let user_doc;
     user_doc = await User.findById(userId)
       .select("teaching")
-      .populate("teaching", "name backgroundColor _id");
+      .populate({
+        path: "teaching.classDetails",
+        select: {
+          teaching: 1,
+          name: 1,
+          backgroundColor: 1,
+          _id: 1,
+        },
+      });
 
     teachingClasses = user_doc.teaching;
 
     user_doc = await User.findById(userId)
       .select("enrolled")
       .populate({
-        path: "enrolled",
+        path: "enrolled.classDetails",
         select: {
           name: 1,
           backgroundColor: 1,
@@ -63,6 +60,9 @@ const handler = async (req, res) => {
 
     enrolledClasses = user_doc.enrolled;
 
+    enrolledClasses.sort((a, b) => a.index - b.index);
+    teachingClasses.sort((a, b) => a.index - b.index);
+
     return res.status(200).json({
       ...manageResponses(200, null),
       user: {
@@ -72,14 +72,19 @@ const handler = async (req, res) => {
       },
     });
   } catch (error) {
+    console.log(error);
     if (!error.statusCode) {
       error.statusCode = 500;
     }
 
     return res
       .status(error.statusCode)
-      .json(manageResponses(error.statusCode, error.message));
+      .json(
+        manageResponses(
+          error.statusCode,
+          "Oops, something went wrong. Please try again later."
+        )
+      );
   }
 };
-
 export default handler;

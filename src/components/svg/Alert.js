@@ -3,7 +3,7 @@ import React from "react";
 const Alert = () => {
   return (
     <svg
-      enable-background="new 0 0 32 32"
+      enableBackground="new 0 0 32 32"
       viewBox="0 0 32 32"
       style={{
         fill: "currentcolor",

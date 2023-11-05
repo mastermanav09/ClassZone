@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import Image from "next/image";
 import { useDrag, useDrop } from "react-dnd";
 
-const ClassCard = ({ classDetails, index, moveClassCard, type, dragStyle }) => {
+const ClassCard = ({ classDetails, index, moveClassCard, type }) => {
   const router = useRouter();
   const { _id, name: className, teacher, backgroundColor } = classDetails;
 
@@ -28,7 +28,7 @@ const ClassCard = ({ classDetails, index, moveClassCard, type, dragStyle }) => {
     accept: type,
     hover: (draggedItem) => {
       if (draggedItem.index !== index) {
-        moveClassCard(draggedItem.index, index);
+        moveClassCard(draggedItem.index, index, draggedItem._id);
         draggedItem.index = index;
       }
     },
@@ -46,7 +46,6 @@ const ClassCard = ({ classDetails, index, moveClassCard, type, dragStyle }) => {
         cursor: "pointer",
         position: "relative",
         opacity: 1,
-        ...(dragStyle && { dragStyle }),
       }}
       onClick={() =>
         router.push({

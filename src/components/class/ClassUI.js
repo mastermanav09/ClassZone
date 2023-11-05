@@ -42,15 +42,21 @@ const ClassUI = () => {
   const router = useRouter();
   const { classId } = router.query;
 
-  const {
-    announcements = [],
-    pinnedAnnouncements = [],
-    _id,
-    name,
-    backgroundColor,
-    teacher,
-    batch,
-  } = useSelector((state) => state.class.currentClassDetails);
+  const announcements = useSelector(
+    (state) => state.class.currentClassDetails.announcements || []
+  );
+  const pinnedAnnouncements = useSelector(
+    (state) => state.class.currentClassDetails.pinnedAnnouncements || []
+  );
+  const _id = useSelector((state) => state.class.currentClassDetails._id);
+  const name = useSelector((state) => state.class.currentClassDetails.name);
+  const backgroundColor = useSelector(
+    (state) => state.class.currentClassDetails.backgroundColor
+  );
+  const teacher = useSelector(
+    (state) => state.class.currentClassDetails.teacher
+  );
+  const batch = useSelector((state) => state.class.currentClassDetails.batch);
 
   useEffect(() => {
     dispatch(
@@ -75,7 +81,8 @@ const ClassUI = () => {
         INFO + "1",
         "info",
         "Announcement should contain valid text!",
-        toast
+        toast,
+        null
       );
       return;
     }
@@ -111,12 +118,18 @@ const ClassUI = () => {
       process.env.NEXT_PUBLIC_NEXTAUTH_URL +
       `/login?redirect=/&jc=true&id=${_id}`;
     navigator.clipboard.writeText(joinLink);
-    notifyAndUpdate(INFO + "3", "info", "Class invite link copied", toast);
+    notifyAndUpdate(
+      INFO + "3",
+      "info",
+      "Class invite link copied",
+      toast,
+      null
+    );
   };
 
   const copyCodeHandler = () => {
     navigator.clipboard.writeText(_id);
-    notifyAndUpdate(INFO + "2", "info", "Class code copied", toast);
+    notifyAndUpdate(INFO + "2", "info", "Class code copied", toast, null);
   };
 
   const classCodefields = [

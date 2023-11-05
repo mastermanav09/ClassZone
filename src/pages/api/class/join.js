@@ -1,9 +1,7 @@
 import Class from "../../../../models/Class";
 import User from "../../../../models/User";
 import mongoose from "mongoose";
-import { authOptions } from "../auth/[...nextauth]";
 import manageResponses from "../../../../utils/responses/manageResponses";
-import { getServerSession } from "next-auth";
 
 const handler = async (req, res) => {
   if (req.method !== "POST") {
@@ -14,15 +12,7 @@ const handler = async (req, res) => {
   }
 
   try {
-    const session = await getServerSession(req, res, authOptions);
-    if (!session || !session.user || !session.user._id) {
-      const error = new Error("Sign in required!");
-      error.statusCode = 401;
-      throw error;
-    }
-
-    const { _id: userId } = session.user;
-
+    const userId = req.headers["x-user-id"];
     const { classId, pathname } = req.body;
 
     if (pathname !== "/") {
@@ -48,7 +38,7 @@ const handler = async (req, res) => {
 
     const joiningUser = await User.findOne({
       _id: userId,
-      enrolled: { $in: [classId] },
+      "enrolled.classDetails": classId,
     });
 
     if (joiningUser) {
@@ -63,12 +53,19 @@ const handler = async (req, res) => {
       throw error;
     }
 
+    await User.findByIdAndUpdate(userId, { $inc: { "enrolled.$[].index": 1 } });
+
     await User.findByIdAndUpdate(userId, {
-      $push: { enrolled: classId },
+      $push: {
+        enrolled: {
+          $each: [{ classDetails: classId, index: 0 }],
+          $position: 0,
+        },
+      },
     });
 
-    const updatedClass = await Class.findOneAndUpdate(joiningClass._id, {
-      $push: { students: userId },
+    const updatedClass = await Class.findByIdAndUpdate(classId, {
+      $push: { members: userId },
     })
       .select("name backgroundColor _id teacher")
       .populate({
@@ -82,7 +79,7 @@ const handler = async (req, res) => {
       });
 
     return res.status(200).json({
-      class: updatedClass,
+      class: { classDetails: updatedClass, index: 0 },
       ...manageResponses(200, "Class joined successfully!"),
     });
   } catch (error) {

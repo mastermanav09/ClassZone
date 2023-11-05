@@ -23,12 +23,18 @@ const awakeToast = (type, message, toastId, toast) => {
   }
 };
 
-const notifyAndUpdate = (toastId, type, message, toast) => {
+const notifyAndUpdate = (toastId, type, message, toast, timeLimit) => {
   if (toast.isActive(toastId)) {
     toast.update(toastId);
   } else {
     toast.dismiss(toastId);
     awakeToast(type, message, toastId, toast);
+  }
+
+  if (timeLimit) {
+    toast.update(toastId, {
+      autoClose: timeLimit,
+    });
   }
 };
 
