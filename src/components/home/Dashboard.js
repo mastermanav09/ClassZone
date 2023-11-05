@@ -69,7 +69,7 @@ const Dashboard = ({ userEnrolledClasses, userTeachingClasses }) => {
     );
   };
 
-  const moveClassCardTeaching = (fromIndex, toIndex) => {
+  const moveClassCardTeaching = (fromIndex, toIndex, classId) => {
     dispatch(
       dragAndDropClasses({
         fromIndex,
