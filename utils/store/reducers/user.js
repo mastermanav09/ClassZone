@@ -122,14 +122,12 @@ export const login = createAsyncThunk("user/login", async (data) => {
 export const loadUser = createAsyncThunk(
   "user/loadUser",
   async (data, { _, dispatch }) => {
-    const { setIsLoading } = data;
-
     try {
       const res = await axios({
         method: "GET",
         url: `/api/user/loaduser`,
       });
-      console.log(res);
+
       const { enrolled: userEnrolledClasses, teaching: userTeachingClasses } =
         res.data.user;
 
@@ -150,7 +148,6 @@ export const loadUser = createAsyncThunk(
 const userSlice = createSlice({
   name: "user",
   initialState: {},
-
   reducers: {},
 });
 
