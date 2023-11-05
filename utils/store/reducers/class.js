@@ -277,12 +277,14 @@ export const manageAnnouncement = createAsyncThunk(
             announcementId,
             content,
             isPinned,
+            classId,
           })
         );
       } else {
         dispatch(
           classSlice.actions.addNewAnnouncement({
             announcements: res.data.announcements,
+            classId,
           })
         );
       }
@@ -330,6 +332,7 @@ export const deleteAnnouncement = createAsyncThunk(
         classSlice.actions.deleteAnnouncement({
           announcementId,
           isPinned,
+          classId,
         })
       );
 
@@ -357,6 +360,7 @@ export const manageAnnouncementPin = createAsyncThunk(
         classSlice.actions.manageAnnouncementPin({
           announcementId,
           isPinned,
+          classId,
         })
       );
 
@@ -374,6 +378,7 @@ export const manageAnnouncementPin = createAsyncThunk(
         classSlice.actions.manageAnnouncementPin({
           announcementId,
           isPinned: !isPinned,
+          classId,
         })
       );
 
@@ -449,7 +454,12 @@ export const createAssignment = createAsyncThunk(
         },
       });
 
-      dispatch(classActions.addNewAssignment(res.data.assignment));
+      dispatch(
+        classActions.addNewAssignment({
+          assignment: res.data.assignment,
+          classId,
+        })
+      );
       setFile(null);
       setOpenAssignmentModal(false);
       reset();
@@ -593,7 +603,9 @@ export const deleteAssignment = createAsyncThunk(
         },
       });
 
-      dispatch(classActions.deleteAssignment(res.data._id));
+      dispatch(
+        classActions.deleteAssignment({ assignmentId: res.data._id, classId })
+      );
       let { message } = res.data;
       notifyAndUpdate(SUCCESS_TOAST, "success", message, toast, null);
       closeConfirmDeleteAssignmentHandler();
@@ -795,21 +807,21 @@ const classSlice = createSlice({
         (item) => item._id === classId
       );
 
-      const assignmentInd = state.classesCache[classInd].assignments.findIndex(
+      const assignmentInd = state.currentClassDetails.assignments.findIndex(
         (assignment) => assignment._id === assignmentId
       );
 
-      state.classesCache[classInd].assignments[assignmentInd] = {
-        ...state.classesCache[classInd].assignments[assignmentInd],
+      state.currentClassDetails.assignments[assignmentInd] = {
+        ...state.currentClassDetails.assignments[assignmentInd],
         responses: [{ ...details }],
       };
 
-      const assignmentInd2 = state.currentClassDetails.assignments.findIndex(
+      const assignmentInd2 = state.classesCache[classInd].assignments.findIndex(
         (assignment) => assignment._id === assignmentId
       );
 
-      state.currentClassDetails.assignments[assignmentInd2] = {
-        ...state.currentClassDetails.assignments[assignmentInd2],
+      state.classesCache[classInd].assignments[assignmentInd2] = {
+        ...state.classesCache[classInd].assignments[assignmentInd2],
         responses: [{ ...details }],
       };
     },
@@ -820,21 +832,21 @@ const classSlice = createSlice({
         (item) => item._id === classId
       );
 
-      const assignmentInd = state.classesCache[classInd].assignments.findIndex(
+      const assignmentInd = state.currentClassDetails.assignments.findIndex(
         (assignment) => assignment._id === assignmentId
       );
 
-      state.classesCache[classInd].assignments[assignmentInd] = {
-        ...state.classesCache[classInd].assignments[assignmentInd],
+      state.currentClassDetails.assignments[assignmentInd] = {
+        ...state.currentClassDetails.assignments[assignmentInd],
         responses: [],
       };
 
-      const assignmentInd2 = state.currentClassDetails.assignments.findIndex(
+      const assignmentInd2 = state.classesCache[classInd].assignments.findIndex(
         (assignment) => assignment._id === assignmentId
       );
 
-      state.currentClassDetails.assignments[assignmentInd2] = {
-        ...state.currentClassDetails.assignments[assignmentInd2],
+      state.classesCache[classInd].assignments[assignmentInd2] = {
+        ...state.classesCache[classInd].assignments[assignmentInd2],
         responses: [],
       };
     },
@@ -890,11 +902,15 @@ const classSlice = createSlice({
 
     // announcement
     addNewAnnouncement(state, action) {
-      state.currentClassDetails.announcements = action.payload.announcements;
+      const { classId, announcements } = action.payload;
+
+      state.currentClassDetails.announcements = announcements;
+      const ind = state.classesCache.findIndex((item) => item._id === classId);
+      state.classesCache[ind].announcements = announcements;
     },
 
     editAnnouncement(state, action) {
-      const { announcementId, content, isPinned } = action.payload;
+      const { announcementId, content, isPinned, classId } = action.payload;
       const updatedAnnouncements = isPinned
         ? state.currentClassDetails.pinnedAnnouncements
         : state.currentClassDetails.announcements;
@@ -906,15 +922,19 @@ const classSlice = createSlice({
       updatedAnnouncements[ind].text = content;
       updatedAnnouncements[ind].isEdited = true;
 
+      const ind2 = state.classesCache.findIndex((item) => item._id === classId);
+
       if (isPinned) {
         state.currentClassDetails.pinnedAnnouncements = updatedAnnouncements;
+        state.classesCache[ind2].pinnedAnnouncements = updatedAnnouncements;
       } else {
         state.currentClassDetails.announcements = updatedAnnouncements;
+        state.classesCache[ind2].announcements = updatedAnnouncements;
       }
     },
 
     deleteAnnouncement(state, action) {
-      const { announcementId, isPinned } = action.payload;
+      const { announcementId, isPinned, classId } = action.payload;
       const updatedAnnouncements = isPinned
         ? state.currentClassDetails.pinnedAnnouncements
         : state.currentClassDetails.announcements;
@@ -925,15 +945,19 @@ const classSlice = createSlice({
 
       updatedAnnouncements.splice(ind, 1);
 
+      const ind2 = state.classesCache.findIndex((item) => item._id === classId);
+
       if (isPinned) {
         state.currentClassDetails.pinnedAnnouncements = updatedAnnouncements;
+        state.classesCache[ind2].pinnedAnnouncements = updatedAnnouncements;
       } else {
         state.currentClassDetails.announcements = updatedAnnouncements;
+        state.classesCache[ind2].announcements = updatedAnnouncements;
       }
     },
 
     manageAnnouncementPin(state, action) {
-      const { announcementId, isPinned } = action.payload;
+      const { announcementId, isPinned, classId } = action.payload;
       const updatedAnnouncements = isPinned
         ? state.currentClassDetails.pinnedAnnouncements
         : state.currentClassDetails.announcements;
@@ -946,6 +970,8 @@ const classSlice = createSlice({
       const announcement = updatedAnnouncements[ind];
       updatedAnnouncements.splice(ind, 1);
 
+      const ind2 = state.classesCache.findIndex((item) => item._id === classId);
+
       if (isPinned) {
         let sortedAnnouncements = state.currentClassDetails.announcements;
         sortedAnnouncements.push(announcement);
@@ -955,23 +981,38 @@ const classSlice = createSlice({
 
         state.currentClassDetails.announcements = sortedAnnouncements;
         state.currentClassDetails.pinnedAnnouncements = updatedAnnouncements;
+
+        state.classesCache[ind2].announcements = sortedAnnouncements;
+        state.classesCache[ind2].pinnedAnnouncements = updatedAnnouncements;
       } else {
-        state.currentClassDetails.pinnedAnnouncements.unshift(announcement);
         state.currentClassDetails.announcements = updatedAnnouncements;
+        state.currentClassDetails.pinnedAnnouncements.unshift(announcement);
+
+        state.classesCache[ind2].announcements = updatedAnnouncements;
+        state.classesCache[ind2].pinnedAnnouncements.unshift(announcement);
       }
     },
 
     // assignment
     addNewAssignment(state, action) {
+      const { classId, assignment } = action.payload;
+
       if (!state.currentClassDetails.assignments) {
         state.currentClassDetails.assignments = [];
       }
 
-      state.currentClassDetails.assignments.unshift(action.payload);
+      state.currentClassDetails.assignments.unshift(assignment);
+
+      const ind = state.classesCache.findIndex((item) => item._id === classId);
+
+      if (!state.classesCache[ind].assignments)
+        state.classesCache[ind].assignments = [];
+
+      state.classesCache[ind].assignments.unshift(assignment);
     },
 
     deleteAssignment(state, action) {
-      const assignmentId = action.payload;
+      const { assignmentId, classId } = action.payload;
       const updatedAssignments = state.currentClassDetails.assignments;
 
       const ind = updatedAssignments.findIndex(
@@ -980,6 +1021,9 @@ const classSlice = createSlice({
 
       updatedAssignments.splice(ind, 1);
       state.currentClassDetails.assignments = updatedAssignments;
+
+      const ind2 = state.classesCache.findIndex((item) => item._id === classId);
+      state.classesCache[ind2].assignments = updatedAssignments;
     },
 
     setClassAssignments(state, action) {
