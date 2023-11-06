@@ -33,7 +33,7 @@ export async function middleware(request) {
       },
     });
   } else {
-    return NextResponse.redirect(new URL("/login", request.url));
+    // return NextResponse.redirect(new URL("/login", request.url));
   }
 }
 
