@@ -29,12 +29,21 @@ export async function getServerSideProps(context) {
 
   if (joinClass === "true" && id) {
     redirectLink = `${redirect}?jc=true&id=${id}`;
+
+    if (session) {
+      return {
+        redirect: {
+          destination: redirectLink,
+          permanent: false,
+        },
+      };
+    }
   }
 
   if (session) {
     return {
       redirect: {
-        destination: redirectLink || "/",
+        destination: "/",
         permanent: false,
       },
     };
