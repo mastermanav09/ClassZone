@@ -40,6 +40,10 @@ export async function middleware(request) {
 }
 
 export const config = {
-  matcher: ["/((?!/api/auth|!_next).*)"],
-  // matcher: ["/((?!_next).*)"],
+  matcher: [
+    "/",
+    "/unauthorized",
+    "/classes/:path*",
+    "/((?!/api/auth|!_next).*)",
+  ],
 };
