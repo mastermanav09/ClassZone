@@ -11,10 +11,12 @@ export async function middleware(request: NextRequest) {
   if (
     pathname.startsWith("/_next") ||
     pathname.startsWith("/static") ||
-    pathname.startsWith("/login") ||
-    pathname.startsWith("/register") ||
     PUBLIC_FILE.test(pathname)
   ) {
+    return NextResponse.next();
+  }
+
+  if (pathname === "/login" || pathname === "/register") {
     return NextResponse.next();
   }
 
@@ -31,14 +33,12 @@ export async function middleware(request: NextRequest) {
         headers: requestHeaders,
       },
     });
+  } else {
+    return NextResponse.redirect(new URL("/login", request.url));
   }
-
-  const url = request.nextUrl.clone();
-  url.pathname = "/login";
-  return NextResponse.redirect(url);
 }
 
 export const config = {
   // matcher: ["/((?!/api/auth|!_next).*)"],
-  matcher: ["/((?!_next/image|favicon.ico|/login).*)"],
+  matcher: ["/((?!_next/image|favicon.ico).*)"],
 };
