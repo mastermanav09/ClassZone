@@ -10,6 +10,8 @@ export async function middleware(request) {
   if (
     pathname.startsWith("/_next") ||
     pathname.startsWith("/static") ||
+    pathname.startsWith("/login") ||
+    pathname.startsWith("/register") ||
     PUBLIC_FILE.test(pathname)
   ) {
     return NextResponse.next();
@@ -39,5 +41,5 @@ export async function middleware(request) {
 
 export const config = {
   // matcher: ["/((?!/api/auth|!_next).*)"],
-  matcher: ["/((?!_next/image|!/api/auth|favicon.ico).*)"],
+  matcher: ["/((?!_next/image|!/api/auth).*)"],
 };
