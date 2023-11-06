@@ -35,7 +35,7 @@ export async function getServerSideProps(context) {
     return {
       redirect: {
         destination: redirectLink || "/",
-        permanent: true,
+        permanent: false,
       },
     };
   }
