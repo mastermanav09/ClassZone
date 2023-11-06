@@ -33,11 +33,11 @@ export async function middleware(request) {
       },
     });
   } else {
-    // return NextResponse.redirect(new URL("/login", request.url));
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 }
 
 export const config = {
   // matcher: ["/((?!/api/auth|!_next).*)"],
-  matcher: ["/((?!_next/image|favicon.ico|!/login|!/register).*)"],
+  matcher: ["/((?!_next/image|!/api/auth|favicon.ico).*)"],
 };
