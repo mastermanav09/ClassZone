@@ -1,9 +1,8 @@
 import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
 
-export async function middleware(request: NextRequest) {
-  const session: any = await getToken({ req: request });
+export async function middleware(request) {
+  const session = await getToken({ req: request });
   const PUBLIC_FILE = /\.(.*)$/;
   const authRegex = /^\/api\/auth\//;
   const { pathname } = request.nextUrl;
@@ -40,5 +39,5 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   // matcher: ["/((?!/api/auth|!_next).*)"],
-  matcher: ["/((?!_next/image|favicon.ico).*)"],
+  matcher: ["/((?!_next/image|favicon.ico|!/login|!/register).*)"],
 };
