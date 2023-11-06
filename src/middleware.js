@@ -33,6 +33,7 @@ export async function middleware(request) {
       },
     });
   } else {
+    console.log(pathname);
     if (pathname !== "/login") {
       return NextResponse.redirect(new URL("/login", request.url));
     }
@@ -41,5 +42,5 @@ export async function middleware(request) {
 
 export const config = {
   // matcher: ["/((?!/api/auth|!_next).*)"],
-  matcher: ["/((?!_next/image).*)"],
+  matcher: ["/((?!_next).*)"],
 };
