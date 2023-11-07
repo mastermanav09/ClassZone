@@ -8,21 +8,21 @@ export async function middleware(request) {
   const authRegex = /^\/api\/auth\//;
   const { pathname } = request.nextUrl;
   console.log("token", session);
-  if (
-    pathname.startsWith("/_next") ||
-    pathname.startsWith("/static") ||
-    PUBLIC_FILE.test(pathname)
-  ) {
-    return NextResponse.next();
-  }
+  // if (
+  //   pathname.startsWith("/_next") ||
+  //   pathname.startsWith("/static") ||
+  //   PUBLIC_FILE.test(pathname)
+  // ) {
+  //   return NextResponse.next();
+  // }
 
-  if (pathname === "/login" || pathname === "/register") {
-    return NextResponse.next();
-  }
+  // if (pathname === "/login" || pathname === "/register") {
+  //   return NextResponse.next();
+  // }
 
-  if (authRegex.test(request.nextUrl.pathname)) {
-    return NextResponse.next();
-  }
+  // if (authRegex.test(request.nextUrl.pathname)) {
+  //   return NextResponse.next();
+  // }
 
   if (session) {
     const requestHeaders = new Headers(request.headers);
@@ -46,6 +46,6 @@ export const config = {
   //   "/((?!register|api/auth|login|unauthorized|_next/image|auth).{1,})",
   // ],
   // matcher: ["/((?!register|api|login|$).*)"],
-  // matcher: ["/((?!api/auth|_next/static|favicon.ico).*)"],
-  matcher: ["/", "/unauthorized", "/classes/:path*", "/api/class", "/api/user"],
+  matcher: ["/((?!api/auth|_next/static|favicon.ico).*)"],
+  // matcher: ["/", "/unauthorized", "/classes/:path*", "/api/class", "/api/user"],
 };
