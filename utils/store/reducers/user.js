@@ -91,7 +91,7 @@ export const login = createAsyncThunk("user/login", async (data) => {
       password,
     });
 
-    if (!res.ok || res.error) {
+    if (res && res.error) {
       const error = new Error();
       error.statusCode = res.status;
 
