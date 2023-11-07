@@ -110,9 +110,8 @@ export async function middleware(request) {
 }
 
 export const config = {
-  matcher: [
-    "/((?!register|api/auth|login|unauthorized|_next/image|auth).{1,})",
-  ],
+  matcher: ["/((?!register|login|_next/image).{1,})"],
+  // matcher: ["/((?!_next/image|!/api/auth|favicon.ico).*)"],
   // matcher: ["/((?!/api/auth|!_next).*)"],
   // matcher: ["/", "/unauthorized", "/classes/:path*", "/api/class", "/api/user"],
   // matcher: ["/((?!_next).*)"],
