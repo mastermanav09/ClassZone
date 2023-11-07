@@ -54,8 +54,8 @@ const AuthForm = (props) => {
   const googleAuthHandler = (event) => {
     event.preventDefault();
     signIn("google", {
-      callbackUrl: process.env.NEXTAUTH_URL,
-      redirect: false,
+      callbackUrl: "/",
+      redirect: true,
     });
   };
 
