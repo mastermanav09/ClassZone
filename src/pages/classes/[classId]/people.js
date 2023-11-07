@@ -3,6 +3,7 @@ import PeopleList from "@/components/class/people/PeopleList";
 import { authOptions } from "@/pages/api/auth/[...nextauth].js";
 import Class from "../../../../models/Class.js";
 import { getServerSession } from "next-auth";
+import { classAuthHandler } from "@/pages/api/class/authorize.js";
 
 const PeoplePage = () => {
   return <PeopleList />;
@@ -20,8 +21,7 @@ export async function getServerSideProps(context) {
     const { _id: userId } = session.user;
 
     if (classData.teacher.toString() !== userId) {
-      const authMid = await import("../../api/class/authorize.js");
-      authRes = await authMid.handler(userId, classId);
+      authRes = await classAuthHandler(userId, classId);
     } else {
       authRes = { isAuthorized: true };
     }
