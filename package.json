@@ -24,6 +24,7 @@
     "mongoose": "^7.6.3",
     "next": "^13.4.12",
     "next-auth": "^4.22.1",
+    "path-to-regexp": "^6.2.1",
     "rdndmb-html5-to-touch": "^8.0.3",
     "react": "18.2.0",
     "react-datepicker": "^4.16.0",
