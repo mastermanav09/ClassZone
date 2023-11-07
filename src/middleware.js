@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { pathToRegexp } from "path-to-regexp";
 
 export async function middleware(request) {
-  const session = await getToken({ req: request });
+  const session = await getToken({ req: request, raw: true });
   const PUBLIC_FILE = /\.(.*)$/;
   const authRegex = /^\/api\/auth\//;
   const { pathname } = request.nextUrl;
