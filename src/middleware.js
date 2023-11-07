@@ -8,13 +8,13 @@ export async function middleware(request) {
   const authRegex = /^\/api\/auth\//;
   const { pathname } = request.nextUrl;
   console.log("token", session);
-  // if (
-  //   pathname.startsWith("/_next") ||
-  //   pathname.startsWith("/static") ||
-  //   PUBLIC_FILE.test(pathname)
-  // ) {
-  //   return NextResponse.next();
-  // }
+  if (
+    pathname.startsWith("/_next") ||
+    pathname.startsWith("/static") ||
+    PUBLIC_FILE.test(pathname)
+  ) {
+    return NextResponse.next();
+  }
 
   // if (pathname === "/login" || pathname === "/register") {
   //   return NextResponse.next();
@@ -46,6 +46,6 @@ export const config = {
   //   "/((?!register|api/auth|login|unauthorized|_next/image|auth).{1,})",
   // ],
   // matcher: ["/((?!register|api|login|$).*)"],
-  matcher: ["/((?!api/auth|_next/static|favicon.ico).*)"],
+  matcher: ["/((?!api/auth).*)"],
   // matcher: ["/", "/unauthorized", "/classes/:path*", "/api/class", "/api/user"],
 };
