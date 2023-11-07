@@ -34,9 +34,9 @@ export async function middleware(request) {
       },
     });
   } else {
-    // if (pathname !== "/login") {
-    return NextResponse.redirect(new URL("/login", request.url));
-    // }
+    if (pathname !== "/login") {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
   }
 }
 
@@ -46,6 +46,6 @@ export const config = {
   //   "/((?!register|api/auth|login|unauthorized|_next/image|auth).{1,})",
   // ],
   // matcher: ["/((?!register|api|login|$).*)"],
-  matcher: ["/((?!api|_next/static|favicon.ico).*)"],
+  matcher: ["/((?!api/auth|_next/static|favicon.ico).*)"],
   // matcher: ["/", "/unauthorized", "/classes/:path*", "/((?!/api/auth).*)"],
 };
