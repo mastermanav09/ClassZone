@@ -34,9 +34,9 @@ export async function middleware(request) {
       },
     });
   } else {
-    if (pathname !== "/login") {
-      return NextResponse.redirect(new URL("/login", request.url));
-    }
+    // if (pathname !== "/login") {
+    //   return NextResponse.redirect(new URL("/login", request.url));
+    // }
   }
 }
 
