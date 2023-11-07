@@ -70,6 +70,8 @@ import { NextResponse } from "next/server";
 export async function middleware(request) {
   const session = await getToken({
     req: request,
+    raw: true,
+    secureCookie: process.env.NODE_ENV === "production" ? true : false,
     secret: process.env.SECRET,
   });
   const PUBLIC_FILE = /\.(.*)$/;
