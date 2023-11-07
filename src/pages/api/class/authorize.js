@@ -1,6 +1,6 @@
 import User from "../../../../models/User";
 
-export const handler = async (userId, classId) => {
+export const classAuthHandler = async (userId, classId) => {
   try {
     const user = await User.findById(userId);
     const { enrolled: enrolledClasses } = user;
@@ -17,4 +17,8 @@ export const handler = async (userId, classId) => {
       isAuthorized: false,
     };
   }
+};
+
+module.exports = {
+  classAuthHandler,
 };

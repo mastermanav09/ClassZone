@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "../../../api/auth/[...nextauth]";
 import Classwork from "@/components/class/classwork/Classwork";
 import Class from "../../../../../models/Class";
+import { classAuthHandler } from "../../../api/class/authorize";
 
 const ClassworkPage = () => {
   return <Classwork />;
@@ -19,8 +20,7 @@ export async function getServerSideProps(context) {
     const { _id: userId } = session.user;
 
     if (classData.teacher.toString() !== userId) {
-      const authMid = await import("../../../api/class/authorize");
-      authRes = await authMid.handler(userId, classId);
+      authRes = await classAuthHandler(userId, classId);
     } else {
       authRes = { isAuthorized: true };
     }

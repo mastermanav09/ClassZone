@@ -2,6 +2,7 @@ import ClassUI from "@/components/class/ClassUI";
 import Class from "../../../../models/Class.js";
 import { authOptions } from "@/pages/api/auth/[...nextauth].js";
 import { getServerSession } from "next-auth";
+import { classAuthHandler } from "@/pages/api/class/authorize.js";
 
 const ClassPage = (props) => {
   return <ClassUI />;
@@ -20,8 +21,7 @@ export async function getServerSideProps(context) {
     const { _id: userId } = session.user;
 
     if (classData.teacher.toString() !== userId) {
-      const authMid = await import("../../api/class/authorize.js");
-      authRes = await authMid.handler(userId, classId);
+      authRes = await classAuthHandler(userId, classId);
     } else {
       authRes = { isAuthorized: true };
     }
