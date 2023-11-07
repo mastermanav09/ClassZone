@@ -42,9 +42,10 @@ export async function middleware(request) {
 
 // const matcher = pathToRegexp();
 export const config = {
-  matcher: [
-    "/((?!register|api/auth|login|unauthorized|_next/image|auth).{1,})",
-  ],
+  // matcher: [
+  //   "/((?!register|api/auth|login|unauthorized|_next/image|auth).{1,})",
+  // ],
   // matcher: ["/((?!register|api|login|$).*)"],
+  matcher: ["/((?!api|_next/static|favicon.ico).*)"],
   // matcher: ["/", "/unauthorized", "/classes/:path*", "/((?!/api/auth).*)"],
 };
