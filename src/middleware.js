@@ -68,7 +68,10 @@ import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
 
 export async function middleware(request) {
-  const session = await getToken({ req: request });
+  const session = await getToken({
+    req: request,
+    secret: process.env.SECRET,
+  });
   const PUBLIC_FILE = /\.(.*)$/;
   const authRegex = /^\/api\/auth\//;
   const { pathname } = request.nextUrl;
@@ -80,12 +83,15 @@ export async function middleware(request) {
   ) {
     return NextResponse.next();
   }
+
   if (pathname === "/login" || pathname === "/register") {
     return NextResponse.next();
   }
+
   if (authRegex.test(request.nextUrl.pathname)) {
     return NextResponse.next();
   }
+
   if (session) {
     const requestHeaders = new Headers(request.headers);
     requestHeaders.set("x-user-id", session._id);
@@ -95,14 +101,17 @@ export async function middleware(request) {
       },
     });
   } else {
-    console.log(pathname);
     if (pathname !== "/login") {
-      // return NextResponse.redirect(new URL("/login", request.url));
+      return NextResponse.redirect(new URL("/login", request.url));
     }
   }
 }
 
 export const config = {
+  matcher: [
+    "/((?!register|api/auth|login|unauthorized|_next/image|auth).{1,})",
+  ],
   // matcher: ["/((?!/api/auth|!_next).*)"],
-  matcher: ["/((?!_next).*)"],
+  // matcher: ["/", "/unauthorized", "/classes/:path*", "/api/class", "/api/user"],
+  // matcher: ["/((?!_next).*)"],
 };
