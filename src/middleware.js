@@ -37,7 +37,8 @@ export async function middleware(request) {
 }
 
 export const config = {
-  matcher: ["/((?!api/auth|_next/image|_ipx).{1,})"],
-  // matcher: ["/((?!api/auth|_next/image|_ipx).*)"],
+  matcher: [
+    "/((?!api/auth|_next/static|_next/image|_ipx|assets|favicon.ico|under-development.svg|public|login|register).*)",
+  ],
   // matcher: ["/((?!register|login|api/auth).{1,})"],
 };
