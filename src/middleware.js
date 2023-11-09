@@ -9,7 +9,6 @@ export async function middleware(request) {
   const PUBLIC_FILE = /\.(.*)$/;
   const { pathname } = request.nextUrl;
 
-  console.log(session, pathname);
   if (
     pathname.startsWith("/_next") ||
     pathname.startsWith("/static") ||
@@ -31,12 +30,6 @@ export async function middleware(request) {
       },
     });
   } else {
-    const originalUrl =
-      request.nextUrl.protocol +
-      request.headers.get("host") +
-      request.nextUrl.pathname;
-
-    console.log("in", request.url);
     if (!request.headers.get("x-middleware-rewrite")) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
@@ -44,8 +37,6 @@ export async function middleware(request) {
 }
 
 export const config = {
-  matcher: [
-    "/((?!api/auth|_next/static|_next/image|_ipx|assets|favicon.ico|under-development.svg|public).*)",
-  ],
+  matcher: ["/((?!api/auth|_next/static|_next/image).*)"],
   // matcher: ["/((?!register|login|api/auth).{1,})"],
 };
