@@ -4,6 +4,7 @@ import Class from "../../../../../models/Class";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { classAuthHandler } from "@/pages/api/class/authorize";
+import db from "../../../../../utils/db";
 
 const AssignmentDetailPage = () => {
   const [classAssignment, setClassAssignment] = useState(null);
@@ -33,6 +34,8 @@ const AssignmentDetailPage = () => {
 export default AssignmentDetailPage;
 
 export async function getServerSideProps(context) {
+  await db.connect();
+
   const { classId } = context.query;
   const session = await getServerSession(context.req, context.res, authOptions);
   const classData = await Class.findById(classId);

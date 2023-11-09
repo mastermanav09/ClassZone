@@ -53,8 +53,14 @@ const AuthForm = (props) => {
 
   const googleAuthHandler = (event) => {
     event.preventDefault();
+
+    let redirectLink = "/";
+    if (redirect && joinClass === "true" && classId) {
+      redirectLink = `/?jc=true&id=${classId}`;
+    }
+
     signIn("google", {
-      callbackUrl: "/",
+      callbackUrl: redirectLink,
       redirect: true,
     });
   };

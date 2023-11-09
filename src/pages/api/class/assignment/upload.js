@@ -7,6 +7,7 @@ import formidable from "formidable";
 import FormData from "form-data";
 import fs from "fs";
 import axios from "axios";
+import { classAuthHandler } from "../authorize";
 
 const cloudinary = require("cloudinary").v2;
 
@@ -83,8 +84,7 @@ const handler = async (req, res) => {
         error.statusCode = 401;
         throw error;
       } else {
-        const authMid = await import("../../class/authorize");
-        const authRes = await authMid.handler(userId, classId);
+        const authRes = await classAuthHandler(userId, classId);
 
         if (!authRes.isAuthorized) {
           const error = new Error(

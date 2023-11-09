@@ -1,7 +1,6 @@
 import mongoose from "mongoose";
 import Class from "../../../../../../models/Class";
 import manageResponses from "../../../../../../utils/responses/manageResponses";
-import db from "../../../../../../utils/db";
 
 const handler = async (req, res) => {
   if (req.method !== "GET") {
@@ -20,8 +19,6 @@ const handler = async (req, res) => {
       error.statusCode = 422;
       throw error;
     }
-
-    await db.connect();
 
     const data = await Class.findById(classId)
       .select("members teacher -_id")

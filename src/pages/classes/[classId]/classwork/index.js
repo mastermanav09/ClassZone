@@ -4,6 +4,7 @@ import { authOptions } from "../../../api/auth/[...nextauth]";
 import Classwork from "@/components/class/classwork/Classwork";
 import Class from "../../../../../models/Class";
 import { classAuthHandler } from "../../../api/class/authorize";
+import db from "../../../../../utils/db";
 
 const ClassworkPage = () => {
   return <Classwork />;
@@ -11,6 +12,8 @@ const ClassworkPage = () => {
 
 export default ClassworkPage;
 export async function getServerSideProps(context) {
+  await db.connect();
+
   const { classId } = context.query;
   const session = await getServerSession(context.req, context.res, authOptions);
   const classData = await Class.findById(classId);

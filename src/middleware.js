@@ -4,13 +4,12 @@ import { NextResponse } from "next/server";
 export async function middleware(request) {
   const session = await getToken({
     req: request,
-    secureCookie: process.env.NODE_ENV === "production" ? true : false,
     secret: process.env.SECRET,
   });
   const PUBLIC_FILE = /\.(.*)$/;
-  const authRegex = /^\/api\/auth\//;
   const { pathname } = request.nextUrl;
-  console.log("session", session);
+
+  console.log(session, pathname);
   if (
     pathname.startsWith("/_next") ||
     pathname.startsWith("/static") ||
@@ -23,10 +22,6 @@ export async function middleware(request) {
     return NextResponse.next();
   }
 
-  if (authRegex.test(request.nextUrl.pathname)) {
-    return NextResponse.next();
-  }
-
   if (session) {
     const requestHeaders = new Headers(request.headers);
     requestHeaders.set("x-user-id", session._id);
@@ -36,12 +31,21 @@ export async function middleware(request) {
       },
     });
   } else {
-    if (pathname !== "/login") {
+    const originalUrl =
+      request.nextUrl.protocol +
+      request.headers.get("host") +
+      request.nextUrl.pathname;
+
+    console.log("in", request.url);
+    if (!request.headers.get("x-middleware-rewrite")) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
   }
 }
 
 export const config = {
-  matcher: ["/((?!register|login).{1,})"],
+  matcher: [
+    "/((?!api/auth|_next/static|_next/image|_ipx|assets|favicon.ico|under-development.svg|public).*)",
+  ],
+  // matcher: ["/((?!register|login|api/auth).{1,})"],
 };

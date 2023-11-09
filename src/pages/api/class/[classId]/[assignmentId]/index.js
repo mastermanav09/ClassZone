@@ -21,8 +21,6 @@ const handler = async (req, res) => {
       throw error;
     }
 
-    await db.connect();
-
     const assignment = await Assignment.findById(assignmentId).select(
       "-__v -cloudinaryId -responses"
     );

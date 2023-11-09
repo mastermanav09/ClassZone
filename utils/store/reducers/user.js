@@ -67,15 +67,7 @@ export const signup = createAsyncThunk(
 );
 
 export const login = createAsyncThunk("user/login", async (data) => {
-  const {
-    email,
-    password,
-    setIsLoading,
-    redirect,
-    joinClass,
-    classId,
-    router,
-  } = data;
+  const { email, password, setIsLoading, redirect, joinClass, classId } = data;
 
   let redirectLink = "/";
   if (redirect && joinClass === "true" && classId) {
@@ -85,8 +77,8 @@ export const login = createAsyncThunk("user/login", async (data) => {
   try {
     setIsLoading(true);
     const res = await signIn("credentials", {
-      callbackUrl: "/",
       redirect: true,
+      callbackUrl: redirectLink,
       email,
       password,
     });
@@ -105,8 +97,6 @@ export const login = createAsyncThunk("user/login", async (data) => {
 
       throw error;
     }
-
-    router.replace(redirectLink);
   } catch (error) {
     const message = getError(error);
     if (error.statusCode === 500) {
