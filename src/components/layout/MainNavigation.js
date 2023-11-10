@@ -13,6 +13,8 @@ import {
   closeUIComponents,
   registerForUIToggle,
 } from "@/helper/closeOpenUIComponents";
+import logo from "../../../public/logo.png";
+import logo_text from "../../../public/logo_text.png";
 
 const MainNavigation = () => {
   const [showSideBar, setShowSideBar] = useState(false);
@@ -97,15 +99,10 @@ const MainNavigation = () => {
             </div>
             <div className={classes.logo}>
               <Link href="/">
-                <Image src="/logo.png" width={40} height={40} alt="logo" />
+                <Image src={logo} width={40} height={40} alt="logo" />
               </Link>
               <div className={classes["logo_text"]}>
-                <Image
-                  src="/logo_text.png"
-                  width={115}
-                  height={35}
-                  alt="logo"
-                />
+                <Image src={logo_text} width={115} height={35} alt="logo" />
               </div>
             </div>
           </div>

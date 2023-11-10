@@ -4,6 +4,9 @@ import Image from "next/legacy/image";
 import LeftArrow from "../svg/LeftArrow";
 import RightArrow from "../svg/RightArrow";
 import shortid from "shortid";
+import open_book from "../../../public/images/extra/open_book.png";
+import grinning_face from "../../../public/images/extra/grinning_face.png";
+import writing_hand from "../../../public/images/extra/writing_hand.png";
 
 const textContent = [
   {
@@ -57,7 +60,7 @@ const DesignContainer = () => {
               width={80}
               height={80}
               fill="true"
-              src="/images/extra/open_book.png"
+              src={open_book}
               alt="pen book"
             />
           </div>
@@ -66,7 +69,7 @@ const DesignContainer = () => {
               width={80}
               height={80}
               fill="true"
-              src="/images/extra/grinning_face.png"
+              src={grinning_face}
               alt="grinning face"
             />
           </div>
@@ -75,7 +78,7 @@ const DesignContainer = () => {
               width={80}
               height={80}
               fill="true"
-              src="/images/extra/writing_hand.png"
+              src={writing_hand}
               alt="writing hand"
             />
           </div>

@@ -5,6 +5,7 @@ import classes from "./PeopleUserCard.module.scss";
 import { useSession } from "next-auth/react";
 import LoadingSpinner from "../progress/LoadingSpinner";
 import Modal from "react-responsive-modal";
+import no_img from "../../../public/images/profileImages/no-img.png";
 
 const PeopleUserCard = ({
   classMember,
@@ -82,10 +83,7 @@ const PeopleUserCard = ({
             alt="user-image"
             width={40}
             height={40}
-            src={
-              classMember?.credentials?.userImage ||
-              "/images/profileImages/no-img.png"
-            }
+            src={classMember?.credentials?.userImage || no_img}
             className={classes.img}
           />
           <span>{classMember?.credentials?.name}</span>

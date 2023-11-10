@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import classes from "./Editor.module.scss";
 import LoadingSpinner from "../progress/LoadingSpinner";
+import no_img from "../../../public/images/profileImages/no-img.png";
 
 const Editor = dynamic(() => import("./Editor"), {
   ssr: false,
@@ -45,12 +46,7 @@ const EditorWrapper = ({
               alt="User image"
             />
           ) : (
-            <Image
-              width={60}
-              height={60}
-              src="/images/profileImages/no-img.png"
-              alt="User image"
-            />
+            <Image width={60} height={60} src={no_img} alt="User image" />
           )}
           <input
             type="text"
