@@ -30,13 +30,13 @@ export async function middleware(request) {
       },
     });
   } else {
-    if (!request.headers.get("x-middleware-rewrite")) {
-      return NextResponse.redirect(new URL("/login", request.url));
-    }
+    // if (!request.headers.get("x-middleware-rewrite")) {
+    return NextResponse.redirect(new URL("/login", request.url));
+    // }
   }
 }
 
 export const config = {
-  // matcher: ["/((?!api/auth|login|register|_next/image|favicon.ico).*)"],
-  matcher: ["/((?!api/auth|register|login).{1,})"],
+  matcher: ["/((?!api/auth|login|register|_next/image|favicon.ico).*)"],
+  // matcher: ["/((?!register|login|api/auth).{1,})"],
 };
