@@ -7,6 +7,7 @@ export async function middleware(request) {
     secret: process.env.SECRET,
   });
   const PUBLIC_FILE = /\.(.*)$/;
+
   const { pathname } = request.nextUrl;
 
   if (
@@ -37,6 +38,7 @@ export async function middleware(request) {
 }
 
 export const config = {
-  matcher: ["/((?!api/auth|_next/image|favicon.ico|login|register).*)"],
+  // matcher: "/((?!api|static|.*\\..*|_next).*)",
+  matcher: ["/((?!api/auth|static|_next/image|favicon.ico|login|register).*)"],
   // matcher: ["/((?!register|login|api/auth).{1,})"],
 };
