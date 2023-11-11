@@ -54,9 +54,9 @@ const AuthForm = (props) => {
   const googleAuthHandler = (event) => {
     event.preventDefault();
 
-    let redirectLink = process.env.NEXTAUTH_URL + "/";
+    let redirectLink = "/";
     if (redirect && joinClass === "true" && classId) {
-      redirectLink = process.env.NEXTAUTH_URL + `/?jc=true&id=${classId}`;
+      redirectLink = `/?jc=true&id=${classId}`;
     }
 
     signIn("google", {
