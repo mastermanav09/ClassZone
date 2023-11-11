@@ -7,7 +7,7 @@ export async function middleware(request) {
     secret: process.env.SECRET,
   });
   const PUBLIC_FILE = /\.(.*)$/;
-  const authRegex = /^\/api\/auth\//;
+
   const { pathname } = request.nextUrl;
 
   if (
@@ -19,10 +19,6 @@ export async function middleware(request) {
   }
 
   if (pathname === "/login" || pathname === "/register") {
-    return NextResponse.next();
-  }
-
-  if (authRegex.test(request.nextUrl.pathname)) {
     return NextResponse.next();
   }
 
@@ -42,6 +38,7 @@ export async function middleware(request) {
 }
 
 export const config = {
-  matcher: ["/((?!login|register|_next/image|favicon.ico).*)"],
+  // matcher: "/((?!api|static|.*\\..*|_next).*)",
+  matcher: ["/((?!api/auth|static|_next/image|favicon.ico|login|register).*)"],
   // matcher: ["/((?!register|login|api/auth).{1,})"],
 };
