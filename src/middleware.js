@@ -6,6 +6,7 @@ export async function middleware(request) {
     req: request,
     secret: process.env.SECRET,
   });
+
   const PUBLIC_FILE = /\.(.*)$/;
 
   const { pathname } = request.nextUrl;
