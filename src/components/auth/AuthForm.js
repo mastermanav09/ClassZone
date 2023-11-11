@@ -59,14 +59,7 @@ const AuthForm = (props) => {
       redirectLink = `/?jc=true&id=${classId}`;
     }
 
-    signIn(
-      "google",
-      {
-        callbackUrl: redirectLink,
-        redirect: true,
-      },
-      null
-    );
+    signIn("google");
   };
 
   return (
