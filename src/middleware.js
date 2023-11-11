@@ -7,6 +7,7 @@ export async function middleware(request) {
     secret: process.env.SECRET,
   });
   const PUBLIC_FILE = /\.(.*)$/;
+  const authRegex = /^\/api\/auth\//;
   const { pathname } = request.nextUrl;
 
   if (
@@ -21,6 +22,10 @@ export async function middleware(request) {
     return NextResponse.next();
   }
 
+  if (authRegex.test(request.nextUrl.pathname)) {
+    return NextResponse.next();
+  }
+
   if (session) {
     const requestHeaders = new Headers(request.headers);
     requestHeaders.set("x-user-id", session._id);
@@ -30,9 +35,9 @@ export async function middleware(request) {
       },
     });
   } else {
-    // if (!request.headers.get("x-middleware-rewrite")) {
-    return NextResponse.redirect(new URL("/login", request.url));
-    // }
+    if (!request.headers.get("x-middleware-rewrite")) {
+      return NextResponse.redirect(new URL("/login", request.url));
+    }
   }
 }
 
