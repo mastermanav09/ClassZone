@@ -60,8 +60,8 @@ const AuthForm = (props) => {
     }
 
     signIn("google", {
-      callbackUrl: redirectLink,
-      redirect: true,
+      // callbackUrl: redirectLink,
+      redirect: false,
     });
   };
 
