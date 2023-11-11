@@ -23,7 +23,7 @@ export const authOptions = {
         token.isAdmin = user.isAdmin;
       }
 
-      return token;
+      return Promise.resolve(token);
     },
 
     async session({ session, token }) {
@@ -39,7 +39,7 @@ export const authOptions = {
         session.user.image = token?.picture;
       }
 
-      return session;
+      return Promise.resolve(session);
     },
 
     async signIn({ account, profile, user }) {

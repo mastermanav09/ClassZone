@@ -1,0 +1,39 @@
+.privacy-policy {
+  &__header {
+    padding: 20px;
+    text-align: center;
+
+    img {
+      max-width: 100px;
+    }
+  }
+
+  &__heading {
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+  &__main {
+    padding: 20px;
+  }
+
+  &__section {
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 20px;
+    padding: 20px;
+
+    h2 {
+      margin-bottom: 10px;
+    }
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    li {
+      margin-bottom: 10px;
+    }
+  }
+}
