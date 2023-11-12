@@ -86,15 +86,18 @@ const MainNavigation = () => {
       <div className={classes.wrapper}>
         <div className={classes.navbar}>
           <div className={classes["container_one"]}>
-            <div
-              className={classes.sidebarBtn}
-              onClick={(event) => {
-                event.stopPropagation();
-                toggleSidebar();
-              }}
-            >
-              <Hamburger />
-            </div>
+            {session?.user && (
+              <div
+                className={classes.sidebarBtn}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  toggleSidebar();
+                }}
+              >
+                <Hamburger />
+              </div>
+            )}
+
             <div className={classes.logo}>
               <Link href="/">
                 <Image src="/logo.png" width={40} height={40} alt="logo" />
