@@ -54,7 +54,7 @@ const AuthForm = (props) => {
   const googleAuthHandler = (event) => {
     event.preventDefault();
 
-    let redirectLink = "/";
+    let redirectLink = "/?";
     if (redirect && joinClass === "true" && classId) {
       redirectLink = `/?jc=true&id=${classId}`;
     }
