@@ -4,11 +4,11 @@ import Cross from "@/components/svg/Cross";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
 import Image from "next/image";
-// import { useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
 const Sidebar = (props) => {
   const { toggleSidebar, showSideBar } = props;
-  // const { data: session } = useSession();
+  const { data: session } = useSession();
 
   const logoutHandler = async () => {
     await signOut({ callbackUrl: "/login" });
@@ -49,7 +49,7 @@ const Sidebar = (props) => {
           </Link>
         </ul>
 
-        {true && (
+        {session?.user && (
           <div
             className={classes["logout"]}
             onClick={() => {
