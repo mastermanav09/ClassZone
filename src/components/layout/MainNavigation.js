@@ -86,7 +86,7 @@ const MainNavigation = () => {
       <div className={classes.wrapper}>
         <div className={classes.navbar}>
           <div className={classes["container_one"]}>
-            {session?.user && (
+            {true && (
               <div
                 className={classes.sidebarBtn}
                 onClick={(event) => {
