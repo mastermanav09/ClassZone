@@ -4,9 +4,11 @@ import Cross from "@/components/svg/Cross";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
 import Image from "next/image";
+import { useSession } from "next-auth/react";
 
 const Sidebar = (props) => {
   const { toggleSidebar, showSideBar } = props;
+  const { data: session } = useSession();
 
   const logoutHandler = async () => {
     await signOut({ callbackUrl: "/login" });
@@ -47,17 +49,19 @@ const Sidebar = (props) => {
           </Link>
         </ul>
 
-        <div
-          className={classes["logout"]}
-          onClick={() => {
-            toggleSidebar(false);
-            logoutHandler();
-          }}
-        >
-          <li className={classes["list-item"]}>
-            <div>Logout</div>
-          </li>
-        </div>
+        {session?.user && (
+          <div
+            className={classes["logout"]}
+            onClick={() => {
+              toggleSidebar(false);
+              logoutHandler();
+            }}
+          >
+            <li className={classes["list-item"]}>
+              <div>Logout</div>
+            </li>
+          </div>
+        )}
       </div>
       <label
         htmlFor="menu-control"
