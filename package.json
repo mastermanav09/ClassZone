@@ -24,7 +24,7 @@
     "jsonwebtoken": "^9.0.2",
     "moment": "^2.29.4",
     "mongoose": "^7.6.3",
-    "next": "^13.4.12",
+    "next": "^14.0.1",
     "next-auth": "^4.24.4",
     "path-to-regexp": "^6.2.1",
     "rdndmb-html5-to-touch": "^8.0.3",
