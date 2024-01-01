@@ -1,3 +1,6 @@
+### Deployment -> https://class-zone.onrender.com/
+The app might run slow on the first load as it is deployed on a free plan.
+
 ## Getting Started
 
 To get started, just clone the repository and run `npm install`:
