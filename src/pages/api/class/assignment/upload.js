@@ -25,11 +25,14 @@ const cloudinaryConfig = {
 
 const handler = async (req, res) => {
   if (req.method === "POST") {
-    let uploadPath;
     try {
       const userId = req.headers["x-user-id"];
 
-      const form = formidable({ keepExtensions: true });
+      const form = formidable({
+        keepExtensions: true,
+        maxTotalFileSize: 10 * 1024 * 1024,
+      });
+
       const [fields, files] = await form.parse(req);
 
       const {
@@ -111,42 +114,56 @@ const handler = async (req, res) => {
       }
 
       cloudinary.config(cloudinaryConfig);
+      const uploadPath = `/assignments/${classAssignment.cloudinaryId}/submissions/${userId}`;
+      let uploadedFileUrl = null;
 
-      uploadPath = `/assignments/${classAssignment.cloudinaryId}/submissions/${userId}`;
+      try {
+        await cloudinary.api.create_folder(uploadPath);
+        const formData = new FormData();
+        formData.append("file", fs.createReadStream(file[0].filepath));
+        formData.append(
+          "public_id",
+          file[0].originalFilename
+            .trim()
+            .replaceAll(" ", "_")
+            .replace(/\.[^.\/]+$/, "")
+        );
+        formData.append("resource_type", "raw");
+        formData.append("folder", uploadPath);
+        formData.append("upload_preset", process.env.CLOUDINARY_UPLOAD_PRESET);
+        const { data } = await axios.post(
+          process.env.UPLOAD_CLOUDINARY_URL,
+          formData
+        );
 
-      await cloudinary.api.create_folder(uploadPath);
-      const formData = new FormData();
-      formData.append("file", fs.createReadStream(file[0].filepath));
-      formData.append(
-        "public_id",
-        file[0].originalFilename
-          .trim()
-          .replaceAll(" ", "_")
-          .replace(/\.[^.\/]+$/, "")
-      );
-      formData.append("resource_type", "raw");
-      formData.append("folder", uploadPath);
-      formData.append("upload_preset", process.env.CLOUDINARY_UPLOAD_PRESET);
-      const { data } = await axios.post(
-        process.env.UPLOAD_CLOUDINARY_URL,
-        formData
-      );
+        if (!data || !data.secure_url) {
+          const error = new Error("Cannot upload File");
+          error.statusCode = 500;
+          throw error;
+        }
 
-      if (!data || !data.secure_url) {
-        const error = new Error("Cannot upload File");
-        error.statusCode = 500;
-        throw error;
+        uploadedFileUrl = data.secure_url;
+      } catch (error) {
+        error = JSON.parse(JSON.stringify(error));
+        return res
+          .status(error.status)
+          .json(
+            manageResponses(
+              error.status,
+              "Something went wrong while uploading the file. Please try again"
+            )
+          );
       }
 
-      const uploadedFileUrl = data.secure_url;
       const isValidComment = userComment.trim().length > 0;
+      const submittedDate = new Date();
 
       await Assignment.findByIdAndUpdate(assignmentId, {
         $push: {
           responses: {
             user: userId,
             submittedFilePath: uploadedFileUrl,
-            submittedOn: new Date(),
+            submittedOn: submittedDate,
             ...(isValidComment && { comment: userComment }),
           },
         },
@@ -155,13 +172,24 @@ const handler = async (req, res) => {
       return res.status(200).json({
         message: "Assignment submitted successfully!",
         submittedFilePath: uploadedFileUrl,
-        submittedOn: new Date(),
+        submittedOn: submittedDate,
         ...(isValidComment && { comment: userComment }),
       });
     } catch (error) {
       console.log(error);
       if (!error.statusCode) {
         error.statusCode = 500;
+      }
+
+      if (error.httpCode && error.httpCode === 400) {
+        return res
+          .status(400)
+          .json(
+            manageResponses(
+              400,
+              "Failed to upload file, make sure the file size should be greater than 0 and under 10MB."
+            )
+          );
       }
 
       return res
@@ -172,7 +200,7 @@ const handler = async (req, res) => {
 
   if (req.method === "DELETE") {
     try {
-      const { _id: userId } = req.user;
+      const userId = req.headers["x-user-id"];
       const { assignmentId, classId } = req.query;
 
       await db.connect();
@@ -227,7 +255,7 @@ const handler = async (req, res) => {
           result.deleted[publicId1] === "not_found" ||
           result.deleted_counts[publicId1].original === 0
         ) {
-          throw new Error("Something went wrong. Please try again later");
+          throw new Error();
         }
       } catch (error) {
         const result = await cloudinary.api.delete_resources([publicId2], {

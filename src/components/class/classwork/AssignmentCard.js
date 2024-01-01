@@ -20,6 +20,8 @@ import {
   getFileExtension,
   removeFileExtension,
 } from "@/helper/fileExtensionHelper";
+import { FileIcon, defaultStyles } from "react-file-icon";
+import moment from "moment";
 
 const AssignmentCard = (props) => {
   const {
@@ -64,6 +66,12 @@ const AssignmentCard = (props) => {
       setFile(event.target.files[0]);
       setIsNewFileSelected(true);
     }
+  };
+
+  const submittedFileExtension = getFileExtension(assignment?.filePath);
+
+  const downloadFileHandler = () => {
+    window.open(assignment?.filePath, "_blank");
   };
 
   const submitHandler = () => {
@@ -168,6 +176,36 @@ const AssignmentCard = (props) => {
               <div className={classes["assignment-description"]}>
                 <span>Description : </span>
                 <div>{assignment?.description}</div>
+              </div>
+
+              <div className={classes["assignment-documents"]}>
+                <span>Documents : </span>
+                {assignment.filePath ? (
+                  <div className={classes["file-icon"]}>
+                    {assignment?.filePath && (
+                      <div
+                        className={classes["download-file"]}
+                        onClick={downloadFileHandler}
+                      >
+                        <FileIcon
+                          extension={submittedFileExtension}
+                          {...defaultStyles[submittedFileExtension]}
+                        />
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div>
+                    <h5 style={{ fontWeight: "bold", color: "#BF3131" }}>
+                      No files uploaded!
+                    </h5>
+                  </div>
+                )}
+              </div>
+
+              <div className={classes["assignment-dueDate"]}>
+                <span>Due Date : </span>
+                <div>{moment(assignment?.dueDate).format("LL")}</div>
               </div>
             </div>
           </div>

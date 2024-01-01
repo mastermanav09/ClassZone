@@ -102,14 +102,30 @@
 }
 
 .assignment-title,
-.assignment-description {
+.assignment-description,
+.assignment-documents,
+.assignment-dueDate {
   display: grid;
   font-size: clamp(14px, 2.5vw, 16px);
 
   span {
     font-weight: 600;
     font-size: clamp(16px, 3vw, 18px);
-    margin-bottom: 0.5rem;
+  }
+}
+
+.file-icon {
+  margin: 0.5rem 0;
+  width: 2.5rem;
+  height: 3rem;
+
+  .download-file {
+    cursor: pointer;
+  }
+
+  @media screen and (max-width: 640px) {
+    width: 2rem !important;
+    height: 2rem !important;
   }
 }
 
@@ -118,10 +134,11 @@
   justify-content: flex-end;
   align-items: center;
   background-color: white;
-  height: 3.6rem;
+  height: 3.5rem;
   position: sticky;
   bottom: 0;
   width: 100%;
+  margin-top: 1rem;
   border-top: 1px solid rgba(128, 128, 128, 0.273);
 
   .modal-upload-btn {

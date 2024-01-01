@@ -3,6 +3,9 @@ import classes from "./AssignmentOptionTab.module.scss";
 import { useRouter } from "next/router";
 import { getAssignmentDetails } from "../../../../utils/store/reducers/class";
 import { useDispatch } from "react-redux";
+import { getFileExtension } from "@/helper/fileExtensionHelper";
+import { FileIcon, defaultStyles } from "react-file-icon";
+import moment from "moment";
 
 const AssignmentOptionTab = (props) => {
   const { classId, assignmentId, classAssignment, loader, setClassAssignment } =
@@ -32,6 +35,13 @@ const AssignmentOptionTab = (props) => {
     setClassAssignment,
   ]);
 
+  const submittedFileExtension = getFileExtension(classAssignment?.filePath);
+  const dueDate = classAssignment && new Date(classAssignment.dueDate);
+
+  const downloadFileHandler = () => {
+    window.open(classAssignment?.filePath, "_blank");
+  };
+
   if (!classAssignment) {
     return <div style={{ marginTop: "13rem" }}>{loader}</div>;
   }
@@ -51,7 +61,33 @@ const AssignmentOptionTab = (props) => {
 
         <div className={classes["documents"]}>
           <span>Documents</span>
-          <div></div>
+
+          {classAssignment.filePath ? (
+            <div className={classes["file-icon"]}>
+              {classAssignment?.filePath && (
+                <div
+                  className={classes["download-file"]}
+                  onClick={downloadFileHandler}
+                >
+                  <FileIcon
+                    extension={submittedFileExtension}
+                    {...defaultStyles[submittedFileExtension]}
+                  />
+                </div>
+              )}
+            </div>
+          ) : (
+            <div>
+              <h5 style={{ fontWeight: "bold", color: "#BF3131" }}>
+                No files uploaded!
+              </h5>
+            </div>
+          )}
+        </div>
+
+        <div className={classes["dueDate"]}>
+          <span>Due Date</span>
+          <div>{moment(dueDate).format("LL")}</div>
         </div>
       </div>
     </div>
