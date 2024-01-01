@@ -1,4 +1,4 @@
-### Deployment -> https://class-zone.onrender.com/
+## Deployment
 The app might run slow on the first load as it is deployed on a free plan.
 
 ## Getting Started
