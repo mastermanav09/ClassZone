@@ -6,7 +6,8 @@
 
 .title,
 .description,
-.documents {
+.documents,
+.dueDate {
   display: flex;
   flex-direction: column;
   gap: 5px;
@@ -14,5 +15,15 @@
   span {
     font-size: 1.1rem;
     font-weight: 600;
+  }
+}
+
+.file-icon {
+  margin: 1rem 0;
+  width: 2.5rem;
+  height: 2.5rem;
+
+  .download-file {
+    cursor: pointer;
   }
 }

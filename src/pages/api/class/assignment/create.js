@@ -28,7 +28,11 @@ const handler = async (req, res) => {
   try {
     const userId = req.headers["x-user-id"];
 
-    const form = formidable({ keepExtensions: true });
+    const form = formidable({
+      keepExtensions: true,
+      maxTotalFileSize: 10 * 1024 * 1024,
+    });
+
     const [fields, files] = await form.parse(req);
 
     const {
@@ -85,24 +89,44 @@ const handler = async (req, res) => {
     const pathId = uuidv4();
 
     if (file && file[0]) {
-      const uploadPath = `/assignments/${pathId}`;
+      try {
+        const uploadPath = `/assignments/${pathId}`;
 
-      await cloudinary.api.create_folder(uploadPath);
-      await cloudinary.api.create_folder(`${uploadPath}/submissions`);
+        await cloudinary.api.create_folder(uploadPath);
+        await cloudinary.api.create_folder(`${uploadPath}/submissions`);
 
-      const formData = new FormData();
-      formData.append("file", fs.createReadStream(file[0].filepath));
-      formData.append("folder", uploadPath);
-      formData.append("upload_preset", process.env.CLOUDINARY_UPLOAD_PRESET);
-      const { data } = await axios.post(url, formData);
+        const formData = new FormData();
+        formData.append("file", fs.createReadStream(file[0].filepath));
+        formData.append(
+          "public_id",
+          file[0].originalFilename
+            .trim()
+            .replaceAll(" ", "_")
+            .replace(/\.[^.\/]+$/, "")
+        );
+        formData.append("resource_type", "raw");
+        formData.append("folder", uploadPath);
+        formData.append("upload_preset", process.env.CLOUDINARY_UPLOAD_PRESET);
+        const { data } = await axios.post(url, formData);
 
-      if (!data || !data.secure_url) {
-        const error = new Error("Cannot upload File");
-        error.statusCode = 500;
-        throw error;
+        if (!data || !data.secure_url) {
+          const error = new Error("Cannot upload File");
+          error.statusCode = 500;
+          throw error;
+        }
+
+        uploadedFileUrl = data.secure_url;
+      } catch (error) {
+        error = JSON.parse(JSON.stringify(error));
+        return res
+          .status(error.status)
+          .json(
+            manageResponses(
+              error.status,
+              "Something went wrong while uploading the file. Please try again"
+            )
+          );
       }
-
-      uploadedFileUrl = data.secure_url;
     }
 
     const newAssignment = new Assignment({
@@ -136,6 +160,17 @@ const handler = async (req, res) => {
     console.log(error);
     if (!error.statusCode) {
       error.statusCode = 500;
+    }
+
+    if (error.httpCode && error.httpCode === 400) {
+      return res
+        .status(400)
+        .json(
+          manageResponses(
+            400,
+            "Failed to upload file, make sure the file size should be greater than 0 and under 10MB."
+          )
+        );
     }
 
     return res

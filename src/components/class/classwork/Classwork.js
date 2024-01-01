@@ -1,6 +1,6 @@
 import "react-responsive-modal/styles.css";
 import "react-datepicker/dist/react-datepicker.css";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/router";
 import ClassNavDropdown from "../ClassNavDropdown";
 import classes from "./Classwork.module.scss";
@@ -34,6 +34,7 @@ const Classwork = () => {
   } = form;
   const [isNewFileSelected, setIsNewFileSelected] = useState(false);
   const [file, setFile] = useState(null);
+  const fileUploadInput = useRef(null);
   const validDate = new Date();
   validDate.setDate(validDate.getDate() + 1);
   const [selectedDate, setSelectedDate] = useState(validDate);
@@ -59,6 +60,10 @@ const Classwork = () => {
       setFile(event.target.files[0]);
       setIsNewFileSelected(true);
     }
+  };
+
+  const clearFile = () => {
+    fileUploadInput.current.value = "";
   };
 
   const submitHandler = ({ title, description }) => {
@@ -207,6 +212,7 @@ const Classwork = () => {
                   onClick={() => {
                     setIsNewFileSelected(false);
                     setFile(null);
+                    clearFile();
                   }}
                 >
                   <span>Remove file</span>
@@ -226,6 +232,7 @@ const Classwork = () => {
                       type="file"
                       className={classes["hidden"]}
                       onChange={fileHandler}
+                      ref={fileUploadInput}
                     />
                     <div className={classes["file_select_text"]}>
                       {isNewFileSelected ? (

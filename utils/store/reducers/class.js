@@ -468,7 +468,7 @@ export const createAssignment = createAsyncThunk(
     } catch (error) {
       console.log(error);
       const message = getError(error);
-      notifyAndUpdate(ERROR_TOAST, "error", message, toast, null);
+      notifyAndUpdate(ERROR_TOAST, "error", message, toast, 5000);
     }
 
     setIsLoading(false);
