@@ -8,6 +8,7 @@ export async function middleware(request) {
   });
 
   const PUBLIC_FILE = /\.(.*)$/;
+
   const { pathname } = request.nextUrl;
 
   if (
