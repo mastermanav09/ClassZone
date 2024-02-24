@@ -24,6 +24,10 @@ io.on("connection", async (socket) => {
     });
   });
 
+  socket.on("videoStateChanged", (data) => {
+    io.to(data.to).emit("videoStateChanged", data.signal);
+  });
+
   socket.on("answerCall", (data) => {
     io.to(data.to).emit("callAccepted", data.signal);
   });
