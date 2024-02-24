@@ -40,6 +40,7 @@ const AuthForm = (props) => {
           redirect,
           joinClass,
           classId,
+          router,
         })
       );
     }
@@ -64,7 +65,7 @@ const AuthForm = (props) => {
       redirect: true,
     });
   };
-
+  console.log(isLoading);
   return (
     <div className={classes.container}>
       <div className={classes.auth}>

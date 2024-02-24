@@ -113,32 +113,44 @@ const MainNavigation = () => {
             </div>
           </div>
 
-          {pathname === "/" && (
-            <div
-              className={classes["container_two"]}
-              onClick={() => {
-                closeUIComponents();
-                setShowNavbarDropdown(true);
-              }}
-            >
-              <div className={classes.addBtn}>
-                <Plus />
-                {showNavbarDropdown ? (
-                  <div
-                    className={classes.dropdown}
-                    onClick={(event) => event.stopPropagation()}
-                  >
-                    <ul>
-                      <li onClick={() => handleJoinClassClick(true)}>
-                        Join class
-                      </li>
-                      <li onClick={() => handleAddClassClick(true)}>
-                        Create class
-                      </li>
-                    </ul>
+          {session?.user && (
+            <div className={classes.navOptions}>
+              {pathname !== "/call" && (
+                <Link href="/call">
+                  <div className={classes.callBtn}>
+                    <Image src="/phone.png" width={40} height={40} alt="logo" />
                   </div>
-                ) : null}
-              </div>
+                </Link>
+              )}
+
+              {pathname === "/" && (
+                <div
+                  className={classes["container_two"]}
+                  onClick={() => {
+                    closeUIComponents();
+                    setShowNavbarDropdown(true);
+                  }}
+                >
+                  <div className={classes.addBtn}>
+                    <Plus />
+                    {showNavbarDropdown ? (
+                      <div
+                        className={classes.dropdown}
+                        onClick={(event) => event.stopPropagation()}
+                      >
+                        <ul>
+                          <li onClick={() => handleJoinClassClick(true)}>
+                            Join class
+                          </li>
+                          <li onClick={() => handleAddClassClick(true)}>
+                            Create class
+                          </li>
+                        </ul>
+                      </div>
+                    ) : null}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>

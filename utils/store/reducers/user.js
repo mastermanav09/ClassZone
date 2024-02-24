@@ -67,46 +67,42 @@ export const signup = createAsyncThunk(
 );
 
 export const login = createAsyncThunk("user/login", async (data) => {
-  const { email, password, setIsLoading, redirect, joinClass, classId } = data;
+  const {
+    email,
+    password,
+    setIsLoading,
+    redirect,
+    joinClass,
+    classId,
+    router,
+  } = data;
 
   let redirectLink = "/";
   if (redirect && joinClass === "true" && classId) {
     redirectLink = `/?jc=true&id=${classId}`;
   }
 
-  try {
-    setIsLoading(true);
-    const res = await signIn("credentials", {
-      redirect: true,
-      callbackUrl: redirectLink,
-      email,
-      password,
+  setIsLoading(true);
+  signIn("credentials", {
+    redirect: false,
+    email,
+    password,
+  })
+    .then(({ ok, error }) => {
+      if (ok) {
+        router.replace(redirectLink);
+      } else {
+        console.log(error);
+        throw new Error(error);
+      }
+
+      setIsLoading(false);
+    })
+    .catch((error) => {
+      const message = getError(error);
+      notifyAndUpdate(SERVER_ERROR_TOAST, "error", message, toast, null);
+      setIsLoading(false);
     });
-
-    if (res && res.error) {
-      const error = new Error();
-      error.statusCode = res.status;
-
-      if (res.status === 401) {
-        error.message = unauthorizedErrorResponse(res.error).message;
-      }
-
-      if (res.status === 500) {
-        error.message = serverErrorResponse().message;
-      }
-
-      throw error;
-    }
-  } catch (error) {
-    const message = getError(error);
-    if (error.statusCode === 500) {
-      return notifyAndUpdate(SERVER_ERROR_TOAST, "error", message, toast, null);
-    }
-
-    notifyAndUpdate(ERROR_TOAST, "error", message, toast, null);
-  }
-
-  setIsLoading(false);
 });
 
 export const loadUser = createAsyncThunk(

@@ -1,0 +1,201 @@
+.wrapper {
+  width: 100%;
+  height: calc(100vh - 55px);
+  background: #202124;
+  color: #ccc;
+  font-family: sans-serif;
+}
+
+.upper-section {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  height: 75%;
+  width: 100%;
+  padding: 1rem;
+
+  .call-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    width: 100%;
+    // grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+}
+
+.person {
+  position: relative;
+  background: #3b4045;
+  border-radius: 8px;
+  height: 100%;
+  width: 790px;
+  margin: 4px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover !important;
+    border-radius: 8px;
+  }
+}
+
+.symbol {
+  position: relative;
+  margin: auto;
+  //   font-size: px;
+  //   text-align: center;
+  background: #e1546b;
+  color: white;
+  //   height: 50%;
+  //   width: 75%;
+  height: 16rem;
+  width: 16rem;
+
+  //   top: 12px;
+  border-radius: 50%;
+  //   padding: 8px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .text {
+    // position: absolute;
+    font-size: 8rem;
+  }
+}
+
+.name {
+  position: relative;
+  bottom: 1rem;
+  font-size: 1rem;
+}
+
+.mic {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  height: 35px;
+  width: 35px;
+  background: #202124;
+  font-size: 12px;
+  top: 10px;
+  right: 10px;
+  z-index: 100;
+
+  svg {
+    fill: white;
+  }
+}
+
+.lower-section {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  justify-content: center;
+  gap: 1rem;
+  height: 25%;
+  bottom: 0px;
+  padding: 10px;
+  font-weight: bolder;
+  align-items: center;
+
+  .meeting-name {
+    @media screen and (max-width: 768px) {
+      font-size: 0.9rem;
+    }
+
+    span {
+      @media screen and (max-width: 768px) {
+        display: none;
+      }
+    }
+  }
+
+  div {
+    text-align: center;
+  }
+}
+
+.meeting-controls {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+}
+
+.icon {
+  width: 2.8rem;
+  height: 2.8rem;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+
+  @media screen and (max-width: 768px) {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .microphone,
+  .video,
+  .chat,
+  .people,
+  .endCall {
+    svg {
+      fill: white;
+    }
+  }
+}
+
+.endCall {
+  width: 5rem;
+  border-radius: 50px;
+  height: 55px;
+  cursor: pointer;
+
+  svg {
+    width: 35px;
+    height: 35px;
+  }
+}
+
+.bg-gray {
+  background: #3b4045;
+}
+
+.bg-dark-gray {
+  background: #202124;
+}
+
+.bg-red {
+  background: #cc0000;
+}
+
+.chat-panel {
+  .heading {
+    padding: 1rem;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    background-color: white;
+    border-bottom: 2px solid rgba(0, 0, 0, 0.25);
+  }
+}
+
+// active classes
+
+.activeChatPanel {
+  background-color: rgb(59, 59, 253);
+}

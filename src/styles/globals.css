@@ -63,3 +63,21 @@ button {
   background-color: #bee0dc;
   width: 8px;
 }
+
+.ps-sidebar-container {
+  &::-webkit-scrollbar {
+    border-radius: 10px !important;
+    background-color: #d2edeb;
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 15px !important;
+    background: #0a9689 !important;
+  }
+
+  &::-webkit-scrollbar {
+    background-color: #bee0dc;
+    width: 8px;
+  }
+}
