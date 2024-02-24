@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useLayoutEffect } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Peer from "simple-peer";
 import { io } from "socket.io-client";
 import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
@@ -12,6 +12,7 @@ import Video from "../svg/Video";
 import Chat from "../svg/Chat";
 import EndCall from "../svg/EndCall";
 import ChatItem from "./ChatItem";
+import OffVideo from "../svg/OffVideo";
 
 const Call = () => {
   const [socket, setSocket] = useState(null);
@@ -24,49 +25,23 @@ const Call = () => {
   const [idToCall, setIdToCall] = useState("");
   const [callEnded, setCallEnded] = useState(false);
   const [name, setName] = useState("");
-  const [isMuted, setIsMuted] = useState(true);
+  const [isMuted, setIsMuted] = useState(false);
   const [isVideoOff, setIsVideoOff] = useState(true);
   const [chatPanel, setChatPanel] = useState(false);
+  const [update, setUpdate] = useState(1);
+  const myVideo = useRef(null);
+  const myAudio = useRef(null);
 
-  const myVideo = useRef();
-  const userVideo = useRef();
-  const connectionRef = useRef();
+  const userVideo = useRef(null);
+  const userAudio = useRef(null);
+  const connectionRef = useRef(null);
 
   useEffect(() => {
     const socket = io.connect(process.env.NEXT_PUBLIC_SOCKET_SERVER_URL);
-    console.log(socket);
     setSocket(socket);
 
-    const storedStream = sessionStorage.getItem("stream");
-    if (storedStream) {
-      setStream(JSON.parse(storedStream));
-    }
-
-    navigator.mediaDevices
-      .getUserMedia({
-        video: true,
-        audio: true,
-      })
-      .then((stream) => {
-        setStream(stream);
-        if (myVideo.current) {
-          myVideo.current.srcObject = stream;
-        }
-      });
-
-    return () => {
-      socket.disconnect();
-      if (stream) {
-        stream.getTracks().forEach((track) => track.stop());
-      }
-    };
+    return () => socket.disconnect();
   }, []);
-
-  useEffect(() => {
-    if (stream && myVideo.current) {
-      myVideo.current.srcObject = stream;
-    }
-  }, [stream]);
 
   useEffect(() => {
     if (socket) {
@@ -80,14 +55,38 @@ const Call = () => {
         setName(data.name);
         setReceivingCall(true);
       });
+
+      // socket.on("videoStateChanged", ({ userId, videoState }) => {
+      //   console.log("changed video state", userId, videoState);
+      //   // Find the user's video element and update its stream
+      //   if (userId !== me && videoState && stream) {
+      //     // if (peerVideo) {
+      //     userVideo.current.srcObject = stream;
+      //     // }
+      //   }
+      // });
     }
   }, [socket]);
 
   useEffect(() => {
+    if (socket) {
+      socket.on("videoStateChanged", (data) => {
+        console.log("getting valled");
+        console.log(data);
+        if (userVideo.current) {
+          userVideo.current.srcObject = data.stream;
+        }
+      });
+    }
+  }, [socket]);
+
+  useEffect(() => {
+    // if (!isVideoOff) {
+
+    // if (!isVideoOff) {
     navigator.mediaDevices
       .getUserMedia({
         video: true,
-        audio: true,
       })
       .then((stream) => {
         setStream(stream);
@@ -96,12 +95,53 @@ const Call = () => {
         }
       });
 
+    if (stream && isVideoOff) {
+      stream.getVideoTracks()[0].enabled = isVideoOff;
+    }
+    // }
+    // }
+    // else {
+    //   stream?.getTracks().forEach((track) => {
+    //     if (track.readyState == "live" && track.kind === "video") {
+    //       track.enabled = !isVideoOff;
+    //     }
+    //   });
+
+    //   // setUpdate((prev) => prev + 1);
+    // }
+
+    // if (!isMuted) {
+    // navigator.mediaDevices
+    //   .getUserMedia({
+    //     audio: true,
+    //   })
+    //   .then((stream) => {
+    //     setStream(stream);
+    //     if (myAudio.current) {
+    //       myAudio.current.srcObject = stream;
+    //     }
+    //   });
+    // }
+    // else {
+    //   stream?.getTracks().forEach((track) => {
+    //     if (track.readyState == "live" && track.kind === "audio") {
+    //       track.enabled = !isMuted;
+    //     }
+    //   });
+
+    //   // setUpdate((prev) => prev + 1);
+    // }
+
     return () => {
       if (stream) {
         stream.getTracks().forEach((track) => track.stop());
       }
     };
   }, [isVideoOff]);
+
+  // useEffect(() => {
+  //   setUpdate((prev) => prev + 1);
+  // }, [stream]);
 
   const callUser = (id) => {
     const peer = new Peer({
@@ -149,9 +189,7 @@ const Call = () => {
     });
 
     peer.on("stream", (stream) => {
-      if (userVideo.current) {
-        userVideo.current.srcObject = stream;
-      }
+      userVideo.current.srcObject = stream;
     });
 
     peer.signal(callerSignal);
@@ -173,13 +211,62 @@ const Call = () => {
 
   const videoHandler = () => {
     setIsVideoOff((prev) => !prev);
+    // console.log(stream.getVideoTracks());
+    // console.log(stream.getTracks());
+
+    // if (stream) {
+    stream.getVideoTracks()[0].enabled = !isVideoOff;
+    if (myVideo.current) {
+      myVideo.current.srcObject = stream;
+    }
+
+    const peer = new Peer({
+      initiator: false,
+      trickle: false,
+      stream: stream,
+    });
+
+    peer.on("signal", (data) => {
+      // console.log("Dadadaiojdowijdaopdj");
+      socket.emit("videoStateChanged", {
+        to: idToCall,
+        signal: data,
+      });
+    });
+
+    peer.on("stream", (stream) => {
+      if (userVideo.current) {
+        userVideo.current.srcObject = stream;
+      }
+    });
+
+    socket.on("videoStateChanged", (data) => {
+      peer.signal(data.signal);
+      // if (userVideo.current) {
+      //   userVideo.current.srcObject = data.stream;
+      // }
+    });
+
+    // });
+    // socket.emit("videoStateChanged", { stream: stream, to: idToCall });
+    // peer.on("stream", (stream) => {
+    // });
+
+    // console.log(stream.getVideoTracks()[0].enabled);
+    // }
+    // socket.emit("videoStateChanged", {
+    //   userId: me,
+    //   videoState: newVideoState,
+    //   to: idToCall,
+    // });
   };
-  console.log(stream, isVideoOff);
+
+  console.log(myVideo, userVideo);
   return (
     <>
-      {/* <h1 style={{ textAlign: "center", color: "white" }}>ClassZone</h1>
+      {/* <h1 style={{ textAlign: "center", color: "white" }}>ClassZone</h1> */}
 
-      <div className={classes.container}>
+      {/* <div className={classes.container}>
         <div className={classes["video-container"]}>
           <div className={classes.video}>
             {stream && (
@@ -192,8 +279,9 @@ const Call = () => {
               <video autoPlay id="player" playsInline ref={userVideo}></video>
             ) : null}
           </div>
-        </div>
+        </div> */}
 
+      <div className={classes["wrapper"]}>
         <div className="myId">
           <input
             id="filled-basic"
@@ -236,20 +324,20 @@ const Call = () => {
             </div>
           ) : null}
         </div>
-      </div> */}
-      <div className={classes["wrapper"]}>
         <div className={classes["upper-section"]}>
           <div className={classes["call-container"]}>
             <div className={classes["person"]}>
-              {isMuted && (
+              {isMuted ? (
                 <div className={classes["mic"]}>
                   <MuteMicrophone />
                 </div>
+              ) : (
+                <audio ref={myAudio} autoPlay playsInline />
               )}
               {stream && !isVideoOff ? (
                 <video
                   autoPlay
-                  muted={isMuted}
+                  muted={true}
                   id="player"
                   playsInline
                   ref={myVideo}
@@ -265,15 +353,23 @@ const Call = () => {
             </div>
 
             <div className={classes["person"]}>
-              <div className={classes["mic"]}>
-                <MuteMicrophone />
-              </div>
-
-              <div className={classes["symbol"]}>
-                {" "}
-                <span className={classes["text"]}>A</span>
-              </div>
-              <div className={classes["name"]}>Manav Naharwal</div>
+              {/* {isMuted ? (
+                <div className={classes["mic"]}>
+                  <MuteMicrophone />
+                </div>
+              ) : ( */}
+              <audio ref={userAudio} autoPlay playsInline />
+              {/* )} */}
+              {callAccepted && !callEnded ? (
+                <video autoPlay id="player" playsInline ref={userVideo}></video>
+              ) : (
+                <>
+                  <div className={classes["symbol"]}>
+                    <span className={classes["text"]}>A</span>
+                  </div>
+                  <div className={classes["name"]}>Manav Naharwal</div>
+                </>
+              )}
             </div>
           </div>
 
@@ -315,14 +411,25 @@ const Call = () => {
               </div>
             )}
 
-            <div
-              className={[classes["bg-gray"], classes.icon].join(" ")}
-              onClick={videoHandler}
-            >
-              <div className={classes.video}>
-                <Video />
+            {isVideoOff ? (
+              <div
+                className={[classes["bg-red"], classes.icon].join(" ")}
+                onClick={videoHandler}
+              >
+                <div className={classes.video}>
+                  <OffVideo />
+                </div>
               </div>
-            </div>
+            ) : (
+              <div
+                className={[classes["bg-gray"], classes.icon].join(" ")}
+                onClick={videoHandler}
+              >
+                <div className={classes.video}>
+                  <Video />
+                </div>
+              </div>
+            )}
 
             <div
               className={[
