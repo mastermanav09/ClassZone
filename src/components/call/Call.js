@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import Peer from "simple-peer";
 import { io } from "socket.io-client";
-import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
+import { Sidebar } from "react-pro-sidebar";
 import Image from "next/image";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 import classes from "./Call.module.scss";
@@ -13,364 +13,378 @@ import Chat from "../svg/Chat";
 import EndCall from "../svg/EndCall";
 import ChatItem from "./ChatItem";
 import OffVideo from "../svg/OffVideo";
+import { notifyAndUpdate } from "@/helper/toastNotifyAndUpdate";
+import { ERROR_TOAST } from "../../../utils/constants";
+import { toast } from "react-toastify";
+import ReactPlayer from "react-player";
+import JoinToast from "./JoinToast";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import moment from "moment";
+
+const colors = [
+  "#0a9689",
+  "#2c6fbb",
+  "#4e2374",
+  "#CC313D",
+  "#7A2048",
+  "#008d7d",
+];
+
+const selectedColor = colors[Math.floor(Math.random() * colors.length)];
 
 const Call = () => {
+  const [isVideoOff, setIsVideoOff] = useState(true);
+  const [isAudioOff, setIsAudioOff] = useState(true);
+  const [yourID, setYourID] = useState("");
   const [socket, setSocket] = useState(null);
-  const [me, setMe] = useState("");
-  const [stream, setStream] = useState();
+  // const [users, setUsers] = useState({});
+  const [idToCall, setIdToCall] = useState();
+  const [myStream, setMyStream] = useState(null);
   const [receivingCall, setReceivingCall] = useState(false);
   const [caller, setCaller] = useState("");
   const [callerSignal, setCallerSignal] = useState();
   const [callAccepted, setCallAccepted] = useState(false);
-  const [idToCall, setIdToCall] = useState("");
-  const [callEnded, setCallEnded] = useState(false);
-  const [name, setName] = useState("");
-  const [isMuted, setIsMuted] = useState(false);
-  const [isVideoOff, setIsVideoOff] = useState(true);
-  const [chatPanel, setChatPanel] = useState(false);
-  const [update, setUpdate] = useState(1);
-  const myVideo = useRef(null);
-  const myAudio = useRef(null);
-
   const userVideo = useRef(null);
   const userAudio = useRef(null);
+  const [chatPanel, setChatPanel] = useState(false);
+  const partnerVideo = useRef(null);
+  const partnerAudio = useRef(null);
   const connectionRef = useRef(null);
+  const chatMessageInput = useRef(null);
+  const [callEnded, setCallEnded] = useState(false);
+  const [callerName, setCallerName] = useState("");
+  const [callerImage, setCallerImage] = useState("");
+  const [myName, setMyName] = useState("");
+  const [myImage, setMyImage] = useState("");
+  const { data: session } = useSession();
+  const [linkCopied, setLinkCopied] = useState(false);
+  const router = useRouter();
+  const [chatMessages, setChatMessages] = useState([]);
+  const messagePanelScrollRef = useRef();
 
   useEffect(() => {
     const socket = io.connect(process.env.NEXT_PUBLIC_SOCKET_SERVER_URL);
+
+    socket.on("yourID", (id) => {
+      setYourID(id);
+    });
+
+    socket.on("allUsers", (users) => {
+      setUsers(users);
+    });
+
+    socket.on("hey", (data) => {
+      setReceivingCall(true);
+      setCaller(data.from);
+      setCallerName(data.name);
+      setCallerImage(data.image);
+      setCallerSignal(data.signal);
+    });
+
+    socket.on("callEnded", () => {
+      setCallEnded(true);
+      setReceivingCall(false);
+      setCallAccepted(false);
+      router.replace("/");
+    });
+
+    socket.on("sendChatMessage", (data) => {
+      setChatMessages((prev) => [
+        ...prev,
+        {
+          name: data.name,
+          message: data.message,
+          time: data.time,
+        },
+      ]);
+    });
+
     setSocket(socket);
 
-    return () => socket.disconnect();
+    return () => {
+      connectionRef?.current?.destroy();
+      socket.disconnect();
+    };
   }, []);
 
   useEffect(() => {
-    if (socket) {
-      socket.on("me", (id) => {
-        setMe(id);
-      });
-
-      socket.on("callUser", (data) => {
-        setCaller(data.from);
-        setCallerSignal(data.signal);
-        setName(data.name);
-        setReceivingCall(true);
-      });
-
-      // socket.on("videoStateChanged", ({ userId, videoState }) => {
-      //   console.log("changed video state", userId, videoState);
-      //   // Find the user's video element and update its stream
-      //   if (userId !== me && videoState && stream) {
-      //     // if (peerVideo) {
-      //     userVideo.current.srcObject = stream;
-      //     // }
-      //   }
-      // });
+    if (linkCopied) {
+      setTimeout(() => {
+        setLinkCopied(false);
+      }, 5000);
     }
-  }, [socket]);
+  }, [linkCopied]);
 
   useEffect(() => {
-    if (socket) {
-      socket.on("videoStateChanged", (data) => {
-        console.log("getting valled");
-        console.log(data);
-        if (userVideo.current) {
-          userVideo.current.srcObject = data.stream;
-        }
-      });
-    }
-  }, [socket]);
+    setMyName(session?.user.name);
+    setMyImage(session?.user.image);
+  }, [session]);
 
   useEffect(() => {
-    // if (!isVideoOff) {
-
-    // if (!isVideoOff) {
     navigator.mediaDevices
-      .getUserMedia({
-        video: true,
-      })
+      .getUserMedia({ video: true, audio: true })
       .then((stream) => {
-        setStream(stream);
-        if (myVideo.current) {
-          myVideo.current.srcObject = stream;
+        setMyStream(stream);
+        if (userVideo.current) {
+          userVideo.current.srcObject = stream;
         }
-      });
 
-    if (stream && isVideoOff) {
-      stream.getVideoTracks()[0].enabled = isVideoOff;
-    }
-    // }
-    // }
-    // else {
-    //   stream?.getTracks().forEach((track) => {
-    //     if (track.readyState == "live" && track.kind === "video") {
-    //       track.enabled = !isVideoOff;
-    //     }
-    //   });
+        if (userAudio.current) {
+          userAudio.current.srcObject = stream;
+        }
 
-    //   // setUpdate((prev) => prev + 1);
-    // }
+        const videoTrack = stream
+          ?.getTracks()
+          .find((track) => track.kind === "video");
+        if (videoTrack) {
+          videoTrack.enabled = false;
+        }
 
-    // if (!isMuted) {
-    // navigator.mediaDevices
-    //   .getUserMedia({
-    //     audio: true,
-    //   })
-    //   .then((stream) => {
-    //     setStream(stream);
-    //     if (myAudio.current) {
-    //       myAudio.current.srcObject = stream;
-    //     }
-    //   });
-    // }
-    // else {
-    //   stream?.getTracks().forEach((track) => {
-    //     if (track.readyState == "live" && track.kind === "audio") {
-    //       track.enabled = !isMuted;
-    //     }
-    //   });
+        const audioTrack = stream
+          ?.getTracks()
+          .find((track) => track.kind === "audio");
+        if (audioTrack) {
+          audioTrack.enabled = false;
+        }
+      })
+      .catch((error) =>
+        notifyAndUpdate(
+          ERROR_TOAST,
+          "error",
+          "Can't access the media device.",
+          toast,
+          null
+        )
+      );
+  }, []);
 
-    //   // setUpdate((prev) => prev + 1);
-    // }
-
-    return () => {
-      if (stream) {
-        stream.getTracks().forEach((track) => track.stop());
-      }
-    };
-  }, [isVideoOff]);
-
-  // useEffect(() => {
-  //   setUpdate((prev) => prev + 1);
-  // }, [stream]);
-
-  const callUser = (id) => {
+  function callPeer(id) {
     const peer = new Peer({
       initiator: true,
       trickle: false,
-      stream: stream,
+      stream: myStream,
     });
 
     peer.on("signal", (data) => {
       socket.emit("callUser", {
         userToCall: id,
         signalData: data,
-        from: me,
-        name: name,
+        name: myName,
+        image: myImage,
+        from: yourID,
       });
     });
 
     peer.on("stream", (stream) => {
-      if (userVideo.current) {
-        userVideo.current.srcObject = stream;
+      if (partnerVideo.current) {
+        partnerVideo.current.srcObject = stream;
+      }
+
+      if (partnerAudio.current) {
+        partnerAudio.current.srcObject = stream;
       }
     });
 
-    socket.on("callAccepted", (signal) => {
+    socket.on("callAccepted", ({ signal }) => {
       setCallAccepted(true);
-      peer.signal(signal);
+
+      try {
+        peer.signal(signal);
+      } catch (error) {
+        // notifyAndUpdate(
+        //   ERROR_TOAST,
+        //   "error",
+        //   "Meeting link is expired, please create a new link",
+        //   toast,
+        //   null
+        // );
+      }
     });
 
     connectionRef.current = peer;
-  };
+  }
 
-  const answerCall = () => {
+  function admitUserHandler() {
     setCallAccepted(true);
+    setCallEnded(false);
+
     const peer = new Peer({
       initiator: false,
       trickle: false,
-      stream: stream,
+      stream: myStream,
     });
-
     peer.on("signal", (data) => {
-      socket.emit("answerCall", {
-        signal: data,
-        to: caller,
-      });
+      socket.emit("acceptCall", { signal: data, to: caller });
     });
 
     peer.on("stream", (stream) => {
-      userVideo.current.srcObject = stream;
+      if (partnerVideo.current) {
+        partnerVideo.current.srcObject = stream;
+      }
+
+      if (partnerAudio.current) {
+        partnerAudio.current.srcObject = stream;
+      }
     });
 
     peer.signal(callerSignal);
     connectionRef.current = peer;
+  }
+
+  const rejectUserHandler = () => {
+    setReceivingCall(false);
+    setCallAccepted(false);
   };
 
-  const leaveCall = () => {
-    setCallEnded(true);
-    connectionRef.current.destroy();
+  const videoHandler = () => {
+    setIsVideoOff((prev) => !prev);
+
+    const videoTrack = myStream
+      ?.getTracks()
+      .find((track) => track.kind === "video");
+    if (videoTrack) {
+      videoTrack.enabled = !videoTrack.enabled;
+    }
   };
+
+  const audioHandler = () => {
+    setIsAudioOff((prev) => !prev);
+    const audioTrack = myStream
+      ?.getTracks()
+      .find((track) => track.kind === "audio");
+    if (audioTrack) {
+      audioTrack.enabled = !audioTrack.enabled;
+    }
+    if (userAudio.current) {
+      userAudio.current.srcObject = myStream;
+    }
+  };
+
+  let UserVideo;
+  if (myStream) {
+    UserVideo = (
+      <ReactPlayer url={myStream} muted playing width="100%" height="100%" />
+    );
+  }
+
+  let PartnerVideo;
+  if (callAccepted) {
+    PartnerVideo = <video playsInline muted ref={partnerVideo} autoPlay />;
+  }
 
   const sidebarHandler = () => {
     setChatPanel((prev) => !prev);
   };
 
-  const muteHandler = () => {
-    setIsMuted((prev) => !prev);
+  const leaveCall = () => {
+    setCallEnded(true);
+    setReceivingCall(false);
+    setCallAccepted(false);
+
+    socket.emit("callEnded", {
+      to: [yourID, idToCall, caller],
+    });
+
+    router.replace("/");
   };
 
-  const videoHandler = () => {
-    setIsVideoOff((prev) => !prev);
-    // console.log(stream.getVideoTracks());
-    // console.log(stream.getTracks());
+  const firstInitial = myName?.split(" ")[0]?.charAt(0);
+  const secondInitial = myName?.split(" ")[1]?.charAt(0) || "";
 
-    // if (stream) {
-    stream.getVideoTracks()[0].enabled = !isVideoOff;
-    if (myVideo.current) {
-      myVideo.current.srcObject = stream;
+  const sendMessageHandler = () => {
+    const text = chatMessageInput.current?.value;
+
+    if (!text || text.trim().length == 0) {
+      return;
     }
+    const newMessage = {
+      name: myName,
+      message: text,
+      time: moment().format("h:mm a"),
+    };
 
-    const peer = new Peer({
-      initiator: false,
-      trickle: false,
-      stream: stream,
+    socket.emit("sendChatMessage", {
+      ...newMessage,
+      to: caller ? caller : idToCall,
     });
 
-    peer.on("signal", (data) => {
-      // console.log("Dadadaiojdowijdaopdj");
-      socket.emit("videoStateChanged", {
-        to: idToCall,
-        signal: data,
-      });
-    });
-
-    peer.on("stream", (stream) => {
-      if (userVideo.current) {
-        userVideo.current.srcObject = stream;
-      }
-    });
-
-    socket.on("videoStateChanged", (data) => {
-      peer.signal(data.signal);
-      // if (userVideo.current) {
-      //   userVideo.current.srcObject = data.stream;
-      // }
-    });
-
-    // });
-    // socket.emit("videoStateChanged", { stream: stream, to: idToCall });
-    // peer.on("stream", (stream) => {
-    // });
-
-    // console.log(stream.getVideoTracks()[0].enabled);
-    // }
-    // socket.emit("videoStateChanged", {
-    //   userId: me,
-    //   videoState: newVideoState,
-    //   to: idToCall,
-    // });
+    setChatMessages((prev) => [...prev, newMessage]);
+    if (chatMessageInput) {
+      chatMessageInput.current.value = "";
+    }
   };
 
-  console.log(myVideo, userVideo);
+  messagePanelScrollRef?.current?.scrollTo({
+    behavior: "smooth",
+    top: messagePanelScrollRef.current.scrollHeight,
+  });
+
   return (
     <>
-      {/* <h1 style={{ textAlign: "center", color: "white" }}>ClassZone</h1> */}
-
-      {/* <div className={classes.container}>
-        <div className={classes["video-container"]}>
-          <div className={classes.video}>
-            {stream && (
-              <video autoPlay muted={isMuted} id="player" playsInline ref={myVideo} />
-            )}
-          </div>
-
-          <div className={classes.video}>
-            {callAccepted && !callEnded ? (
-              <video autoPlay id="player" playsInline ref={userVideo}></video>
-            ) : null}
-          </div>
-        </div> */}
+      <JoinToast
+        showToast={receivingCall && !callAccepted}
+        callerImage={myImage}
+        callerName={myName}
+        rejectUserHandler={rejectUserHandler}
+        admitUserHandler={admitUserHandler}
+      />
 
       <div className={classes["wrapper"]}>
-        <div className="myId">
-          <input
-            id="filled-basic"
-            label="Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            style={{ marginBottom: "20px" }}
-          />
-          <CopyToClipboard text={me} style={{ marginBottom: "2rem" }}>
-            <button
-
-            //   startIcon={<AssignmentIcon fontSize="large" />}
-            >
-              Copy ID
-            </button>
-          </CopyToClipboard>
-
-          <input
-            id="filled-basic"
-            label="ID to call"
-            value={idToCall}
-            onChange={(e) => setIdToCall(e.target.value)}
-          />
-          <div className="call-button">
-            {callAccepted && !callEnded ? (
-              <button onClick={leaveCall}>End Call</button>
-            ) : (
-              <button aria-label="call" onClick={() => callUser(idToCall)}>
-                <Image src="/phone.png" width={40} height={40} alt="call" />
-              </button>
-            )}
-            {idToCall}
-          </div>
-        </div>
-        <div>
-          {receivingCall && !callAccepted ? (
-            <div className="caller">
-              <h1>{name} is calling...</h1>
-              <button onClick={answerCall}>Answer</button>
-            </div>
-          ) : null}
-        </div>
         <div className={classes["upper-section"]}>
           <div className={classes["call-container"]}>
             <div className={classes["person"]}>
-              {isMuted ? (
+              {isAudioOff && (
                 <div className={classes["mic"]}>
                   <MuteMicrophone />
                 </div>
-              ) : (
-                <audio ref={myAudio} autoPlay playsInline />
               )}
-              {stream && !isVideoOff ? (
-                <video
-                  autoPlay
-                  muted={true}
-                  id="player"
-                  playsInline
-                  ref={myVideo}
-                />
+              <audio ref={userAudio} autoPlay playsInline />
+              {myStream && !isVideoOff ? (
+                <>{UserVideo}</>
               ) : (
                 <>
-                  <div className={classes["symbol"]}>
-                    <span className={classes["text"]}>A</span>
+                  <div
+                    className={classes["symbol"]}
+                    style={{
+                      background: selectedColor,
+                    }}
+                  >
+                    <span className={classes["text"]}>
+                      {!firstInitial && !secondInitial
+                        ? ""
+                        : firstInitial + secondInitial}
+                    </span>
                   </div>
-                  <div className={classes["name"]}>Manav Naharwal</div>
+                  <div className={classes["name"]}>{myName}</div>
                 </>
               )}
             </div>
 
-            <div className={classes["person"]}>
-              {/* {isMuted ? (
+            {callAccepted && (
+              <div className={classes["person"]}>
+                {/* {isMuted ? (
                 <div className={classes["mic"]}>
                   <MuteMicrophone />
                 </div>
-              ) : ( */}
-              <audio ref={userAudio} autoPlay playsInline />
-              {/* )} */}
-              {callAccepted && !callEnded ? (
-                <video autoPlay id="player" playsInline ref={userVideo}></video>
               ) : (
-                <>
-                  <div className={classes["symbol"]}>
-                    <span className={classes["text"]}>A</span>
-                  </div>
-                  <div className={classes["name"]}>Manav Naharwal</div>
-                </>
-              )}
-            </div>
+              )} */}
+                <audio ref={partnerAudio} autoPlay playsInline />
+                {callAccepted ? (
+                  <>{PartnerVideo}</>
+                ) : (
+                  <>
+                    <div
+                      className={classes["symbol"]}
+                      style={{ background: "#e1546b" }}
+                    >
+                      <span className={classes["text"]}>U</span>
+                    </div>
+                    <div className={classes["name"]}>User</div>
+                  </>
+                )}
+              </div>
+            )}
           </div>
 
           <div className={classes.chatPanel}></div>
@@ -381,9 +395,32 @@ const Call = () => {
             " "
           )}
         >
-          <div className={classes["meeting-name"]}>
-            <span> Classzone | </span>
-            <ClockComponent />
+          <div className={classes["meeting-details"]}>
+            {!callAccepted && (
+              <div className={classes.joinRoom}>
+                <input
+                  id="filled-basic"
+                  label="ID to call"
+                  type="text"
+                  placeholder="Enter Room Id"
+                  className={`${classes.joinInput}`}
+                  value={idToCall}
+                  onChange={(e) => setIdToCall(e.target.value)}
+                />
+
+                <button
+                  className={`${classes.joinButton}`}
+                  onClick={() => callPeer(idToCall)}
+                >
+                  Join
+                </button>
+              </div>
+            )}
+
+            <div className={classes["meeting-name"]}>
+              <span> Classzone | </span>
+              <ClockComponent />
+            </div>
           </div>
 
           <div
@@ -391,10 +428,10 @@ const Call = () => {
               " "
             )}
           >
-            {isMuted ? (
+            {isAudioOff ? (
               <div
                 className={[classes["bg-red"], classes.icon].join(" ")}
-                onClick={muteHandler}
+                onClick={audioHandler}
               >
                 <div className={classes.microphone}>
                   <MuteMicrophone />
@@ -403,7 +440,7 @@ const Call = () => {
             ) : (
               <div
                 className={[classes["bg-gray"], classes.icon].join(" ")}
-                onClick={muteHandler}
+                onClick={audioHandler}
               >
                 <div className={classes.microphone}>
                   <Microphone />
@@ -444,12 +481,33 @@ const Call = () => {
               </div>
             </div>
 
-            <div className={[classes["bg-red"], classes.endCall].join(" ")}>
-              <EndCall />
-            </div>
+            {callAccepted && !callEnded && (
+              <div
+                className={[classes["bg-red"], classes.endCall].join(" ")}
+                onClick={leaveCall}
+              >
+                <EndCall />
+              </div>
+            )}
           </div>
-
-          <div className={classes["chat-icon"]}></div>
+          {!callAccepted && (
+            <div className={classes["create-meeting"]}>
+              <CopyToClipboard
+                text={yourID}
+                style={{
+                  marginBottom: "2rem",
+                  backgroundColor:
+                    linkCopied === true ? "green" : "rgb(54, 54, 231)",
+                }}
+              >
+                <button onClick={() => setLinkCopied(true)}>
+                  {!linkCopied
+                    ? " Copy Room Id"
+                    : "Great! Now you can share it with someone. 🤩"}
+                </button>
+              </CopyToClipboard>
+            </div>
+          )}
         </div>
 
         <div
@@ -478,22 +536,24 @@ const Call = () => {
                 <Image src="/logo.png" width={40} height={40} alt="logo" />
               </div>
               <div className={classes.hr} />
+              <div
+                className={classes["message-box"]}
+                ref={messagePanelScrollRef}
+              >
+                {chatMessages.map((message, index) => (
+                  <div key={index}>
+                    <ChatItem message={message} />
+                  </div>
+                ))}
+                <div style={{ height: "5rem" }}></div>
+              </div>
 
-              <div className={classes["message-box"]}>
-                <ChatItem />
-                <ChatItem />
-                <ChatItem />
-                <ChatItem />
-                <ChatItem />
-                <ChatItem />
-
-                <ChatItem />
-                <ChatItem />
-                <ChatItem />
-                <ChatItem />
-                <ChatItem />
-                <ChatItem />
-                <ChatItem />
+              <div className={classes["message-input"]}>
+                <textarea
+                  ref={chatMessageInput}
+                  placeholder="Type your message here..."
+                />
+                <button onClick={sendMessageHandler}>Send</button>
               </div>
             </div>
           </Sidebar>

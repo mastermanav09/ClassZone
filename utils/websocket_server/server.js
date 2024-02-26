@@ -10,26 +10,36 @@ const io = new Server(httpServer, {
 });
 
 io.on("connection", async (socket) => {
-  socket.emit("me", socket.id);
+  socket.emit("yourID", socket.id);
 
   socket.on("disconnect", () => {
     socket.broadcast.emit("Call ended");
   });
 
   socket.on("callUser", (data) => {
-    io.to(data.userToCall).emit("callUser", {
+    io.to(data.userToCall).emit("hey", {
       signal: data.signalData,
       from: data.from,
       name: data.name,
+      image: data.image,
     });
   });
 
-  socket.on("videoStateChanged", (data) => {
-    io.to(data.to).emit("videoStateChanged", data.signal);
+  socket.on("callEnded", (data) => {
+    const set = new Set([...data.to]);
+    const socketIds = Array.from(set);
+
+    for (let socketId of socketIds) {
+      io.to(socketId).emit("callEnded");
+    }
   });
 
-  socket.on("answerCall", (data) => {
-    io.to(data.to).emit("callAccepted", data.signal);
+  socket.on("sendChatMessage", (data) => {
+    io.to(data.to).emit("sendChatMessage", data);
+  });
+
+  socket.on("acceptCall", (data) => {
+    io.to(data.to).emit("callAccepted", data);
   });
 });
 

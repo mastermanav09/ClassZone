@@ -1,15 +1,16 @@
 import React from "react";
 import classes from "./ChatItem.module.scss";
+import moment from "moment";
 
-const ChatItem = () => {
+const ChatItem = (props) => {
+  const { message } = props;
   return (
     <div className={classes["chat-item"]}>
       <div className={classes["name"]}>
-        Manav Naharwal <span className={classes.time}>5:05 PM</span>
+        {message.name}
+        <span className={classes.time}>{message.time}</span>
       </div>
-      <div className={classes["message"]}>
-        Manav NaharwalManav NaharwalManav NaharwalManav Naharwal
-      </div>
+      <div className={classes["message"]}>{message.message}</div>
     </div>
   );
 };

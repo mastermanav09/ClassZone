@@ -1,0 +1,77 @@
+.toast {
+  position: fixed;
+  top: -100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: white;
+  color: black;
+  height: 8rem;
+  width: 25rem;
+  z-index: 120;
+  padding: 10px 20px;
+  border-radius: 8px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  opacity: 0;
+  transition: opacity 0.8s ease-in-out, top 0.8s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 1rem;
+}
+
+.toast.show {
+  top: 55px;
+  opacity: 1;
+}
+
+.toast.slide-out {
+  top: 100%;
+  opacity: 0;
+}
+
+.avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.userInfo {
+  display: flex;
+  gap: 1rem;
+
+  .username {
+    font-weight: 600;
+  }
+}
+
+.actionButtons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.actionButtons .btn {
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.admitBtn {
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+
+  &:hover {
+    background-color: #3f9041;
+  }
+}
+
+.denyBtn {
+  background-color: #f44336;
+  color: #fff;
+  border: none;
+
+  &:hover {
+    background-color: #c2362c;
+  }
+}
