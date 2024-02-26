@@ -15,6 +15,23 @@ const nextConfig = {
       },
     ],
   },
+
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.module.rules.push({
+        test: /\.(ogg|mp3|wav|mpe?g)$/i,
+        loader: "file-loader",
+        options: {
+          publicPath: "/_next/static/audio", // Adjust the path as needed
+          outputPath: "static/audio", // Adjust the path as needed
+          name: "[name].[ext]",
+          esModule: false,
+        },
+      });
+    }
+
+    return config;
+  },
 };
 
 module.exports = nextConfig;
