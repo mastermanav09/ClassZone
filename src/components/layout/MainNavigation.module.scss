@@ -108,5 +108,18 @@
         }
       }
     }
+
+    .navOptions {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .callBtn {
+      cursor: pointer;
+      width: 40px;
+      height: 40px;
+    }
   }
 }
