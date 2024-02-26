@@ -11,14 +11,14 @@ const JoinToast = (props) => {
     rejectUserHandler,
   } = props;
 
-  // useEffect(() => {
-  //   if (showToast) {
-  //     setTimeout(() => {
-  //       const audio = new Audio("/sounds/admit.wav");
-  //       audio.play();
-  //     }, 500);
-  //   }
-  // }, [showToast]);
+  useEffect(() => {
+    if (showToast) {
+      setTimeout(() => {
+        const audio = new Audio("/sounds/admit.wav");
+        audio.play();
+      }, 500);
+    }
+  }, [showToast]);
 
   return (
     <div className={`${classes.toast} ${showToast ? classes.show : ""}`}>

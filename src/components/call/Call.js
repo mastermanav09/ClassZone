@@ -7,7 +7,6 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 import classes from "./Call.module.scss";
 import Microphone from "../svg/Microphone";
 import MuteMicrophone from "../svg/MuteMicrophone";
-import ClockComponent from "./Clock";
 import Video from "../svg/Video";
 import Chat from "../svg/Chat";
 import EndCall from "../svg/EndCall";
@@ -21,6 +20,7 @@ import JoinToast from "./JoinToast";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import moment from "moment";
+import LiveClockUpdate from "@/helper/LiveClock";
 
 const colors = [
   "#0a9689",
@@ -419,7 +419,7 @@ const Call = () => {
 
             <div className={classes["meeting-name"]}>
               <span> Classzone | </span>
-              <ClockComponent />
+              <LiveClockUpdate />
             </div>
           </div>
 
