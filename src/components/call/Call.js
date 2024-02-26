@@ -324,8 +324,8 @@ const Call = () => {
     <>
       <JoinToast
         showToast={receivingCall && !callAccepted}
-        callerImage={myImage}
-        callerName={myName}
+        callerImage={callerImage}
+        callerName={callerName}
         rejectUserHandler={rejectUserHandler}
         admitUserHandler={admitUserHandler}
       />

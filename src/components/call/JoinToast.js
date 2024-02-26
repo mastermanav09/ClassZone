@@ -14,7 +14,7 @@ const JoinToast = (props) => {
   useEffect(() => {
     if (showToast) {
       setTimeout(() => {
-        const audio = new Audio("/sounds/mixkit-correct-answer-tone-2870.wav");
+        const audio = new Audio("/sounds/admit.wav");
         audio.play();
       }, 500);
     }
