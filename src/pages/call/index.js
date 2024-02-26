@@ -1,14 +1,19 @@
-import React from "react";
-import dynamic from "next/dynamic";
+import React, { useEffect, useState } from "react";
+import Call from "@/components/call/Call";
 import LoadingSpinner from "@/components/progress/LoadingSpinner";
 
-const Call = dynamic(() => import("@/components/call/Call"), {
-  ssr: false,
-  loading: () => <LoadingSpinner />,
-});
-
 const CallPage = () => {
-  return <Call />;
+  const [client, setClient] = useState(false);
+
+  useEffect(() => {
+    setClient(true);
+  }, []);
+
+  if (!client) {
+    return <LoadingSpinner />;
+  }
+
+  return client && <Call />;
 };
 
 export default CallPage;
