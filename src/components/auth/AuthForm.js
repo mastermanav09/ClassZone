@@ -40,6 +40,7 @@ const AuthForm = (props) => {
           redirect,
           joinClass,
           classId,
+          router,
         })
       );
     }

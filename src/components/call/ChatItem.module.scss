@@ -1,0 +1,26 @@
+.chat-item {
+  text-align: left;
+  padding: 0.6rem;
+
+  .name {
+    font-size: 1rem;
+    font-weight: 600;
+
+    .time {
+      font-size: 0.8rem;
+      color: rgb(92, 91, 91);
+      font-weight: 200;
+      margin-left: 0.5rem;
+    }
+  }
+
+  .message {
+    margin-top: 0.4rem;
+    margin-bottom: 0.4rem;
+    font-size: 0.9rem;
+    font-weight: 400;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  border-bottom: 1px solid #5c595953;
+}
